@@ -1,0 +1,40 @@
+name: DSH adapter
+
+on:
+  push:
+    branches: [dsh_main]
+  pull_request:
+    branches: [dsh_main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-dsh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.5'
+      - name: Install adapter dependencies without lifecycle scripts
+        run: bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts
+      - name: Typecheck, lint, and test native behavior
+        run: bun run check:dsh
+      - name: Verify shared SQLite and normalization leaves
+        run: >-
+          bun test packages/plugin/src/shared/sqlite.test.ts
+          packages/plugin/src/shared/sqlite-bind-style.test.ts
+          packages/plugin/src/shared/sqlite-import-fence.test.ts
+          packages/plugin/src/features/magic-context/memory/normalize-hash.test.ts
+      - name: Build portable artifact
+        run: bun run --cwd packages/dsh-plugin build
+      - name: Install and exercise the tarball in isolation
+        run: bun run --cwd packages/dsh-plugin test:install
+      - name: Measure bounded memory retrieval
+        run: bun run --cwd packages/dsh-plugin benchmark
