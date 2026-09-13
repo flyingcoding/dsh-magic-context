@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "definedBeforeMeasurement": "2026-09-13",
+  "description": "Local keyless adapter gates; full-provider token billing and production RSS are separate acceptance measurements.",
+  "corpusSizes": [1000, 10000],
+  "querySamples": 100,
+  "gates": {
+    "storeOpenMs": 100,
+    "queryP95Ms": 25,
+    "snapshotP95Ms": 25,
+    "snapshotEstimatedTokens": 1000,
+    "additionalRssMiB": 64,
+    "retainedSnapshotStateBytes": 128,
+    "auxiliaryModelCalls": 0,
+    "additionalProcesses": 0
+  }
+}
