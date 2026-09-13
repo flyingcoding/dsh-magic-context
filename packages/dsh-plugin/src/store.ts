@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { chmodSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { z } from "zod";
-import { Database, type Statement } from "../../plugin/src/shared/sqlite.ts";
 import { boundedInteger } from "./config.ts";
+import { Database, type Statement } from "./sqlite.ts";
 import { searchTokens, toFtsQuery } from "./tokenize.ts";
 import type {
   ForgetRequest,

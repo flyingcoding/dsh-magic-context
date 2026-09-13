@@ -1,4 +1,4 @@
-import { normalizeMemoryContent } from "../../plugin/src/features/magic-context/memory/normalize-hash.ts";
+import { normalizeMemoryContent } from "./normalize.ts";
 
 /** Split Han text into indexed bigrams and singleton tokens without a model or dictionary. */
 export function searchTokens(text: string): string[] {

@@ -1,5 +1,3 @@
-import type { MemoryCategory as UpstreamCategory } from "../../plugin/src/features/magic-context/memory/types.ts";
-
 /** Stable logical record identity; revisions retain the same id. */
 export type MemoryId = string & { readonly __memoryId: unique symbol };
 /** Canonical real workspace path; never accepted from a model argument. */
@@ -7,16 +5,15 @@ export type WorkspaceKey = string & { readonly __workspaceKey: unique symbol };
 /** Global writes always require an explicit scope selection. */
 export type MemoryScope = "workspace" | "global";
 /** The small supported subset of Magic's category vocabulary. */
-export type MemoryCategory = Extract<
-  UpstreamCategory,
+// Vocabulary from cortexkit/magic-context memory/types.ts at 6f718ff0 (MIT; see NOTICE).
+export type MemoryCategory =
   | "PROJECT_RULES"
   | "ARCHITECTURE"
   | "CONFIG_VALUES"
   | "CONSTRAINTS"
   | "NAMING"
   | "USER_PREFERENCES"
-  | "KNOWN_ISSUES"
->;
+  | "KNOWN_ISSUES";
 export const CATEGORIES: readonly MemoryCategory[] = [
   "PROJECT_RULES",
   "ARCHITECTURE",

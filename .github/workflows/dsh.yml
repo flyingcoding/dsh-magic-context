@@ -26,12 +26,6 @@ jobs:
         run: bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts
       - name: Typecheck, lint, and test native behavior
         run: bun run check:dsh
-      - name: Verify shared SQLite and normalization leaves
-        run: >-
-          bun test packages/plugin/src/shared/sqlite.test.ts
-          packages/plugin/src/shared/sqlite-bind-style.test.ts
-          packages/plugin/src/shared/sqlite-import-fence.test.ts
-          packages/plugin/src/features/magic-context/memory/normalize-hash.test.ts
       - name: Build portable artifact
         run: bun run --cwd packages/dsh-plugin build
       - name: Install and exercise the tarball in isolation

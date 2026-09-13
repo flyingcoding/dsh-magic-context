@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { resolve } from "node:path";
 
-/** Bundle the audited shared-source leaves while keeping host packages external. */
+/** Bundle the self-contained DSH source while keeping host packages external. */
 async function build(): Promise<void> {
   if (existsSync("dist")) {
     mkdirSync(".cache/builds", { recursive: true });
