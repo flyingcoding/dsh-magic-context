@@ -31,7 +31,7 @@ mkdir -p .cache/artifacts
 npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifacts
 ```
 
-Install that tarball with `dsh plugin --profile <profile> add <absolute-tarball-path>`, using an explicitly selected `DSH_HOME` for integration checks. The repository root is not a Bundle. The profile's `package.json` must include the package in `dsh.profile.bundles`, after the existing base and application bundles:
+Install that tarball with `dsh plugin --profile <profile> add <absolute-tarball-path> --config.auto-install-peers=false`, using an explicitly selected `DSH_HOME` for integration checks. The repository root is not a Bundle. The profile's `package.json` must include the package in `dsh.profile.bundles`, after the existing base and application bundles:
 
 ```json
 {
@@ -46,6 +46,8 @@ Install that tarball with `dsh plugin --profile <profile> add <absolute-tarball-
   }
 }
 ```
+
+This installation option keeps host peers supplied by the launcher. A partial second copy of DSH core packages can split internal tool identities even at the same version; the live-test preflight verifies that the selected tools and AgentLoop resolve one runtime.
 
 Inspect the composition with `dsh --profile <profile> --dump-config`. The three added rows are `magic-memory-store`, `magic-memory-tools`, and `magic-memory-recall`. Launch the chosen application through `dsh --profile <profile>`; a Web preview can add `--port 43179 --no-open`. Only profiles that list the Bundle gain the capability.
 
@@ -118,6 +120,8 @@ The plugin performs no arbitrary synchronous Session-history reads and retains n
 ## Real-model verification
 
 Configure a separate `memory-live` profile with the same Ollama Cloud route used by the deployment: `api: openai-completions`, `baseURL: https://ollama.com/v1`, model `deepseek-v4.1-flash`, and its existing `OLLAMA_API_KEY` credential reference. Keep the credential outside this repository. A local Ollama daemon is not needed. The profile must use this Bundle, the headless application, `live-memory.sqlite`, and plain JSONL Session storage under `live-sessions` in that isolated home. Disable the `session-title-llm` row to isolate the test's model calls. The complete acceptance profile also installs and mounts `@deepseek-ai/dsh-tool-session-query@0.1.5-rc.2`, configures `session-query-sqlite` with `openAt: first-search`, and points its `path` at `live-history.sqlite` in the isolated home.
+
+Install the prepared profile through `dsh plugin --profile memory-live install --ignore-scripts --config.auto-install-peers=false` with its isolated `DSH_HOME`. The preflight initializes the profile without a model request and records the resolved host-module versions and hashes.
 
 Run from `packages/dsh-plugin` after setting `DSH_MEMORY_TEST_HOME` to that prepared home:
 

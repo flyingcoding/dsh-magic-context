@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { spawn, spawnSync } from "node:child_process";
+import { createHash, randomUUID } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
@@ -10,9 +10,41 @@ import {
   realpathSync,
   writeFileSync,
 } from "node:fs";
+import { createRequire } from "node:module";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+
+/** Refuse split host modules before paying for a model request or starting a tool call. */
+function verifyProfileRuntime(command, profile, home) {
+  const initialized = spawnSync(command, ["--profile", profile, "--help"], {
+    cwd: home,
+    env: { ...process.env, DSH_HOME: home },
+    encoding: "utf8",
+    timeout: 30000,
+  });
+  assert.equal(initialized.status, 0, initialized.stderr);
+  const profileRequire = createRequire(join(home, "profiles", profile, "package.json"));
+  const loopPath = profileRequire.resolve("@deepseek-ai/dsh-agent-loop");
+  const loopRequire = createRequire(loopPath);
+  const toolsPath = profileRequire.resolve("@deepseek-ai/dsh-tools");
+  assert.equal(
+    realpathSync(toolsPath),
+    realpathSync(loopRequire.resolve("@deepseek-ai/dsh-tools")),
+    "Mixed DSH host modules: install the isolated profile through dsh plugin with --config.auto-install-peers=false so its tools and AgentLoop share one runtime",
+  );
+  return {
+    sharedToolRuntime: true,
+    agentLoopVersion: JSON.parse(
+      readFileSync(profileRequire.resolve("@deepseek-ai/dsh-agent-loop/package.json"), "utf8"),
+    ).version,
+    toolsVersion: JSON.parse(
+      readFileSync(profileRequire.resolve("@deepseek-ai/dsh-tools/package.json"), "utf8"),
+    ).version,
+    agentLoopSha256: createHash("sha256").update(readFileSync(loopPath)).digest("hex"),
+    toolsSha256: createHash("sha256").update(readFileSync(toolsPath)).digest("hex"),
+  };
+}
 
 /** Collect only this isolated run's plain JSONL logs, never the production Session store. */
 function sessionFiles(root) {
@@ -69,6 +101,7 @@ async function main() {
   );
   const profile = process.env.DSH_MEMORY_TEST_PROFILE ?? "memory-live";
   const command = process.env.DSH_MEMORY_TEST_COMMAND ?? "dsh";
+  const runtime = verifyProfileRuntime(command, profile, home);
   const root = mkdtempSync(join(tmpdir(), "dsh-memory-live-"));
   const workspace = join(root, "project-a");
   const other = join(root, "project-b");
@@ -316,7 +349,7 @@ async function main() {
     results.push(result);
     writeFileSync(
       ".cache/live-model.json",
-      `${JSON.stringify({ testedAt: new Date().toISOString(), model: "ollama/deepseek-v4.1-flash", profile, home, results }, null, 2)}\n`,
+      `${JSON.stringify({ testedAt: new Date().toISOString(), model: "ollama/deepseek-v4.1-flash", profile, home, runtime, results }, null, 2)}\n`,
     );
     console.log(JSON.stringify(result));
   }

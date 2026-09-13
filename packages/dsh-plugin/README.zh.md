@@ -31,7 +31,7 @@ mkdir -p .cache/artifacts
 npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifacts
 ```
 
-使用 `dsh plugin --profile <profile> add <安装包绝对路径>` 安装，集成检查时显式指定隔离的 `DSH_HOME`。仓库根目录不是 Bundle。profile 的 `package.json` 中，`dsh.profile.bundles` 应在原有基础包和应用包之后包含本包：
+使用 `dsh plugin --profile <profile> add <安装包绝对路径> --config.auto-install-peers=false` 安装，集成检查时显式指定隔离的 `DSH_HOME`。仓库根目录不是 Bundle。profile 的 `package.json` 中，`dsh.profile.bundles` 应在原有基础包和应用包之后包含本包：
 
 ```json
 {
@@ -46,6 +46,8 @@ npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifa
   }
 }
 ```
+
+此安装选项让 launcher 提供宿主 peer。额外安装部分 DSH 核心包，即使版本号相同，也可能分裂内部工具身份；真实模型测试会先确认所选工具与 AgentLoop 解析到同一运行时。
 
 通过 `dsh --profile <profile> --dump-config` 检查组合，应新增 `magic-memory-store`、`magic-memory-tools`、`magic-memory-recall` 三行。使用 `dsh --profile <profile>` 启动对应应用；Web 预览可添加 `--port 43179 --no-open`。只有列入此 Bundle 的 profile 获得该能力。
 
@@ -118,6 +120,8 @@ npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifa
 ## 真实模型验证
 
 准备独立 `memory-live` profile，复用正式环境的 Ollama Cloud 路由：`api: openai-completions`、`baseURL: https://ollama.com/v1`、模型 `deepseek-v4.1-flash` 及其既有 `OLLAMA_API_KEY` 凭据引用。凭据不得放进仓库，也无需本地 Ollama daemon。此 profile 应组合本 Bundle 与 headless 应用，在隔离 home 中使用 `live-memory.sqlite`，并将未压缩 JSONL Session 写入 `live-sessions`。停用 `session-title-llm` 行，以便单独统计测试请求。完整验收还应安装并挂载 `@deepseek-ai/dsh-tool-session-query@0.1.5-rc.2`，将 `session-query-sqlite` 配置为 `openAt: first-search`，并将其 `path` 指向隔离 home 内的 `live-history.sqlite`。
+
+使用隔离 `DSH_HOME`，通过 `dsh plugin --profile memory-live install --ignore-scripts --config.auto-install-peers=false` 安装已准备的 profile。预检在不请求模型的情况下初始化 profile，并记录实际宿主模块版本与哈希。
 
 将 `DSH_MEMORY_TEST_HOME` 设置为准备好的隔离 home，然后在 `packages/dsh-plugin` 执行：
 
