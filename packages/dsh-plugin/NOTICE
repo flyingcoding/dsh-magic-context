@@ -1,0 +1,18 @@
+This native DSH adapter is maintained by the flyingcoding/dsh-magic-context fork.
+
+Audited source reuse from cortexkit/magic-context (MIT), baseline
+6f718ff019bf327a0b291a8510dfb42f91b65921:
+
+- packages/plugin/src/shared/sqlite.ts: runtime-selected SQLite backend,
+  savepoint-aware transactions, connection accounting, and argument binding.
+- packages/plugin/src/features/magic-context/memory/normalize-hash.ts:
+  whitespace and case normalization for keyword search. DSH write deduplication
+  preserves case-sensitive identifiers and configuration values.
+- packages/plugin/src/features/magic-context/memory/types.ts: type-only category vocabulary.
+
+The runtime bundle contains those source leaves. No compiled community port,
+upstream compaction engine, embedding model, UI runtime, or auxiliary agent is
+used by the native Host memory path. DSH Client code is a separate browser artifact.
+
+Upstream MIT notices are retained in LICENSE. The upstream OpenCode and Pi
+package names and release processes are unchanged.

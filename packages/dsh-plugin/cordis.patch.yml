@@ -1,0 +1,8 @@
+# Native bundle: one database owner and two independently disposable consumers.
+- insert:
+    - id: magic-memory-store
+      name: '@flyingcoding/dsh-magic-context'
+    - id: magic-memory-tools
+      name: '@flyingcoding/dsh-magic-context/tools'
+    - id: magic-memory-recall
+      name: '@flyingcoding/dsh-magic-context/recall'
