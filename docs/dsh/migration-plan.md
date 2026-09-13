@@ -16,7 +16,7 @@ English | [中文](migration-plan.zh.md)
 
 Use this handoff to start a native DSH memory-plugin migration without repeating the initial repository investigation. The recommended first release keeps DSH compaction, stores selected durable memories locally, and introduces neither MCP nor a document knowledge base. This document preserves the design and dated research baseline. The native alpha is implemented under `packages/dsh-plugin/`; current commands and verification evidence live in the [package README](../../packages/dsh-plugin/README.md) and [compatibility record](compatibility.md).
 
-This plan is maintained in the full `flyingcoding/dsh-magic-context` fork on `dsh_main`. Start from the [development entry](README.md) and [upstream workflow](../../UPSTREAM.md). Recheck the evidence after upstream or DSH updates; promote implemented behavior into the adapter package README and record compatibility results beside the code.
+This handoff is maintained on `dsh_main` in `flyingcoding/dsh-magic-context`; the original full-source tree remains in the `origin_main` mirror while the active product is DSH-only. Start from the [development entry](README.md) and [upstream workflow](../../UPSTREAM.md). Recheck the evidence after upstream or DSH updates; promote implemented behavior into the adapter package README and record compatibility results beside the code.
 
 <a id="contents"></a>
 ## Table of Contents
@@ -38,7 +38,7 @@ This plan is maintained in the full `flyingcoding/dsh-magic-context` fork on `ds
 <a id="scope"></a>
 ## Scope and recommendation
 
-The user requires an in-process native plugin, excludes MCP integration and document knowledge-base products, and prioritizes low resource use. The full fork and native adapter now support isolated installation, Node SQLite, logged recall, and a Web management page. Production-profile activation and npm publication have not been performed.
+The user requires an in-process native plugin, excludes MCP integration and document knowledge-base products, and prioritizes low resource use. The native adapter now supports isolated installation, Node SQLite, logged recall, and a Web management page. Production-profile activation and npm publication have not been performed.
 
 | Scope | First release | Reason |
 |---|---|---|
@@ -50,7 +50,7 @@ The user requires an in-process native plugin, excludes MCP integration and docu
 | Document ingestion, graph knowledge base, automatic documentation editing | Exclude | These are outside the requested memory use case. |
 | Live shared database with OpenCode/Pi/OMP | Defer | First establish memory semantics and compatible data ownership. |
 
-The engineering recommendation is to add a separately installable DSH Bundle to this full fork and reuse selected Magic memory concepts and source components. `packages/dsh-plugin/` is the implemented native package location. Use the community port as a reference for integration and tests. A full port is a separate investment decision after the lightweight version demonstrates useful recall and acceptable cost. If P0 shows that a small reusable source subset cannot be isolated economically, record that result and prefer an existing lightweight native memory plugin.
+The original engineering recommendation was a separately installable DSH Bundle reusing selected Magic memory concepts and source components; this subset is now owned locally by the specialized package. `packages/dsh-plugin/` is the implemented native package location. Use the community port as a reference for integration and tests. A full port is a separate investment decision after the lightweight version demonstrates useful recall and acceptable cost. If P0 shows that a small reusable source subset cannot be isolated economically, record that result and prefer an existing lightweight native memory plugin.
 
 -----
 
@@ -62,7 +62,7 @@ These identifiers freeze the investigation performed on 2026-09-12. They are rep
 | Subject | Inspected baseline | Evidence level |
 |---|---|---|
 | Magic Context | `0.42.0`; `9dc6b4ae009b264a0f7ac2c1b2c0169dbcdfbdfe` | README, configuration, manifests, and selected source files; [E1–E4](#sources). |
-| Development fork | `flyingcoding/dsh-magic-context`; `dsh_main` for development, `origin_main` for upstream tracking. | Full Magic sources are present. Exact branch pins and pending upstream changes live in [UPSTREAM.md](../../UPSTREAM.md). |
+| Development fork | `flyingcoding/dsh-magic-context`; `dsh_main` for development, `origin_main` for upstream tracking. | Full Magic sources were present at the investigation baseline and remain in `origin_main`. Exact branch pins and pending upstream changes live in [UPSTREAM.md](../../UPSTREAM.md). |
 | DSH integration checkout | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; branch `fix/session-query-cjk-memory` | Architecture, Session, compaction, query, and prompt sources. |
 | Installed DSH dependency line | Web profile `@deepseek-ai/dsh-session-query@0.1.5-rc.2` | Local package manifest and resolved installation path were read; no plugin runtime test. |
 | Community DSH port | Package `0.1.2`; `6c82abd4d75c63516421c6e1692d1b7d1636b8e4`; last commit 2026-08-21 | Declared baseline DSH `0.1.0-rc.6`, Magic `0.36.1`, shared schema `77`; [E5–E7](#sources). |
@@ -114,7 +114,7 @@ The reusable design is stronger than the current external packaging. Treat the f
 
 | Finding | Required work | Verification |
 |---|---|---|
-| The community port aliases `@magic-context/core/*` to an upstream tree it does not include. This full fork contains that tree. | Reuse local upstream source with a tracked import map; audit the memory-only dependency closure and preserve MIT notices. | A clean build needs no external sibling source checkout; no compiled community-port files are copied; [E6](#sources). |
+| The community port aliases `@magic-context/core/*` to an upstream tree it does not include. The initial full fork contained that tree; the DSH-only product now owns its required subset. | Reuse local upstream source with a tracked import map; audit the memory-only dependency closure and preserve MIT notices. | A clean build needs no external sibling source checkout; no compiled community-port files are copied; [E6](#sources). |
 | Old code reads `agent.session.events` and hashes rebuilt transcripts. | Replace arbitrary synchronous history scans with current events, projections, and verified bounded history access. | Resume and long-history cases stay correct without per-step full-history serialization; [E7](#sources). |
 | Upstream harness ids are `opencode`, `pi`, and `omp`; model settings are per harness. | Add explicit DSH identity and model mapping if reusing those modules; never identify DSH as Pi. | DSH session rows and model routes cannot leak into another harness. |
 | DSH model-visible content must be logged. | Use framework admission and source markers for memory injection; keep original message roles and tool pairing valid. | Restart, replay, cancellation, and fork snapshots match what the model received. |

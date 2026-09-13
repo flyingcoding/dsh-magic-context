@@ -1,28 +1,25 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/dsh-plugin"
   ],
-  "scripts": {
-    "build": "bun run --cwd packages/plugin build && bun run --cwd packages/pi-plugin build && bun run --cwd packages/cli build && bun run --cwd packages/dsh-plugin build",
-    "typecheck": "bun run --cwd packages/plugin typecheck && bun run --cwd packages/pi-plugin typecheck && bun run --cwd packages/cli typecheck && bun run --cwd packages/retina-local-fs typecheck && bun run --cwd packages/dsh-plugin typecheck",
-    "test": "bun run --cwd packages/plugin test && bun run --cwd packages/pi-plugin test && bun run --cwd packages/cli test && bun run --cwd packages/retina-local-fs test && bun run --cwd packages/dsh-plugin test",
-    "test:e2e": "bun run --cwd packages/e2e-tests test",
-    "test:rust-e2e": "bun run --cwd packages/e2e-tests test:rust-e2e",
-    "test:e2e-docker": "tests/docker/run-e2e.sh",
-    "lint": "bun run --cwd packages/plugin lint && bun run --cwd packages/pi-plugin lint && bun run --cwd packages/cli lint && bun run --cwd packages/retina-local-fs lint && bun run --cwd packages/dsh-plugin lint",
-    "lint:fix": "bun run --cwd packages/plugin lint:fix && bun run --cwd packages/pi-plugin lint:fix",
-    "dev:dashboard": "bun run --cwd packages/dashboard dev",
-    "build:rust": "cargo build --workspace",
-    "test:rust": "cargo test --workspace",
-    "lint:rust": "cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings",
-    "fmt:rust": "cargo fmt",
-    "check:all": "bun run test && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings",
-    "build:dists": "bun run --cwd packages/plugin build && bun run --cwd packages/pi-plugin build && bun run dists:load-probe",
-    "dists:load-probe": "bun -e \"await import('./packages/plugin/dist/index.js'); await import('./packages/pi-plugin/dist/index.js'); console.log('dists LOAD OK')\"",
-    "check:dsh": "bun run --cwd packages/dsh-plugin typecheck && bun run --cwd packages/dsh-plugin lint && bun run --cwd packages/dsh-plugin test && bun run --cwd packages/dsh-plugin docs:check"
+  "packageManager": "bun@1.3.5",
+  "engines": {
+    "node": ">=24"
   },
-  "overrides": {
-    "adm-zip": "0.6.0"
+  "scripts": {
+    "build": "bun run --cwd packages/dsh-plugin build",
+    "typecheck": "bun run --cwd packages/dsh-plugin typecheck",
+    "test": "bun run --cwd packages/dsh-plugin test",
+    "lint": "bun run --cwd packages/dsh-plugin lint",
+    "lint:fix": "bun run --cwd packages/dsh-plugin lint:fix",
+    "docs:check": "bun run --cwd packages/dsh-plugin docs:check",
+    "test:install": "bun run --cwd packages/dsh-plugin test:install",
+    "benchmark": "bun run --cwd packages/dsh-plugin benchmark",
+    "test:live": "bun run --cwd packages/dsh-plugin test:live",
+    "structure:check": "node packages/dsh-plugin/scripts/verify-project.mjs",
+    "check": "bun run typecheck && bun run lint && bun run test && bun run docs:check && bun run structure:check",
+    "check:dsh": "bun run check",
+    "test:rollback": "bun run --cwd packages/dsh-plugin test:rollback"
   }
 }

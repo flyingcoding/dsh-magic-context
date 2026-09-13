@@ -11,16 +11,16 @@
 在仓库根目录执行，需具备 Bun 1.3.5 和 Node 24：
 
 ```sh
-bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts
-bun run check:dsh
-bun run --cwd packages/dsh-plugin build
-bun run --cwd packages/dsh-plugin test:install
-bun run --cwd packages/dsh-plugin benchmark
+bun install --frozen-lockfile --ignore-scripts
+bun run check
+bun run build
+bun run test:install
+bun run benchmark
 ```
 
-按 workspace 过滤安装，避免安装上游推理和桌面工作区。原生测试在 Node 下执行，实际覆盖 `node:sqlite`。构建会打包本 monorepo 中已审查的源码小模块，并单独生成使用生产 JSX 的客户端文件；打包前使用 Node 检查每个 Host JavaScript 文件。旧构建目录移到 `.cache/builds/`，避免旧 chunk 混入新产物。
+仓库显式声明唯一工作区，默认安装无需过滤。原生测试在 Node 下执行，实际覆盖 `node:sqlite`。构建打包本包内已审查的源码，并单独生成生产 JSX 客户端文件，声明统一位于 `dist/types/`；打包前使用 Node 检查每个 Host JavaScript 文件。旧构建目录移到 `.cache/builds/`，避免旧 chunk 混入新产物。
 
-`test:install` 会生成 tarball，在仓库外安装，使用无需密钥的 provider 驱动真实 DSH AgentLoop，按宿主支持的模块集合执行客户端 factory，并在存在 `dsh` 时检查 Bundle 组合。回执位于 `packages/dsh-plugin/.cache/install.json`。`benchmark` 使用构建产物，在包目录生成 `.cache/benchmark.json`。
+`test:install` 会生成 tarball，在仓库外安装，检查本地声明闭包，使用无需密钥的 provider 驱动真实 DSH AgentLoop，按宿主支持的模块集合执行客户端 factory，并在存在 `dsh` 时检查 Bundle 组合。回执位于 `packages/dsh-plugin/.cache/install.json`。`benchmark` 使用构建产物，在包目录生成 `.cache/benchmark.json`。
 
 ## 安装到指定 profile
 
@@ -129,6 +129,8 @@ bun run test:live
 
 ## 发布与回滚
 
-在兼容性矩阵评审完成、下游 npm scope 确认之前，保持 alpha 包私有。发布准备采用手动流程：更新版本，执行上述检查，审查 tarball，再将完全相同的 tarball 安装到隔离 profile。发布需要明确的 release 变更，上游 OpenCode/Pi 发布流水线不会发布本包。
+在兼容性矩阵评审完成、下游 npm scope 确认之前，保持 alpha 包私有。发布准备采用手动流程：更新版本，执行上述检查，审查 tarball，再将完全相同的 tarball 安装到隔离 profile。发布需要明确的 release 变更；唯一 DSH CI 流程只验证私有产物，没有发布步骤。
+
+验证与已验收产物的格式兼容时，将 `DSH_MEMORY_BASELINE_STORE` 指向其隔离安装目录内的 `dist/store.js`，构建后在根目录执行 `bun run test:rollback`。验证使用全新合成数据库，交替运行旧/新版本写入，检查 ID、重试回执、修订、归档、检索及保持不变的 schema。
 
 回滚启用状态时，从指定 profile 的 Bundle 列表移除本包并重载该 profile，保留记忆数据库和 DSH Session 日志。本 alpha 不导入已有 Magic 数据库，也不与其他宿主共享在线数据库；本次没有提供待导入的源数据库。后续可选扩展由[迁移计划](../../docs/dsh/migration-plan.zh.md)维护。

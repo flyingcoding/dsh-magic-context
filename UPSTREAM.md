@@ -1,49 +1,42 @@
-# Upstream baseline and synchronization
+# Upstream provenance and maintenance
 
 English | [中文](UPSTREAM.zh.md)
 
-This file owns the fork's upstream provenance and branch workflow. Refresh the inspected baseline after deliberately adopting upstream changes. First-release scope and acceptance live in the [migration plan](docs/dsh/migration-plan.md); the [DSH-only plan](docs/dsh/dsh-only-plan.md) owns the next specialization phase.
+This file owns source ancestry, branch roles, and check selection for the DSH-only project. The [migration handoff](docs/dsh/migration-plan.md) preserves the first-release design; the [specialization plan](docs/dsh/dsh-only-plan.md) defines the retained scope and acceptance.
 
 <a id="remotes"></a>
 ## Remote and branch roles
 
-Mirror official source from `upstream/master` into `origin_main`; adopt only reviewed fixes relevant to DSH into `dsh_main`. The local branch `origin_main` and the Git remote `origin` are different objects. The specialized branch does not routinely merge the complete upstream mirror.
-
 | Name | Source or tracking ref | Role |
 |---|---|---|
-| `origin` | `https://github.com/flyingcoding/dsh-magic-context` | The user's fork; destination for downstream branches. |
-| `upstream` | `https://github.com/cortexkit/magic-context.git` | Official Magic Context source; fetch its `master`. |
-| `origin_main` | `origin/origin_main` | Preserve an upstream-only history through fast-forward updates. |
-| `dsh_main` | `origin/dsh_main` | Own all DSH-specific code and development documentation. |
+| `origin` | `https://github.com/flyingcoding/dsh-magic-context` | Downstream fork and reviewed DSH changes. |
+| `upstream` | `https://github.com/cortexkit/magic-context.git` | Official source; inspect `master`. |
+| `origin_main` | `origin/origin_main` | Full upstream-only mirror, updated by fast-forward. |
+| `dsh_main` | `origin/dsh_main` | The specialized DSH product, tests, and paired documentation. |
 
-Do not commit DSH changes to `origin_main`, merge `dsh_main` back into it, or push downstream changes to the official remote. Preserve MIT notices when reusing upstream code. The existing upstream npm names and release automation do not constitute a DSH release process; select a downstream package identity and publication rules before publishing.
-
-Remote configuration is local and is not copied by a fresh clone. On another checkout, inspect `git remote -v`; add a missing official remote with `git remote add upstream https://github.com/cortexkit/magic-context.git`. If `upstream` already exists, verify its URL instead of overwriting it. The fork-tracking refs remain under `origin`.
+Remote configuration is local. Inspect `git remote -v` before adding a missing official remote. Keep DSH changes on `dsh_main`; preserve original MIT notices and upstream package identities in the mirror. The private DSH package has its own name and manual release preparation.
 
 <a id="baseline"></a>
-## Inspected implementation baseline
+## Inspected baselines
 
-This observation was refreshed on 2026-09-13. The implementation deliberately uses the already-imported `6f718ff0` source; the later documentation-only upstream delta has been inspected but not merged.
-
-| Item | Observed value |
+| Item | Recorded value |
 |---|---|
-| Imported Magic release | `0.42.0` |
-| Imported source commit | `6f718ff019bf327a0b291a8510dfb42f91b65921` |
-| `dsh_main` / `origin_main` | DSH implementation, tests, and CI are committed on `dsh_main`; `origin_main` retains the imported source base. |
-| Native implementation revision | `be3e1f871b4af0afc54e83925544dad8bf60b525`; paired documentation and acceptance records follow in a separate commit. |
-| Fetched `upstream/master` | `70d3945bde0feb75a24e922880791f5fe7267823` |
-| Pending upstream delta | `1` documentation/ignore-rule commit: `gitignore: private drafts live under docs/private so the rule names what it hides`. |
-| DSH host compatibility target | Published `0.1.5-rc.2` packages and inspected checkout `7e4504856456f5298b8bc66299995ce8d86c3aa1`. |
-| Local tool availability | Node `v24.18.0`, Bun `1.3.5`. |
-| Native package | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`; private local tarball workflow. |
-| Dependency/build state | Filtered dependencies and native build are implemented; exact executed checks are in [compatibility](docs/dsh/compatibility.md). |
+| Imported Magic source | `6f718ff019bf327a0b291a8510dfb42f91b65921`, release line `0.42.0`. |
+| Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
+| Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
+| Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
+| Inspected `upstream/master` | `70d3945bde0feb75a24e922880791f5fe7267823`; one documentation/ignore-rule commit beyond the imported source, not adopted. |
+| DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
+| Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
+| Local tools | Node `v24.18.0`, Bun `1.3.5`, macOS arm64. |
+| Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-The imported guard fix affects OpenCode's entry delegation. The pending commit changes `.gitignore` and `STRUCTURE.md`, not the audited SQLite/normalization leaves. Keep this explicit baseline until the next deliberate synchronization. [Pending commit](https://github.com/cortexkit/magic-context/commit/70d3945bde0feb75a24e922880791f5fe7267823).
+These are inspected pins, not claims about the latest available release. The pending [upstream commit](https://github.com/cortexkit/magic-context/commit/70d3945bde0feb75a24e922880791f5fe7267823) does not change the retained SQLite/normalization contracts. Refresh this table after deliberately adopting source or host changes.
 
 <a id="synchronize"></a>
-## Synchronize upstream during development
+## Synchronize without restoring retired products
 
-The commands below are the future synchronization procedure, not actions performed by document migration. Begin with a clean worktree, save the current branch tips, and inspect both local/remote tracking relationships. Preserve user work before switching branches.
+Start with a clean worktree or preserve user changes, then inspect the graph and both tracking relationships:
 
 ```sh
 git status --short --branch
@@ -55,7 +48,7 @@ git log --oneline origin_main..upstream/master
 git diff --stat origin_main..upstream/master
 ```
 
-After reviewing the delta, fast-forward the mirror from its fork-tracking ref and then from the official ref. A rejected fast-forward means the histories need inspection; do not reset or force-push the mirror to conceal the divergence.
+Fast-forward the full mirror only after reviewing that delta:
 
 ```sh
 git switch origin_main
@@ -65,34 +58,45 @@ git switch dsh_main
 git merge --ff-only origin/dsh_main
 ```
 
-If local `dsh_main` has unpublished commits and its fork-tracking ref has also moved, resolve that relationship deliberately; the `--ff-only` step intentionally refuses divergence. Inspect upstream changes against the retained source map, port relevant fixes with their original commit references, and run the affected DSH checks. Cherry-pick a complete commit only when every changed path belongs to the retained scope. Do not merge `origin_main` wholesale and restore retired workspaces. Push each reviewed branch to `origin` with an explicit name.
+A rejected fast-forward requires graph inspection; do not reset or force-push away divergence. On `dsh_main`, port only fixes relevant to the retained source map and record their original commits. Whole-commit cherry-picks are appropriate only when every changed path belongs to DSH's retained scope. Routine full-mirror merges can restore retired adapters and are excluded from this workflow.
+
+After focused validation, push reviewed branches explicitly when publication of repository changes is intended:
 
 ```sh
 git push origin origin_main
 git push origin dsh_main
 ```
 
-These pushes are not required for local document preparation. Re-read the branch graph after synchronization and update the imported source commit, compatibility results, and pending work together.
-
 <a id="validation"></a>
 ## Choose the relevant checks
 
-This repository uses Bun workspaces. The root [package manifest](package.json), package scripts, and [upstream CI](.github/workflows/ci.yml) own the current commands. DSH's `pnpm run doc-sync` is not a command in this fork. The following are check-selection instructions for later code work; no runtime check is claimed complete here.
+The root [manifest](package.json), [native manifest](packages/dsh-plugin/package.json), and [DSH CI](.github/workflows/dsh.yml) own the commands. A clean checkout uses the default single-workspace path:
+
+```sh
+bun install --frozen-lockfile --ignore-scripts
+bun run check
+bun run build
+bun run test:install
+bun run benchmark
+```
 
 | Changed area | Required evidence |
 |---|---|
-| Development Markdown | Local links/anchors, paired content and line structure, migration-plan checksums, and `git diff --check`. |
-| Reused memory code | Owning focused tests plus the existing package's typecheck/lint; cover other existing consumers affected by a shared change. |
-| Native DSH adapter | Define package scripts when the package is created; run its typecheck, focused behavior/replay tests, artifact build, and isolated DSH install smoke. |
-| SQLite backend | Verify the Node `node:sqlite` branch, not only Bun's backend, plus crash/retry and write-serialization behavior. |
-| OpenCode/Pi integration or upstream upgrade | Run the relevant existing package checks and host regressions; preserve current entrypoint contracts. |
-| Rust/subc | Run Cargo and cross-runtime evidence only if those paths change; they are outside the lightweight first release. |
+| Paired Markdown | `docs:check`, current local links/anchors/examples, migration checksums, and `git diff --check`. |
+| Memory, tools, or recall | Node behavior tests, typecheck/lint, logged cancellation/replay/restart/fork, and native compaction. |
+| SQLite | Actual `node:sqlite` binding/transaction tests, failed persistence, writer contention, retry, and process-death recovery. |
+| Manifest, source extraction, or build | Default frozen install from a clean checkout, `structure:check`, portable declarations, artifact build, and isolated tarball activation. |
+| Resources or model behavior | Equivalent benchmark workloads and the explicit isolated Ollama Cloud ten-scenario run; record versions and actual observations. |
 
-Root `typecheck`, `lint`, `build`, and `test` now explicitly include `packages/dsh-plugin`. For the native path, use `bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts` and `bun run check:dsh`; `.github/workflows/dsh.yml` owns its dedicated CI. Select additional upstream package checks when their source or reused contracts are affected. Keep the full-workspace install/build separate from the lightweight artifact dependency graph.
+Default checks need no old workspace, Cargo, sibling checkout, local inference model, or DSH-specific documentation command. The optional installed DSH launcher is used only for profile-level acceptance; the tarball's keyless runtime probe uses published packages. Report remote CI only from its actual run.
 
 <a id="provenance"></a>
-## Source provenance and downstream changes
+## Retained source map
 
-Keep the imported upstream source and MIT license traceable. Put DSH-specific work under the new native package and `docs/dsh/` where practical. Record shared-source changes with their reason and affected upstream consumers in commit/PR descriptions; do not maintain an unversioned copied core or import prebuilt community artifacts as source.
+| Original at `6f718ff0` | Local owner | Retained contract |
+|---|---|---|
+| [SQLite](https://github.com/cortexkit/magic-context/blob/6f718ff019bf327a0b291a8510dfb42f91b65921/packages/plugin/src/shared/sqlite.ts) | [sqlite.ts](packages/dsh-plugin/src/sqlite.ts) | Node statements, bindings, transaction modes, and nested savepoints. |
+| [Normalization](https://github.com/cortexkit/magic-context/blob/6f718ff019bf327a0b291a8510dfb42f91b65921/packages/plugin/src/features/magic-context/memory/normalize-hash.ts) | [normalize.ts](packages/dsh-plugin/src/normalize.ts) | Keyword whitespace/case normalization; the unused hash helper is omitted. |
+| [Categories](https://github.com/cortexkit/magic-context/blob/6f718ff019bf327a0b291a8510dfb42f91b65921/packages/plugin/src/features/magic-context/memory/types.ts) | [types.ts](packages/dsh-plugin/src/types.ts) | The same seven supported category values. |
 
-The migrated plan's initial evidence remains pinned to its research commits. Current implementation and compatibility claims must name the new fork commit and the exact DSH host version they were verified against.
+[NOTICE](packages/dsh-plugin/NOTICE) also records migrated regression origins and omitted upstream helpers. Keep this subset versioned and auditable. Specialization leaves the DSH database and Session formats stable; rollback uses a revert or a separate accepted-baseline checkout and preserves user data.

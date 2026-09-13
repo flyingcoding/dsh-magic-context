@@ -2,7 +2,7 @@
 
 English | [中文](compatibility.zh.md)
 
-This record owns acceptance evidence for `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`. It covers the lightweight native memory implementation committed on `dsh_main` at the revision below. The package is a private local artifact; production-profile activation and npm publication are separate actions. Findings below have high confidence for the named fixtures, versions, and machine, with the limits stated at the end.
+This record preserves the initial pre-specialization acceptance evidence for `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`. It covers the lightweight native memory implementation committed on `dsh_main` at the revision below. The package is a private local artifact; production-profile activation and npm publication are separate actions. Findings below have high confidence for the named fixtures, versions, and machine, with the limits stated at the end.
 
 ## Reproducible inputs
 
@@ -107,9 +107,9 @@ The final complete run took 61.1 seconds across 24 normal model requests. DSH re
 
 The actual DSH Web page at the isolated loopback preview rendered its Memory settings entry and completed edits/archive. Console inspection after the fixed reload found no new errors or warnings. Earlier loader errors and expected reconnect messages came from the replaced preview build and are not treated as current failures.
 
-## Commands and retained evidence
+## Historical commands and retained evidence
 
-A [machine-readable acceptance summary](evidence/2026-09-13-acceptance.json) accompanies this record. The following commands define the reproducible acceptance path. Local receipts under the package's ignored `.cache/` preserve exact artifact paths, raw measurements, model counters, and Session-log locations; they contain synthetic facts rather than user conversation history.
+A [machine-readable acceptance summary](evidence/2026-09-13-acceptance.json) accompanies this record. The following commands were run on the original `be3e1f87` source tree; reproduce them in that baseline checkout. Current DSH-only commands are in the [root guide](../../README.md). Local receipts under the package's ignored `.cache/` preserve exact artifact paths, raw measurements, model counters, and Session-log locations; they contain synthetic facts rather than user conversation history.
 
 ```sh
 bun run check:dsh

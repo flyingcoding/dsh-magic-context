@@ -1,4 +1,4 @@
-name: DSH adapter
+name: DSH memory
 
 on:
   push:
@@ -22,13 +22,13 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.3.5'
-      - name: Install adapter dependencies without lifecycle scripts
-        run: bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts
+      - name: Install the DSH workspace without lifecycle scripts
+        run: bun install --frozen-lockfile --ignore-scripts
       - name: Typecheck, lint, and test native behavior
-        run: bun run check:dsh
+        run: bun run check
       - name: Build portable artifact
-        run: bun run --cwd packages/dsh-plugin build
+        run: bun run build
       - name: Install and exercise the tarball in isolation
-        run: bun run --cwd packages/dsh-plugin test:install
+        run: bun run test:install
       - name: Measure bounded memory retrieval
-        run: bun run --cwd packages/dsh-plugin benchmark
+        run: bun run benchmark

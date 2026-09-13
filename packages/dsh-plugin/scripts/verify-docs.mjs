@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const pairs = [
+  ["README.md", "README.zh.md"],
+  ["ARCHITECTURE.md", "ARCHITECTURE.zh.md"],
+  ["STRUCTURE.md", "STRUCTURE.zh.md"],
   ["UPSTREAM.md", "UPSTREAM.zh.md"],
   ["docs/dsh/README.md", "docs/dsh/README.zh.md"],
   ["docs/dsh/migration-plan.md", "docs/dsh/migration-plan.zh.md"],

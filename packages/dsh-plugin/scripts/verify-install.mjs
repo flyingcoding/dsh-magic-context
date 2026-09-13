@@ -1,9 +1,18 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, resolve } from "node:path";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(resolve(packageRoot, "package.json"), "utf8"));
@@ -67,6 +76,38 @@ const result = JSON.parse(
     timeout: 30000,
   }),
 );
+const installedRoot = resolve(profile, "node_modules", manifest.name);
+const declarationPaths = packed.files.filter((file) => file.path.endsWith(".d.ts"));
+for (const value of Object.values(manifest.exports)) {
+  if (typeof value === "object") {
+    assert.ok(
+      existsSync(resolve(installedRoot, value.types)),
+      `missing public types: ${value.types}`,
+    );
+  }
+}
+for (const { path } of declarationPaths) {
+  const file = resolve(installedRoot, path);
+  const source = readFileSync(file, "utf8");
+  const imports = ts.preProcessFile(source).importedFiles;
+  for (const { fileName: specifier } of imports) {
+    if (!specifier.startsWith(".")) continue;
+    const resolved = ts.resolveModuleName(
+      specifier,
+      file,
+      { moduleResolution: ts.ModuleResolutionKind.Bundler },
+      ts.sys,
+    ).resolvedModule;
+    assert.ok(resolved, `${path}: unresolved declaration ${specifier}`);
+    assert.ok(
+      !relative(installedRoot, resolved.resolvedFileName).startsWith(".."),
+      `${path}: declaration escapes package`,
+    );
+  }
+  assert.doesNotMatch(source, /better-sqlite3|@magic-context\/core|(?:\.\.\/)+plugin\//);
+}
+result.declarationFiles = declarationPaths.length;
+result.declarationClosure = "passed";
 const composition = spawnSync("dsh", ["--profile", "memory-probe", "--dump-config"], {
   cwd: profile,
   env,
@@ -83,6 +124,7 @@ if (composition.error?.code !== "ENOENT") {
   result.profileComposition = "not run: dsh CLI unavailable";
 }
 result.tarball = resolve(root, packed.filename);
+result.sha256 = createHash("sha256").update(readFileSync(result.tarball)).digest("hex");
 result.profile = profile;
 result.compressedBytes = packed.size;
 result.unpackedBytes = packed.unpackedSize;

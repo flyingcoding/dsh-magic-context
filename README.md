@@ -1,435 +1,53 @@
-<p align="center">
-  <strong>English</strong> |
-  <a href="./README.zh.md">简体中文</a> |
-  <a href="./README.zht.md">繁體中文</a> |
-  <a href="./README.ko.md">한국어</a> |
-  <a href="./README.de.md">Deutsch</a> |
-  <a href="./README.es.md">Español</a> |
-  <a href="./README.fr.md">Français</a> |
-  <a href="./README.it.md">Italiano</a> |
-  <a href="./README.da.md">Dansk</a> |
-  <a href="./README.ja.md">日本語</a> |
-  <a href="./README.pl.md">Polski</a> |
-  <a href="./README.ru.md">Русский</a> |
-  <a href="./README.bs.md">Bosanski</a> |
-  <a href="./README.ar.md">العربية</a> |
-  <a href="./README.no.md">Norsk</a> |
-  <a href="./README.br.md">Português (Brasil)</a> |
-  <a href="./README.th.md">ไทย</a> |
-  <a href="./README.tr.md">Türkçe</a> |
-  <a href="./README.uk.md">Українська</a> |
-  <a href="./README.bn.md">বাংলা</a> |
-  <a href="./README.gr.md">Ελληνικά</a> |
-  <a href="./README.vi.md">Tiếng Việt</a>
-</p>
+# DSH Magic Context
 
-<h1 align="center">Magic Context</h1>
+English | [中文](README.zh.md)
 
-<p align="center">
-  <strong>Unbounded context. Memory that manages itself. One session, for life.</strong><br>
-  The hippocampus for coding agents, part of CortexKit.
-</p>
+Local, cross-session memory for DeepSeek Harness, delivered as a native Cordis Bundle. DSH owns conversation history, compaction, model routing, and permissions; this package owns selected durable memories and their logged recall.
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@cortexkit/magic-context"><img src="https://img.shields.io/npm/v/@cortexkit/magic-context?label=cli&color=orange&style=flat-square" alt="npm @cortexkit/magic-context"></a>
-  <a href="https://www.npmjs.com/package/@cortexkit/opencode-magic-context"><img src="https://img.shields.io/npm/v/@cortexkit/opencode-magic-context?label=opencode&color=blue&style=flat-square" alt="npm @cortexkit/opencode-magic-context"></a>
-  <a href="https://www.npmjs.com/package/@cortexkit/pi-magic-context"><img src="https://img.shields.io/npm/v/@cortexkit/pi-magic-context?label=pi&color=purple&style=flat-square" alt="npm @cortexkit/pi-magic-context"></a>
-  <a href="https://discord.gg/DSa65w8wuf"><img src="https://img.shields.io/discord/1488852091056295957?style=flat-square&logo=discord&logoColor=white&label=Discord&color=5865F2" alt="Discord"></a>
-  <a href="https://github.com/cortexkit/magic-context/stargazers"><img src="https://img.shields.io/github/stars/cortexkit/magic-context?style=flat-square&color=yellow" alt="stars"></a>
-  <a href="https://github.com/cortexkit/magic-context/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>
-</p>
+The only workspace is [`packages/dsh-plugin`](packages/dsh-plugin/README.md). The private package `@flyingcoding/dsh-magic-context@0.1.0-alpha.1` targets Node 24+ and DSH `0.1.5-rc.2`. Its repository root is a development workspace; install the built package tarball through DSH.
 
-<p align="center">
-  <em>You don't hire a developer for one task and fire them when they ship.<br>Stop doing it to your agent.</em>
-</p>
+## Build and check
 
-<p align="center">
-  <a href="#what-is-magic-context">What is Magic Context?</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="#part-of-cortexkit">CortexKit</a> ·
-  <a href="#-context-management">Context</a> ·
-  <a href="#-capture">Capture</a> ·
-  <a href="#-consolidate">Consolidate</a> ·
-  <a href="#-recall">Recall</a> ·
-  <a href="https://docs.cortexkit.io/magic-context">Docs</a> ·
-  <a href="./CONFIGURATION.md">Configuration</a> ·
-  <a href="https://github.com/cortexkit/magic-context/releases?q=dashboard&expanded=true">Dashboard</a> ·
-  <a href="https://discord.gg/DSa65w8wuf">💬 Discord</a>
-</p>
-
----
-
-## What is Magic Context?
-
-You don't hire a developer to fix one bug and fire them the moment it ships. You keep the good ones. They learn the codebase, remember why decisions were made, and get sharper every week.
-
-Coding agents work the opposite way. Every task is a fresh hire with no memory of your project, and at the end of each session you fire them and start from zero. Mid-task they even hit "compaction" pauses that break the flow and quietly drop what they knew. It is anterograde amnesia, the same thing that happens when the hippocampus is damaged.
-
-Magic Context gives them one. It is the **hippocampus** for coding agents, the part of the brain that forms memories, consolidates them, and recalls them, entirely in the background. One session stops being a disposable contractor and becomes a long-term teammate who was there for the whole project:
-
-- **Capture.** As the historian compresses your history, it lifts the durable knowledge (decisions, constraints, conventions) into project memory. You get a memory system for free, from work you are already doing.
-- **Consolidate.** Overnight, dreamer agents do what sleep does for you: verify memories against the codebase, curate duplicates and stale entries, and promote what recurs.
-- **Recall.** The right memories surface automatically every turn, and the agent can search across memories, past conversations, and git history on demand. Across sessions, and across OpenCode, Pi, and OMP.
-
-Two promises: your agent **never stops to manage its context** (no compaction pauses, no broken flow) and it **never forgets**.
-
-Run one session per project and keep it going for weeks, months, or years. It remembers everything you've built together.
-
----
-
-## Quick start
-
-Run the interactive setup wizard. It detects your models, configures everything, and handles compatibility.
-
-**macOS / Linux:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/cortexkit/magic-context/master/scripts/install.sh | bash
-```
-
-**Windows (PowerShell):**
-```powershell
-irm https://raw.githubusercontent.com/cortexkit/magic-context/master/scripts/install.ps1 | iex
-```
-
-**Or run directly (any OS):**
-```bash
-npx @cortexkit/magic-context@latest setup
-```
-
-The wizard auto-detects which harnesses you have (OpenCode, Pi, OMP, or any combination), adds the plugin, disables built-in compaction, helps you pick models for the historian and dreamer, and resolves conflicts with other context-management plugins. Target one with `--harness opencode`, `--harness pi`, or `--harness omp`.
-
-> **Why disable built-in compaction?** Magic Context manages context itself. The host's compaction would interfere with its cache-aware deferred operations and double-compress.
-
-### Manual setup (OpenCode)
-
-If you cannot run the wizard, add this to `opencode.jsonc`:
-
-```jsonc
-{
-  "plugin": ["@cortexkit/opencode-magic-context@latest"],
-  "compaction": { "auto": false, "prune": false }
-}
-```
-
-> **Plugin updates:** A bare plugin entry is pinned to the downloaded exact version before restart so OpenCode does not remove the active package mid-session. To deliberately keep it unpinned after removing a version, write `@latest` explicitly.
-
-Then create `magic-context.jsonc` with the OpenCode historian setting:
-
-```jsonc
-{
-  "$schema": "https://raw.githubusercontent.com/cortexkit/magic-context/master/assets/magic-context.schema.json",
-  "historian": {
-    "opencode": { "model": "provider/model-id" }
-  }
-}
-```
-
-- **Required:** `historian.opencode.model` must be a real `provider/model-id`. Without it, the plugin loads but historian runs fail, older history is not summarized, and repeated failures show a `Magic Context — history comparting needs attention` notice.
-- **Optional:** the `dreamer` model/disable block. Omit it to leave periodic memory consolidation off.
-- **Optional:** `embedding`. Omit it to use the local `Xenova/all-MiniLM-L6-v2`; turning embeddings off removes semantic/embedding-backed search, but keyword search and context management continue.
-
-### Flat model-config migration (before/after)
-
-Existing flat model settings migrate automatically on the first config read. The
-flat form below is shown only as a migration **before** example; write the
-per-harness **after** form for all new configuration.
-
-**Before (flat shape — migration only):**
-
-```jsonc
-{
-  "historian": {
-    "model": "provider/model-id",
-    "thinking_level": "medium"
-  }
-}
-```
-
-**After (per-harness shape):**
-
-```jsonc
-{
-  "historian": {
-    "opencode": { "model": "provider/model-id" },
-    "pi": {
-      "model": "provider/model-id",
-      "thinking_level": "medium"
-    },
-    "omp": {
-      "model": "opencode/provider-model-id",
-      "thinking_level": "auto"
-    }
-  }
-}
-```
-
-OMP uses Pi-native `thinking_level` qualifiers. If `historian.omp` or `dreamer.omp` is absent, OMP falls back to the matching `pi` block, so existing Pi-compatible configurations need no migration. An explicit OMP block is authoritative even when it omits a model.
-
-User-level config is `~/.config/cortexkit/magic-context.jsonc` on macOS/Linux and `%USERPROFILE%\.config\cortexkit\magic-context.jsonc` on Windows (or `$XDG_CONFIG_HOME/cortexkit/magic-context.jsonc` when set). OpenCode Desktop users can use the dashboard's config editor or hand-edit that file; Desktop does not include the CLI setup wizard.
-
-**Pi:** `npx @cortexkit/magic-context@latest setup --harness pi` (requires Pi `>= 0.74.0`). The Pi extension shares the same database as OpenCode; project memories and embeddings pool across both.
-
-**Oh My Pi (OMP):** `npx @cortexkit/magic-context@latest setup --harness omp` (requires OMP `>= 17.1.7`). Setup installs the Pi-compatible extension through `omp plugin`, disables OMP native compaction and automatic memory, and honors OMP profiles, `PI_CODING_AGENT_DIR`, and initialized XDG layouts.
-
-**Troubleshooting:** `npx @cortexkit/magic-context@latest doctor` auto-detects your harnesses, checks host-specific conflicts, verifies plugin registration and database integrity, and fixes what it can. Add `--issue` to file a ready-to-submit bug report.
-
-Works the same on a brand-new or a long-running project: install, restart the harness, and Magic Context captures context from that point forward. It does not backfill OpenCode, Pi, or OMP sessions from before it was installed.
-
-<details>
-<summary><strong>Compatibility with other context-management plugins</strong></summary>
-
-<br>
-
-Magic Context owns context management end to end, so it **disables itself** if another plugin is already doing that job. Running two context managers at once would double-compress your history and thrash the prompt cache. On startup it checks for the following; setup and `doctor` help you resolve each, and until they're resolved Magic Context stays off (fail-safe) and tells you why:
-
-- **OpenCode built-in compaction** (`compaction.auto` / `compaction.prune`) — Magic Context replaces it. Setup turns it off.
-- **OMP native compaction** (`compaction.enabled`) — Magic Context replaces it. OMP setup turns it off transactionally.
-- **OMP automatic memory** (`memory.backend`) — a second memory injector duplicates recall and retention. OMP setup sets it to `off`; existing data is not deleted.
-- **DCP** (`opencode-dcp`) — a separate context-pruning plugin. The two cannot run together; remove it from your `plugin` list.
-- **oh-my-opencode (OMO)** — setup offers to disable the three hooks that overlap:
-  - `preemptive-compaction` — triggers compaction that conflicts with the historian.
-  - `context-window-monitor` — injects usage warnings that overlap with Magic Context's nudges.
-  - `anthropic-context-window-limit-recovery` — triggers emergency compaction that bypasses the historian.
-
-Run `npx @cortexkit/magic-context@latest doctor` any time to re-check and auto-fix.
-
-</details>
-
----
-
-## Part of CortexKit
-
-A brain isn't one organ. Neither is a capable coding agent.
-
-**CortexKit** is a family of plugins, each modeled on a different region of the brain. Install one and your agent gets sharper. Install all three and it has a brain.
-
-| Plugin | Region | What it does |
-|---|---|---|
-| **Magic Context** *(you are here)* | Hippocampus & medial temporal lobe | Self-managing context and long-term memory. Keeps sessions running with no compaction pauses while it forms, consolidates, and recalls project knowledge across them. |
-| **[AFT](https://github.com/cortexkit/aft)** | Sensorimotor cortex | Perceives code structure and acts on it precisely. A proper IDE and OS for your agent. |
-| **Alfonso** *(coming soon)* | Prefrontal cortex | Executive control. Plans, decomposes work, chooses agents and models, and decides when to ask, verify, and commit. |
-
-Magic Context is **1 of the 3 plugins you'll ever need.** It remembers; AFT perceives and acts; Alfonso decides. They share one CortexKit store, so memory pools across harnesses and tools.
-
----
-
-## ⚡ Context management
-
-*An unbounded session that manages itself.* The context window fills up as you work, and the usual fix, compaction, stops the agent cold to re-read everything. Magic Context handles it continuously in the background, so the session just keeps going.
-
-- **Historian compartmentalization**: a background historian compresses old raw history into **tiered compartments**, chronological summaries that stand in for older messages. Each carries an importance score, so the live window stays small without losing the thread. Summarizing doesn't need your primary's coding muscle, so you can run the historian on a cheap or even fully local model while your main agent stays top-tier.
-- **Decay rendering**: compartments render at the right fidelity for the moment, by a deterministic, no-LLM rule that self-tunes to the model's context window. Old history fades gracefully instead of dropping off a cliff, and because it is deterministic, the same history always renders the same way.
-- **The agent hints what to drop, or it doesn't**: with agent-driven reduction on, the agent calls `ctx_reduce` to mark stale tool outputs or long messages for removal. Drops are **queued and cache-aware**, applied only at cache-safe moments so reduction never thrashes the cache. Switch it off and the agent stays out of context management entirely: stale output is shed automatically by age, with optional caveman compression of the oldest text.
-- **Cache-stable layout**: all of this is structured so background work never invalidates the cached prefix of your prompt. Your cache survives the whole session.
-
-The result: one session runs for months, with no compaction pauses and low cost on cache-priced providers. You can watch it happen in OpenCode's TUI, where a live sidebar shows the context breakdown by source, historian status, and memory counts, updating after every message.
-
-> *Optional (off by default):* **caveman text compression** progressively compresses the oldest user and assistant text by a deterministic age-tiered rule, for sessions that run with agent-driven reduction off.
-
----
-
-## 🧠 Capture
-
-*Memory, for free.* To compress your history, the historian has to read all of it. So in the same pass it lifts out the knowledge worth keeping forever, decisions, constraints, conventions, config values, and promotes it into **project memory**, categorized and carried into every future session. Your memory builds itself from the work you are already doing.
-
-The agent can also record memories explicitly, though most are captured automatically for it:
-
-- **`ctx_memory`**: write or delete cross-session knowledge directly, in a small category taxonomy (`PROJECT_RULES`, `ARCHITECTURE`, `CONSTRAINTS`, `CONFIG_VALUES`, `NAMING`).
-
-```
-ctx_memory(action="write", category="ARCHITECTURE", content="Event sourcing for orders.")
-```
-
-> **Temporal awareness** *(on by default)* gives the agent a sense of time, with gap markers like `+2h 15m` between messages and dated compartments, so it can reason about how long ago something happened. Set `temporal_awareness: false` to turn it off.
-
----
-
-## 🌙 Consolidate
-
-*What sleep does for memory.* An optional **dreamer** agent runs overnight to keep memory quality high, spinning up ephemeral child sessions for each task:
-
-- **Map memories**: map each memory to the project files that back it (or mark it file-independent), so verify knows what to re-check. Mostly a one-time backfill.
-- **Verify**: incrementally check memories against the current codebase (paths, configs, patterns) and fix/remove stale facts.
-- **Verify broad**: re-verify the entire file-mapped pool against code, ignoring the change gate, to catch drift the incremental pass can't see.
-- **Curate**: scan the whole memory pool to merge duplicates, tighten wording, and archive low-value or redundant entries.
-- **Classify**: score each memory's importance, scope, and safe shareability without disturbing the live prompt cache.
-- **Retrospective**: learn from moments you had to correct or re-explain, and record the durable lesson.
-- **Maintain docs**: keep `ARCHITECTURE.md` and `STRUCTURE.md` current from codebase changes.
-- **User memories**: promote recurring observations about how you work (communication style, review focus, working patterns) into a `<user-profile>` that travels with every session.
-- **Promote primers**: promote recurring standing questions the historian noticed into durable primers.
-- **Refresh primers**: re-investigate stale primers against current code and refresh their answers.
-- **Smart notes**: evaluate deferred notes whose `surface_condition` has come true and surface the ready ones.
-
-Because it runs during idle time, the dreamer pairs well with local models, even slow ones. Nobody is waiting. Trigger a run any time with `/ctx-dream`.
-
----
-
-## 🔎 Recall
-
-*The right memory at the right moment.* Every turn, active project memories and the compacted session history are injected automatically and cache-stably. On demand, the agent reaches for:
-
-- **`ctx_search`**: one query across project **memories**, raw **conversation** history, indexed **git commits**, parked **notes**, and promoted **primers**. Semantic embeddings with full-text fallback.
-
-  ```
-  ctx_search(query="why did we pick event sourcing for orders")
-  ```
-
-- **`ctx_expand`**: pull a compressed history range back to the original `U:`/`A:` transcript when the agent needs the exact details.
-- **`ctx_note`**: a scratchpad for deferred intentions. Notes resurface at natural boundaries (after commits, after historian runs, when todos finish). **Smart notes** carry an open-ended condition the dreamer watches for.
-
-Recall works **across sessions** (a new session inherits everything) and **across harnesses** (write a memory in OpenCode, retrieve it in Pi or OMP).
-
-> **Auto search hints** *(on by default)* run a background `ctx_search` each turn and whisper a "vague recall" when something relevant exists — like almost remembering a note you took. It appends only compact fragments, never full content; set `memory.auto_search.enabled: false` to turn it off. **Git commit indexing** *(opt-in)* makes your project history semantically searchable as an additional `ctx_search` source — enable with `memory.git_commit_indexing.enabled: true`.
-
-### Agent tools at a glance
-
-| Tool | Section | What it does |
-|------|-------|-------------|
-| `ctx_reduce` | Context | Queue stale tagged content for removal, cache-aware |
-| `ctx_memory` | Capture | Write or delete durable cross-session memories |
-| `ctx_search` | Recall | Search memories, conversation history, git commits, notes, and primers |
-| `ctx_expand` | Recall | Decompress a history range back to the transcript |
-| `ctx_note` | Recall | Deferred intentions and dreamer-evaluated smart notes |
-
----
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/ctx-status` | Debug view: tags, pending drops, cache TTL, nudge state, historian progress, compartment coverage, history budget |
-| `/ctx-flush` | Force all queued operations immediately, bypassing cache TTL |
-| `/ctx-recomp` | Rebuild compartments from raw history (accepts a `start-end` range). Use when stored state seems wrong |
-| `/ctx-wrapup [messages_to_keep]` | Compact older live history while keeping the newest N messages raw; queued compaction materializes on the next model message |
-| `/ctx-session-upgrade` | Upgrade this session to the latest history format: rebuild compartments and migrate project memories |
-| `/ctx-dream` | Run dreamer maintenance on demand: maintain memory, docs, smart notes, and user-profile review |
-| `/ctx-embed` | Embedding status, or start/pause history compartment embedding (`start` \| `pause`) |
-
----
-
-## Desktop app
-
-A companion desktop app for browsing and managing Magic Context state outside the terminal.
-
-<p align="center">
-  <a href="https://github.com/cortexkit/magic-context/releases?q=dashboard&expanded=true"><strong>⬇️ Download for macOS · Windows · Linux</strong></a>
-</p>
-
-- **Memory browser**: search, filter, and edit project memories by category and project.
-- **Session history**: browse compartments and notes for any session with timeline navigation.
-- **Cache diagnostics**: real-time cache hit/miss timeline and bust-cause detection.
-- **Dreamer management**: view dream-run history, trigger runs, inspect task results.
-- **Configuration editor**: form-based editing for every setting, including model fallback chains.
-- **Log viewer**: live-tailing logs with search.
-
-It reads directly from Magic Context's SQLite database. No extra server, no API. Auto-updates built in.
-
----
-
-## Configuration
-
-Settings live in `magic-context.jsonc`. Most settings have sensible defaults, but the active harness's historian model (`historian.opencode.model`, `historian.pi.model`, or `historian.omp.model`) is required for history compacting; project config merges on top of user-wide settings. For the full reference — cache TTL tuning, per-model execute thresholds, historian and dreamer model selection, embedding providers, memory settings, and prompt-surface presets (`full`/`light`) — see **[CONFIGURATION.md](./CONFIGURATION.md)** or the **[configuration reference on docs.cortexkit.io](https://docs.cortexkit.io/magic-context/reference/configuration/)**.
-
-> **Note on per-model settings (OpenCode/Pi/OMP):** settings that route per model — like `prompt_surface.models` — apply to the injected guidance block. Tool descriptions are registered once per process by the current (v1) plugin API and follow the default preset; per-model tool descriptions arrive with the OpenCode v2 plugin API once the SDK stabilizes ([#260](https://github.com/cortexkit/magic-context/issues/260)).
-
-**Config locations** (one shared CortexKit location, project overrides user):
-1. `<project-root>/.cortexkit/magic-context.jsonc`
-2. `~/.config/cortexkit/magic-context.jsonc`
-
-Upgrading from an earlier version? Your existing config is moved here automatically on first run (a `.MOVED_READPLEASE` breadcrumb is left at the old path).
-
-### Work and personal repository model profiles
-
-If your personal repositories use one hidden-agent model set and work repositories use another, define the profiles in user config and let each work repository select its name:
-
-```jsonc
-// ~/.config/cortexkit/magic-context.jsonc
-{
-  "profile": "personal",
-  "profiles": {
-    "personal": { "historian": { "opencode": { "model": "anthropic/claude-sonnet-4-6" } } },
-    "work": { "historian": { "opencode": { "model": "openai/gpt-5.2-codex" } } }
-  }
-}
-
-// <work-repo>/.cortexkit/magic-context.jsonc
-{ "profile": "work" }
-```
-
-This is the work-repositories-versus-personal-repositories setup requested by kagbodji. Profiles overlay only hidden-agent model selection, preserve base settings that they do not mention, and are defined only in user config. A project can select a known user profile but cannot supply its contents. See [CONFIGURATION.md](./CONFIGURATION.md#per-repository-model-profiles) for the full OpenCode/Pi/OMP example, fallback behavior, and trust boundary.
-
----
-
-## Storage
-
-All durable state lives in a local SQLite database under the shared CortexKit store (`~/.local/share/cortexkit/magic-context/context.db`, XDG-equivalent on Windows; legacy OpenCode-folder databases are migrated forward on first boot). Set `MAGIC_CONTEXT_STORAGE_DIR` to an absolute, complete Magic Context storage directory when a host isolates `XDG_DATA_HOME`; the explicit path takes precedence over the XDG-derived path. Every process sharing the store must receive the same explicit value. Hosts propagate this variable when explicitly configured but Magic Context never originates it from its own default resolution. The override moves the harness-side database only; the per-user `subc` daemon state remains in its own shared location. Mixed-version processes continue to block migrations on a shared directory until all processes are updated. If the database can't be opened, Magic Context disables itself and notifies you. Memories are keyed to a **stable project identity** derived from the repo, so they follow a project across worktrees, clones, and forks rather than being tied to a directory path.
-
-Magic Context also writes to a few other locations:
-
-| Path | What | Persistence |
-|---|---|---|
-| `~/.local/share/cortexkit/magic-context/context.db` | SQLite database — tags, compartments, memories, all durable state (XDG-equivalent on Windows) | **Must persist.** Losing it loses your memory/history. |
-| `~/.local/share/cortexkit/magic-context/models/` | Local embedding model cache (~90 MB `Xenova/all-MiniLM-L6-v2` ONNX), downloaded on first use when local embeddings are enabled | Should persist, else re-downloaded each run. Not used when `memory.enabled: false` or an `openai_compatible`/`ollama` embedding backend is configured. |
-| `$MAGIC_CONTEXT_LOG_PATH` (default: `${TMPDIR}/opencode/magic-context/magic-context.log`, `pi/` for Pi) | Diagnostic log. Set `MAGIC_CONTEXT_LOG_PATH` to redirect it (e.g. to a persistent path in a container). | Disposable. |
-
-**Sandboxed / ephemeral environments (Docker, CI, disposable containers):** mount the `~/.local/share/cortexkit/magic-context/` directory on a persistent volume so the database and model cache survive between runs. If only the model cache is ephemeral, the model is simply re-downloaded; if the database is ephemeral, memory and history don't accumulate. To avoid the ~90 MB model download entirely, set `memory.enabled: false` or point `embedding` at a remote `openai_compatible`/`ollama` backend.
-
----
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=cortexkit%2Fmagic-context&type=date&legend=bottom-right">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=cortexkit/magic-context&type=date&theme=dark&legend=bottom-right&sealed_token=8tgpBwlCfG4Vl1P1ink58E2ocwGiJZ7EfwQLdovNyFh8gqF6In4EhvfaIx8p_C6KztsJtU389KpouCB0HKrjDqN06WULjeHrc1uGhnHHpqDJHv_eAa2zWA" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=cortexkit/magic-context&type=date&legend=bottom-right&sealed_token=8tgpBwlCfG4Vl1P1ink58E2ocwGiJZ7EfwQLdovNyFh8gqF6In4EhvfaIx8p_C6KztsJtU389KpouCB0HKrjDqN06WULjeHrc1uGhnHHpqDJHv_eAa2zWA" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=cortexkit/magic-context&type=date&legend=bottom-right&sealed_token=8tgpBwlCfG4Vl1P1ink58E2ocwGiJZ7EfwQLdovNyFh8gqF6In4EhvfaIx8p_C6KztsJtU389KpouCB0HKrjDqN06WULjeHrc1uGhnHHpqDJHv_eAa2zWA" />
- </picture>
-</a>
-
----
-
-## Development
-
-**Requirements:** [Bun](https://bun.sh) ≥ 1.0
+Use Bun 1.3.5 and Node 24 from the repository root:
 
 ```sh
-bun install         # Install dependencies
-bun run build       # Build the plugin
-bun run typecheck   # Type-check without emitting
-bun test            # Run tests
-bun run lint        # Lint (Biome)
-bun run format      # Format (Biome)
+bun install --frozen-lockfile --ignore-scripts
+bun run check
+bun run build
+bun run test:install
+bun run benchmark
 ```
 
-Dream execution requires a live OpenCode server (the dreamer creates ephemeral child sessions). Use `/ctx-dream` inside OpenCode for on-demand maintenance.
+Default commands operate on DSH alone. Tests run under Node and exercise `node:sqlite`. `check` includes types, lint, behavior, paired documentation, and repository ownership. `test:install` installs the tarball outside the checkout, checks declaration closure, runs a keyless AgentLoop, and evaluates the production client factory. `check:dsh` remains an alias for `check`.
 
----
+For profile installation, configuration, or explicit real-model acceptance, follow the [package guide](packages/dsh-plugin/README.md). Integration runs use an isolated DSH home/profile. Local acceptance does not publish npm packages or activate a production profile.
 
-### Cache-bust sentinel
+## Use memory
 
-`packages/plugin/scripts/cache-bust-sentinel.ts` audits recent OpenCode and Pi/OMP provider requests for cache busts that are not explained by Magic Context's fold, refresh, reduction, flush, force-band, or provider/system-prompt contracts. It joins each provider request to MC's nearest pass record from 30 seconds before through five seconds after the request from `transform_decisions`/`scheduler_history` in `context.db` and the rust-mode `mc_pass_trace`/decision mirror in `store.db`; requests without a matching pass are reported as `no_mc_pass_row`. It opens both databases, OpenCode's database, auth-plugin dumps, Pi/OMP JSONL, and `.pi/pi-llm-debugging`/served-array artifacts read-only. Its only local write is the high-water/dedup state file at `~/.local/share/cortexkit/magic-context/cache-bust-sentinel-state.json` (or the resolved `MAGIC_CONTEXT_STORAGE_DIR`).
+| Capability | Behavior |
+|---|---|
+| Remember and correct | Four native tools provide scoped writes, recall, revision checks, and archive operations. |
+| Workspace isolation | Trusted Session workspace identity is the default; global writes require an explicit scope. |
+| Durable storage | SQLite records, revision history, search entries, and retry receipts commit atomically. |
+| Logged recall | A bounded initial snapshot is admitted and recorded by DSH, then stays frozen across restart and fork. |
+| Web management | The DSH settings page lists, edits, archives, and exports selected records. |
 
-Run a single dry pass from the repository root; each new unaccounted bust window is printed as one JSON line:
+The lightweight path uses literal Chinese/identifier/path retrieval. Embeddings, background extraction, document ingestion, other host adapters, and a separate daemon are outside this product's current scope.
 
-```sh
-bun packages/plugin/scripts/cache-bust-sentinel.ts --once
-```
+## Development references
 
-Omit `--once` for the built-in one-minute loop, or invoke `--once` from cron/launchd every 1–5 minutes. The template at `packages/plugin/scripts/launchd/com.cortexkit.magic-context.cache-bust-sentinel.plist` uses a five-minute cadence, deliberately has `RunAtLoad=false`, and is not installed automatically. Replace its `__BUN_PATH__`, `__REPO_ROOT__`, and `__LOG_DIR__` placeholders before loading it. A cron equivalent is:
+| Read | Purpose |
+|---|---|
+| [Package guide](packages/dsh-plugin/README.md) | Installation, tools, configuration, UI, release, and rollback. |
+| [Architecture](ARCHITECTURE.md) | Storage, admission, lifecycle, and replay invariants. |
+| [Source layout](STRUCTURE.md) | Ownership of retained files and commands. |
+| [DSH development entry](docs/dsh/README.md) | Plans, source provenance, and compatibility evidence. |
+| [Specialization plan](docs/dsh/dsh-only-plan.md) | Removal scope, stages, and acceptance criteria. |
+| [Compatibility](docs/dsh/compatibility.md) | Versioned observations and supported limits. |
+| [Upstream workflow](UPSTREAM.md) | Full source mirror and selective adoption of relevant fixes. |
 
-```cron
-*/5 * * * * cd /path/to/magic-context && /path/to/bun packages/plugin/scripts/cache-bust-sentinel.ts --once >> /path/to/cache-bust-sentinel.jsonl 2>> /path/to/cache-bust-sentinel.log
-```
+## Source and license
 
-`--send` switches from JSON-line dry-run output to the `prefrontal` module's `wake.event_record` subc operation. Do not enable it until that operation is deployed. Known dispositions (`accepted`, `unowned_session`, `dedup`, and `superseded`) are counted and logged; malformed replies fail the run. Use `--connection-file`, `--wake-module-id`, `--state-file`, `--db`, or `--rust-store` only when the corresponding runtime location is non-default.
+This product derives a small SQLite, normalization, and category subset from [cortexkit/magic-context](https://github.com/cortexkit/magic-context/tree/6f718ff019bf327a0b291a8510dfb42f91b65921). Exact origins and downstream changes are recorded in [NOTICE](packages/dsh-plugin/NOTICE). The MIT license and original copyright remain in [LICENSE](LICENSE).
 
----
-## Contributing
-
-Bug reports and pull requests are welcome. For larger changes, open an issue first to discuss the approach. Run `bun run format` before submitting; CI rejects unformatted code.
-
----
-
-## License
-
-[MIT](LICENSE)
+`origin_main` preserves the full upstream mirror. DSH development lives on `dsh_main`; retired products, release automation, and historical documentation remain available in Git history and the mirror.

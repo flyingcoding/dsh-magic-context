@@ -1,81 +1,47 @@
-name: Bug Report
-description: Report a bug or unexpected behavior in Magic Context
+name: DSH memory bug
+description: Report a reproducible problem with the native DSH memory Bundle
 labels: ["bug"]
 body:
-  - type: markdown
+  - type: textarea
+    id: behavior
     attributes:
-      value: |
-        Thanks for reporting! To make debugging faster, please run:
-
-        ```
-        npx @cortexkit/magic-context@latest doctor --issue
-        ```
-
-        That command collects environment info, your sanitized config, recent historian failure dumps, and the last 400 log lines into a local file. You can paste its contents into the Diagnostics field below, or let it submit the issue directly via `gh`.
-
-        For Pi users, add `--harness pi`. For OpenCode users, the harness is auto-detected.
-
-  - type: input
-    id: title
-    attributes:
-      label: Short description
-      placeholder: "ctx_reduce is not dropping tool outputs even after execute threshold"
+      label: Expected and observed behavior
+      description: Include the exact steps, memory scope, and tool or settings action involved.
     validations:
       required: true
-
-  - type: textarea
-    id: description
-    attributes:
-      label: What happened?
-      description: Describe the problem, what you expected, and what you observed. Include repro steps if you have them.
-    validations:
-      required: true
-
-  - type: textarea
-    id: diagnostics
-    attributes:
-      label: Diagnostics
-      description: Paste the output of `npx @cortexkit/magic-context@latest doctor --issue` here, or fill in the sections below manually.
-      render: markdown
-
   - type: input
     id: plugin_version
     attributes:
-      label: Plugin version
-      placeholder: "0.8.6"
-
-  - type: input
-    id: opencode_version
-    attributes:
-      label: OpenCode version
-      placeholder: "1.4.3"
-
-  - type: input
-    id: platform
-    attributes:
-      label: Platform
-      placeholder: "macOS arm64 / linux x64 / windows x64"
-
-  - type: dropdown
-    id: client
-    attributes:
-      label: Client
-      options:
-        - OpenCode Desktop
-        - OpenCode TUI (CLI)
-        - OpenCode Web
-        - Pi
-        - Magic Context Dashboard
-        - Unknown
+      label: Memory package version and source revision
+      placeholder: "0.1.0-alpha.1; commit or tarball SHA-256"
     validations:
       required: true
-
-  - type: textarea
-    id: logs
+  - type: input
+    id: dsh_version
     attributes:
-      label: Log output (optional)
-      description: |
-        Contents of the magic-context log, trimmed to the relevant section and sanitized
-        (remove your username and home path). The log lives under the system temp directory —
-        on macOS/Linux it's typically `/tmp/magic-context.log` or under `$TMPDIR`.
-      render: shell
+      label: DSH version
+      placeholder: "0.1.5-rc.2"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS, architecture, Node, and Bun versions
+      placeholder: "macOS arm64; Node 24; Bun 1.3.5"
+  - type: dropdown
+    id: surface
+    attributes:
+      label: DSH surface
+      options:
+        - Web settings
+        - Headless agent
+        - TUI agent
+        - Build or isolated package installation
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant configuration, errors, and evidence
+      description: Include relevant Bundle overrides or test output. Exclude credentials and private memory or Session content.
+      render: text

@@ -1,65 +1,51 @@
-# DSH adaptation development
+# DSH development
 
 English | [中文](README.zh.md)
 
-This directory owns the downstream DSH adaptation plan for the full `flyingcoding/dsh-magic-context` fork. The target is a lightweight native Cordis Bundle: local long-term memory, bounded recall, and DSH-owned compaction. The native `0.1.0-alpha.1` package now lives in `packages/dsh-plugin/`; installation and behavior evidence are recorded separately from the original plan.
+This directory owns the native DSH memory project's plans and evidence. `packages/dsh-plugin/` is the sole workspace: local long-term memory, bounded logged recall, and a DSH Web settings page, with compaction retained by the host.
 
 | Read | Purpose |
 |---|---|
-| [Native package](../../packages/dsh-plugin/README.md) | Build, install, configure, and operate the current alpha. |
-| [Compatibility record](compatibility.md) | Verified host versions, replay and model tests, resource measurements, and remaining limits. |
-| [DSH-only optimization plan](dsh-only-plan.md) | Next priority: source extraction, removal of other adapters, simpler dependencies/configuration, and measurable acceptance. |
-| [Migration plan](migration-plan.md) | Scope, architecture, P0–P5 stages, data import, resource targets, and acceptance. |
-| [Upstream workflow](../../UPSTREAM.md) | Remotes, branch roles, pinned source baseline, pending changes, synchronization, and check selection. |
-| [Agent instructions](../../AGENTS.md) | Short standing rules for work in this fork. |
-| [Upstream architecture](../../ARCHITECTURE.md) and [source layout](../../STRUCTURE.md) | Understand the existing Magic runtime before selecting reusable components. |
+| [Native package](../../packages/dsh-plugin/README.md) | Build, install, configure, and operate the private alpha. |
+| [Compatibility record](compatibility.md) | Original acceptance inputs, observed behavior, model/resource results, and limits. |
+| [DSH-only plan](dsh-only-plan.md) | Source extraction, removal scope, and the specialization acceptance sequence. |
+| [Migration handoff](migration-plan.md) | Historical first-release design, scope, P0–P5 stages, and optional import. |
+| [Upstream workflow](../../UPSTREAM.md) | Source pins, full-mirror maintenance, and selective fix adoption. |
+| [Architecture](../../ARCHITECTURE.md) and [layout](../../STRUCTURE.md) | Current DSH runtime contracts and file ownership. |
+| [Agent instructions](../../AGENTS.md) | Standing implementation rules. |
 
 <a id="p0"></a>
-## P0 readiness
+## First-release baseline
 
-This checklist separates repository preparation from behavior verification. Completing the setup rows is not proof that an adapter works.
+P0–P4 are implemented, with dated acceptance retained in [compatibility](compatibility.md). That baseline verified isolated Node SQLite storage, committed injection, cancellation, restart/replay, forks, fresh-session recall, compaction, Web management, and ten real-model scenarios. It also defined the [resource gates](resource-budgets.json) and 1,000/10,000-record workloads.
 
-- [x] The full official-source fork is available, including the reusable memory code under `packages/plugin/src/`.
-- [x] `dsh_main` tracks `origin/dsh_main`; `origin_main` tracks `origin/origin_main`.
-- [x] The official `upstream` remote is configured and its `master` ref has been fetched.
-- [x] The migration plan is located in this repository with portable DSH-source links.
-- [x] Node `v24.18.0` and Bun `1.3.5` were observed during preparation; `bun.lock` is present.
-- [x] Reviewed the upstream delta and selected `6f718ff019bf327a0b291a8510dfb42f91b65921` as the implementation baseline.
-- [x] Audited the default import graph: reuse SQLite, text normalization, and category types without the full context manager.
-- [x] Created `@flyingcoding/dsh-magic-context` with distinct storage, tool, recall, and optional client responsibilities.
-- [x] Added filtered dependency installation, Node typecheck/tests, build checks, root-script wiring, and dedicated CI.
-- [x] Verified committed injection, cancellation, real persisted-session recovery, forks, and fresh-session recall in isolation.
-- [x] Defined numeric budgets and measured 1,000 / 10,000 records plus short / long Session logs.
-
-The original P0 feasibility questions have a native implementation path. Follow the [compatibility record](compatibility.md) for acceptance status and the [package README](../../packages/dsh-plugin/README.md) for current behavior. Production-profile activation and npm publication remain separate release actions.
+The old full-source tree was a preparation input. Its complete history remains on `origin_main`; `dsh_main` now owns the specialized package. Production-profile activation, npm publication, supplied-data import, and optional P5 features remain separate work items.
 
 <a id="next-phase"></a>
-## Next phase: specialize for DSH
+## DSH specialization
 
-The project will support DSH alone. The [specialization plan](dsh-only-plan.md) records the inspected baseline and removal sequence; implementation is still pending. Extract the three required upstream source contracts first, then remove non-DSH workspaces, simplify root commands/CI/documentation, and measure equivalent before/after behavior. This takes priority over optional P5 features. A smaller source tree does not by itself prove lower runtime RSS.
+The [plan](dsh-only-plan.md) freezes the pre-specialization inventory and acceptance criteria. The retained source is local to DSH, root commands target one workspace, and upstream release/host infrastructure is retired. New acceptance evidence must distinguish repository/dependency savings from runtime RSS and compare equivalent workloads. Historical measurements are preserved rather than overwritten.
 
 <a id="source-map"></a>
-## Source map for the adapter
+## Retained source map
 
-These links name existing upstream files. Reuse small internal modules only after inspecting their imports; the `memory/index.ts` barrel also exports embedding modules and is not automatically a lightweight entry point.
-
-| Area | Existing source | P0 question |
+| Area | Current owner | Contract |
 |---|---|---|
-| Memory records | [storage-memory.ts](../../packages/plugin/src/features/magic-context/memory/storage-memory.ts), [types.ts](../../packages/plugin/src/features/magic-context/memory/types.ts) | Which record/revision/lifecycle behavior is reusable without importing the complete context manager? |
-| Local keyword retrieval | [storage-memory-fts.ts](../../packages/plugin/src/features/magic-context/memory/storage-memory-fts.ts) | How do Chinese, identifiers, and paths match without embeddings? |
-| SQLite and migrations | [sqlite.ts](../../packages/plugin/src/shared/sqlite.ts), [migrations.ts](../../packages/plugin/src/features/magic-context/migrations.ts) | Can the DSH memory store remain small and independent while using Node's backend? |
-| Identity and configuration | [harness.ts](../../packages/plugin/src/shared/harness.ts), [project-identity.ts](../../packages/plugin/src/features/magic-context/memory/project-identity.ts), [config schema](../../packages/plugin/src/config/schema/magic-context.ts) | Which DSH-specific identity and model-routing fields must be added explicitly? |
-| Existing host adapter | [Pi entry](../../packages/pi-plugin/src/index.ts), [Pi tsconfig](../../packages/pi-plugin/tsconfig.json) | How does the monorepo reuse source while keeping host integration separate? |
-| Tool behavior | [ctx-memory](../../packages/plugin/src/tools/ctx-memory/tools.ts), [ctx-search](../../packages/plugin/src/tools/ctx-search/tools.ts) | Which behavior should the native DSH tools retain, with DSH-owned schemas and logging? |
+| SQLite | [sqlite.ts](../../packages/dsh-plugin/src/sqlite.ts) | Node statements, argument binding, immediate transactions, and nested savepoints. |
+| Normalization | [normalize.ts](../../packages/dsh-plugin/src/normalize.ts) | Search case/whitespace normalization; write deduplication stays case-sensitive. |
+| Categories and records | [types.ts](../../packages/dsh-plugin/src/types.ts) | Stable seven-category vocabulary, scopes, revisions, and provenance. |
+| Persistence and retrieval | [store.ts](../../packages/dsh-plugin/src/store.ts), [tokenize.ts](../../packages/dsh-plugin/src/tokenize.ts) | DSH-owned schema and bounded literal FTS queries. |
+| Model input | [recall.ts](../../packages/dsh-plugin/src/recall.ts), [tools.ts](../../packages/dsh-plugin/src/tools.ts) | Logged admission, recovery, and observable memory operations. |
+| Source attribution | [NOTICE](../../packages/dsh-plugin/NOTICE), [upstream map](../../UPSTREAM.md#provenance) | Exact original paths/commit and downstream omissions. |
 
-The DSH host is a separate integration repository, locally available as the sibling `../deepseek-harness`. Its inspected source links are pinned in [the migration plan](migration-plan.md#sources). The older `xiaohj233/dsh-magic-context` community port is reference material, not this repository's upstream.
+The DSH host is a separate integration repository. The inspected source revision is linked from the [migration handoff](migration-plan.md#sources); normal development and artifact installation use published dependencies without requiring that sibling checkout. The community port remains historical reference material.
 
 <a id="layout"></a>
 ## Package ownership
 
-`packages/dsh-plugin/` owns the native Bundle, Cordis service/provider/consumers, Host lifecycle, and optional DSH Web client integration. The next phase moves the required upstream leaves into this package with their tests and source attribution before retiring other workspaces. Do not copy the community port's compiled `dist/` into this fork.
+`packages/dsh-plugin/` owns the Bundle, Cordis service/provider/consumers, Host lifecycle, tests, build scripts, and optional Web face. Its local source subset is sufficient for declaration generation and runtime bundling. New runtime capabilities must preserve DSH's logged model input and bounded state, and need their own scope and acceptance.
 
 <a id="maintenance"></a>
-## Maintain the development documents
+## Maintain paired evidence
 
-Update each English/Chinese pair together. The migrated plan retains a portable Git-blob checksum record; after editing both files, refresh its values with `git hash-object docs/dsh/migration-plan.md` and `git hash-object docs/dsh/migration-plan.zh.md`. This record confirms content identity, not runtime correctness. No DSH-specific documentation command is installed in this fork.
+Update each English/Chinese pair together and run `bun run docs:check` from the root. New observed results belong in a dated record under `evidence/`, with the exact source, host, artifact checksum, and commands. The initial migration handoff keeps its Git-blob checksum record; refresh both values after editing its pair. No host-specific documentation command is installed here.

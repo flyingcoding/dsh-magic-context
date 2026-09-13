@@ -70,7 +70,8 @@
     "test:install": "node scripts/verify-install.mjs",
     "benchmark": "node --import tsx scripts/benchmark.ts",
     "test:live": "node scripts/test-live-model.mjs",
-    "docs:check": "node scripts/verify-docs.mjs"
+    "docs:check": "node scripts/verify-docs.mjs",
+    "test:rollback": "node scripts/verify-rollback.mjs"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "3.18.2",
@@ -115,13 +116,10 @@
     "@deepseek-ai/dsh-tools": "0.1.5-rc.2",
     "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
     "@deepseek-ai/dsh-typert-registry": "0.1.5-rc.2",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "^1.3.10",
     "@types/node": "^24.0.0",
     "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.1",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
     "tsx": "^4.23.12",
     "typescript": "~5.9.3"
   },

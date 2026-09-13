@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Documentation
-    url: https://github.com/cortexkit/magic-context#readme
-    about: Check the README for configuration, setup, and feature docs before filing an issue.
-  - name: Configuration reference
-    url: https://github.com/cortexkit/magic-context/blob/master/CONFIGURATION.md
-    about: Full reference for magic-context.jsonc options.
+  - name: DSH memory documentation
+    url: https://github.com/flyingcoding/dsh-magic-context/blob/dsh_main/README.md
+    about: Build, usage, source layout, and development references.
+  - name: Bundle configuration and tools
+    url: https://github.com/flyingcoding/dsh-magic-context/blob/dsh_main/packages/dsh-plugin/README.md
+    about: Profile installation, configuration, native tools, and rollback.

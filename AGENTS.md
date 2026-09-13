@@ -1,30 +1,30 @@
-# DSH adaptation instructions
+# DSH-only development instructions
 
-This fork targets DSH exclusively. The accepted alpha still contains the full upstream tree; the next phase removes other adapters under the [DSH-only plan](docs/dsh/dsh-only-plan.md) ([中文](docs/dsh/dsh-only-plan.zh.md)). Read the [DSH development entry](docs/dsh/README.md) ([中文](docs/dsh/README.zh.md)) and the completed first-release [migration plan](docs/dsh/migration-plan.md) before implementation work.
+This project supports DSH exclusively. Read the [development entry](docs/dsh/README.md) ([中文](docs/dsh/README.zh.md)), [architecture](ARCHITECTURE.md), [source layout](STRUCTURE.md), and [specialization plan](docs/dsh/dsh-only-plan.md) before implementation. The [migration handoff](docs/dsh/migration-plan.md) preserves the completed first-release design.
 
 ## Repository workflow
 
-- Develop DSH-specific code and documentation on `dsh_main`; keep `origin_main` for upstream-only fast-forward synchronization.
-- Follow [UPSTREAM.md](UPSTREAM.md) for remote roles, inspected baselines, synchronization, and validation. Preserve the user's work before switching or merging.
-- Read [ARCHITECTURE.md](ARCHITECTURE.md) and [STRUCTURE.md](STRUCTURE.md) before extracting shared Magic source. Preserve required DSH contracts and tests before retiring other hosts and their owning commands.
-- Prioritize DSH-only source/dependency/configuration simplification over optional feature expansion. Do not add new OpenCode/Pi/OMP compatibility work; keep the full upstream mirror on `origin_main` and port relevant fixes selectively.
-- Use the available semantic code-search tool before editing an unfamiliar module; use exact searches for known identifiers.
-- Conversation language is Chinese; code comments are concise English and explain non-obvious function behavior.
+- Develop DSH code and paired documentation on `dsh_main`. Preserve `origin_main` as the full upstream-only mirror.
+- Follow [UPSTREAM.md](UPSTREAM.md) for exact source pins, selective fix adoption, and validation. Preserve user work before switching or merging; do not routinely merge the full mirror into the specialized branch.
+- Keep `packages/dsh-plugin` as the only workspace. Root commands and CI serve this package; a new workspace requires an explicit scope decision and command/CI wiring.
+- Use semantic code search before editing unfamiliar modules and exact searches for known identifiers.
+- Conversation language is Chinese. Code comments are concise English and explain function behavior or non-obvious decisions.
+- Use `trash` for filesystem deletions. User databases, Session logs, production profiles, and unrelated caches are outside repository cleanup.
 
-## Native adapter scope
+## Native memory contracts
 
-- The first release provides local memory through a native Cordis Bundle and retains DSH compaction. Follow the plan's explicit scope and proposed budgets.
-- The native adapter lives in `packages/dsh-plugin/`; read its paired READMEs and `docs/dsh/compatibility.md`. The repository root is not an installable DSH Bundle.
-- Reuse audited source modules with exact provenance. Extract the small required source subset into the DSH package before removing upstream workspace trees; do not copy compiled community-port output.
-- Model-visible input must be reconstructable from the DSH Session log. Use the host's supported admission, projection, cancellation, and lifecycle APIs.
-- New work must not depend on arbitrary synchronous Session-history reads. Verify actual history I/O and memory costs before choosing a reader.
-- Use an isolated DSH home/profile for integration checks. The sibling DSH repository is the host integration target, not the owner of these development documents.
-- Keep embeddings, periodic auxiliary agents, Rust/subc, and document ingestion outside the default lightweight path unless the task explicitly changes that scope.
+- The [native package](packages/dsh-plugin/README.md) ([中文](packages/dsh-plugin/README.zh.md)) is the installable Cordis Bundle. The repository root is a development workspace.
+- Preserve package identity, Bundle rows, tool schemas, database path/schema, memory ids/revisions, and Session projection identity during source/dependency simplification.
+- Local SQLite, normalization, and category sources retain exact upstream ancestry in [NOTICE](packages/dsh-plugin/NOTICE). Reuse audited source only; compiled community artifacts are not source inputs.
+- DSH owns conversation history, compaction, model routing, cancellation, admission, and lifecycle. Model-visible input must be reconstructable from its Session log.
+- Do not introduce arbitrary synchronous Session-history reads. Verify actual history I/O and retained memory when changing recovery behavior.
+- Keep embeddings, auxiliary extraction agents, Rust/subc, document ingestion, and other host adapters outside the default path unless explicitly requested.
+- Use isolated homes/profiles for integration. Published host dependencies support normal checks; a sibling DSH checkout is an optional integration reference, not a build input.
 
 ## Verification and documentation
 
-- Use the Bun/package checks selected in [UPSTREAM.md](UPSTREAM.md#validation); do not run DSH-only commands in this fork.
-- Adding a workspace requires explicit root-script and CI wiring; existing root scripts name upstream packages individually.
-- Verify Node-backed SQLite, replay, restart, fork isolation, and bounded resource use for the affected adapter behavior. Claims name the exact host version and commands actually run.
-- Keep English and Chinese DSH document pairs synchronized. Refresh the migration-plan checksum record after changing both sides.
-- Preserve upstream licenses and package identities. Choose a downstream package name and release workflow before publishing.
+- Use the root Bun commands in [UPSTREAM.md](UPSTREAM.md#validation). Tests run on Node 24+ through `bun run test`; do not replace them with `bun test`.
+- Verify actual Node SQLite transactions/bindings, replay, restart, fork isolation, disposal, artifact declaration closure, and bounded resources for affected behavior.
+- Record the exact source revision, host version, artifact checksum, and commands actually run. Keep historical acceptance measurements separate from new results.
+- Update English/Chinese document pairs together. Refresh the migration-plan checksum record after changing its pair and run `bun run docs:check`.
+- Preserve MIT notices and upstream identities. The private DSH artifact has no automatic publication workflow; npm publication and production activation are separate release actions.

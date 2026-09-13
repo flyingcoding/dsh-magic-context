@@ -1,59 +1,35 @@
-name: Feature Request
-description: Suggest a new feature or improvement for Magic Context
+name: DSH memory improvement
+description: Propose an improvement to the DSH memory project
 labels: ["feature request"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for the suggestion! Please check the [README](https://github.com/cortexkit/magic-context#readme) and [open issues](https://github.com/cortexkit/magic-context/issues) first — your idea may already be documented or under discussion.
-
-  - type: input
-    id: title
-    attributes:
-      label: Short description
-      placeholder: "Surface decision/why behind compartments as a graph in the dashboard"
-    validations:
-      required: true
-
   - type: textarea
     id: problem
     attributes:
-      label: What problem does this solve?
-      description: Describe the pain point or limitation you're hitting today. What are you trying to do that Magic Context doesn't (or can't) help with yet?
+      label: User task and current limitation
+      description: Describe the task, the current behavior, and a concrete example.
     validations:
       required: true
-
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed solution
-      description: How would you like it to work? Be as concrete as you can — UI, config, behavior, command, etc.
+      label: Proposed behavior and acceptance
+      description: Explain the desired result and how to verify it.
     validations:
       required: true
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives considered
-      description: Other approaches you've tried or thought about, and why they fall short. Optional.
-
   - type: dropdown
     id: area
     attributes:
       label: Area
-      description: Which part of Magic Context does this touch?
       options:
-        - OpenCode plugin
-        - Pi plugin
-        - Dashboard
-        - CLI (setup / doctor)
-        - Memory / historian / dreamer
-        - Not sure
+        - Memory storage and scope
+        - Recall and Session replay
+        - Native tools
+        - DSH Web settings
+        - Build, installation, or documentation
     validations:
       required: true
-
   - type: textarea
-    id: context
+    id: tradeoffs
     attributes:
-      label: Additional context
-      description: Anything else — screenshots, links, related issues, examples from other tools. Optional.
+      label: Resource or compatibility considerations
+      description: Describe expected model calls, retained memory, host requirements, or migration needs if applicable.

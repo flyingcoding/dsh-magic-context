@@ -11,16 +11,16 @@ This is a local alpha artifact. The package remains `private: true`; no npm publ
 Run these commands from the repository root with Bun 1.3.5 and Node 24 available:
 
 ```sh
-bun install --frozen-lockfile --filter '@flyingcoding/dsh-magic-context' --ignore-scripts
-bun run check:dsh
-bun run --cwd packages/dsh-plugin build
-bun run --cwd packages/dsh-plugin test:install
-bun run --cwd packages/dsh-plugin benchmark
+bun install --frozen-lockfile --ignore-scripts
+bun run check
+bun run build
+bun run test:install
+bun run benchmark
 ```
 
-The filtered install avoids installing the upstream inference and desktop workspaces. Native tests execute under Node so they exercise `node:sqlite`. The build bundles audited source leaves from this monorepo and emits a separate production JSX client artifact. It checks every Host JavaScript file with Node before packaging. Previous build directories are moved under `.cache/builds/`, keeping stale chunks out of the new artifact.
+The repository has one explicit workspace, so the default install needs no filter. Native tests execute under Node so they exercise `node:sqlite`. The build bundles the package's own audited source and emits a separate production JSX client artifact; declarations stay under `dist/types/`. It checks every Host JavaScript file with Node before packaging. Previous build directories are moved under `.cache/builds/`, keeping stale chunks out of the new artifact.
 
-`test:install` creates a tarball and installs it outside the checkout, drives a real DSH AgentLoop with a keyless provider, evaluates the client factory against the supported platform imports, and checks Bundle composition when `dsh` is available. It leaves its receipt in `packages/dsh-plugin/.cache/install.json`. `benchmark` requires the built artifact and writes `.cache/benchmark.json` in the package directory.
+`test:install` creates a tarball and installs it outside the checkout, checks the local declaration closure, drives a real DSH AgentLoop with a keyless provider, evaluates the client factory against the supported platform imports, and checks Bundle composition when `dsh` is available. It leaves its receipt in `packages/dsh-plugin/.cache/install.json`. `benchmark` requires the built artifact and writes `.cache/benchmark.json` in the package directory.
 
 ## Install into a selected profile
 
@@ -129,6 +129,8 @@ The script refuses the production `~/.dsh` home, creates fresh synthetic workspa
 
 ## Release and rollback
 
-Keep the alpha package private until its compatibility matrix is reviewed and the downstream npm scope is confirmed. Release preparation is manual: update the version, run the checks above, inspect the tarball, and install that exact tarball into an isolated profile. Publication requires a deliberate release change; upstream OpenCode/Pi publication automation does not publish this package.
+Keep the alpha package private until its compatibility matrix is reviewed and the downstream npm scope is confirmed. Release preparation is manual: update the version, run the checks above, inspect the tarball, and install that exact tarball into an isolated profile. Publication requires a deliberate release change; the sole DSH CI workflow validates the private artifact and has no publication step.
+
+To verify format compatibility against the accepted artifact, set `DSH_MEMORY_BASELINE_STORE` to its isolated installed `dist/store.js` and run `bun run test:rollback` from the root after building. The probe uses a fresh synthetic database, alternates old/new writers, and checks ids, retry receipts, revisions, archive, retrieval, and the unchanged schema.
 
 To roll back activation, remove this package from the selected profile's Bundle list and reload that profile. Keep its memory database and DSH Session logs. Importing an existing Magic database and sharing live databases with other hosts are outside this alpha; no source database was supplied for import. The [migration plan](../../docs/dsh/migration-plan.md) owns later optional work.

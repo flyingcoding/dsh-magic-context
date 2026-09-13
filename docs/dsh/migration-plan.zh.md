@@ -16,7 +16,7 @@ promotion-target: "DSH 适配包 README 与兼容记录"
 
 本文用于启动 DSH 原生记忆插件迁移，后续接手者无需重新完成首轮仓库调研。推荐首版保留 DSH 压缩（compaction），在本地保存精选长期记忆，不引入 MCP 或文档知识库。本文保留设计方案和有日期的调研基线。原生 alpha 已实现在 `packages/dsh-plugin/`，当前命令与验证证据见[包说明](../../packages/dsh-plugin/README.zh.md)和[兼容性记录](compatibility.zh.md)。
 
-本文在完整的 `flyingcoding/dsh-magic-context` fork 的 `dsh_main` 分支维护。接手时先看[开发入口](README.zh.md)和[上游工作流](../../UPSTREAM.zh.md)。上游或 DSH 更新后重新核对证据；实现后的行为归入适配包 README，兼容结果与代码一并记录。
+本文在 `flyingcoding/dsh-magic-context` 的 `dsh_main` 分支维护；原有完整源码树保留于 `origin_main` 镜像，当前产品已专用于 DSH。接手时先看[开发入口](README.zh.md)和[上游工作流](../../UPSTREAM.zh.md)。上游或 DSH 更新后重新核对证据；实现后的行为归入适配包 README，兼容结果与代码一并记录。
 
 <a id="contents"></a>
 ## 目录
@@ -38,7 +38,7 @@ promotion-target: "DSH 适配包 README 与兼容记录"
 <a id="scope"></a>
 ## 范围与推荐路线
 
-用户要求进程内原生插件，排除 MCP 接入和文档知识库产品，并优先降低资源占用。完整 fork 和原生适配器已支持隔离安装、Node SQLite、可回放召回和 Web 管理页；正式 profile 启用与 npm 发布尚未执行。
+用户要求进程内原生插件，排除 MCP 接入和文档知识库产品，并优先降低资源占用。原生适配器已支持隔离安装、Node SQLite、可回放召回和 Web 管理页；正式 profile 启用与 npm 发布尚未执行。
 
 | 范围 | 首版安排 | 原因 |
 |---|---|---|
@@ -50,7 +50,7 @@ promotion-target: "DSH 适配包 README 与兼容记录"
 | 文档导入、图谱知识库、自动改写项目文档 | 排除 | 超出本次记忆用途。 |
 | 与 OpenCode/Pi/OMP 实时共用数据库 | 延后 | 先建立记忆语义与数据归属，再处理兼容共享。 |
 
-工程建议是在本完整 fork 中增加可独立安装的 DSH Bundle，复用 Magic 的部分记忆机制与源码组件。原生包已实现在 `packages/dsh-plugin/`。社区移植版用于参考接入方式与测试。只有轻量版证明召回有效且成本可接受后，才单独决定是否投入完整移植。如果 P0 表明无法以合理成本隔离出可复用的小范围源码，应记录结果，优先采用现有轻量原生记忆插件。
+原始工程建议是提供可独立安装的 DSH Bundle，复用 Magic 的部分记忆机制与源码组件；当前必要子集已由专用包本地维护。原生包已实现在 `packages/dsh-plugin/`。社区移植版用于参考接入方式与测试。只有轻量版证明召回有效且成本可接受后，才单独决定是否投入完整移植。如果 P0 表明无法以合理成本隔离出可复用的小范围源码，应记录结果，优先采用现有轻量原生记忆插件。
 
 -----
 
@@ -62,7 +62,7 @@ promotion-target: "DSH 适配包 README 与兼容记录"
 | 对象 | 已核查基线 | 证据级别 |
 |---|---|---|
 | Magic Context | `0.42.0`；`9dc6b4ae009b264a0f7ac2c1b2c0169dbcdfbdfe` | README、配置、manifest（元数据清单）与部分源码；[E1–E4](#sources)。 |
-| 开发 fork | `flyingcoding/dsh-magic-context`；`dsh_main` 开发，`origin_main` 跟踪上游。 | 已具备完整 Magic 源码；精确分支基线和待同步上游变化见 [UPSTREAM.zh.md](../../UPSTREAM.zh.md)。 |
+| 开发 fork | `flyingcoding/dsh-magic-context`；`dsh_main` 开发，`origin_main` 跟踪上游。 | 调研基线具备完整 Magic 源码，并在 `origin_main` 保留；精确分支基线和待同步上游变化见 [UPSTREAM.zh.md](../../UPSTREAM.zh.md)。 |
 | DSH 集成工作区 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`；分支 `fix/session-query-cjk-memory` | 架构、Session、压缩、查询和提示词源码。 |
 | 已安装 DSH 依赖线 | Web profile 中的 `@deepseek-ai/dsh-session-query@0.1.5-rc.2` | 读取了本地包清单及解析后的安装路径；未进行迁移插件运行测试。 |
 | 社区 DSH 移植版 | 包版本 `0.1.2`；`6c82abd4d75c63516421c6e1692d1b7d1636b8e4`；最后提交 2026-08-21 | 声明基线为 DSH `0.1.0-rc.6`、Magic `0.36.1`、共享 schema `77`；[E5–E7](#sources)。 |
@@ -114,7 +114,7 @@ Magic 通常在 Historian 处理历史时提升长期事实；关闭其压缩会
 
 | 发现 | 必要工作 | 验证方式 |
 |---|---|---|
-| 社区移植版将 `@magic-context/core/*` 指向其未包含的上游源码；本完整 fork 已具备该目录。 | 通过可追踪的导入映射复用本仓库源码，审查仅记忆所需的依赖，并保留 MIT 声明。 | 干净构建不依赖外部兄弟源码目录，也不复制社区移植版编译文件；[E6](#sources)。 |
+| 社区移植版将 `@magic-context/core/*` 指向其未包含的上游源码；初始完整 fork 包含该目录，DSH 专用产品现在本地维护必要子集。 | 通过可追踪的导入映射复用本仓库源码，审查仅记忆所需的依赖，并保留 MIT 声明。 | 干净构建不依赖外部兄弟源码目录，也不复制社区移植版编译文件；[E6](#sources)。 |
 | 旧代码读取 `agent.session.events`，并对重建的文本记录求哈希。 | 用当前事件、投影和已验证的有界历史读取替换任意同步历史扫描。 | 恢复及长历史场景正确，且每步骤不会序列化完整历史；[E7](#sources)。 |
 | 上游 harness id 为 `opencode`、`pi`、`omp`，模型设置按 harness 划分。 | 复用相关模块时明确增加 DSH 身份与模型映射，不能把 DSH 冒充 Pi。 | DSH 会话记录和模型路由不会串入其他 harness。 |
 | DSH 要求模型可见内容被记录。 | 记忆注入使用框架接纳流程及来源标记，保持消息角色和工具配对有效。 | 重启、重放、取消和 fork 快照与模型收到的内容一致。 |
