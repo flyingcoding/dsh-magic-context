@@ -27,3 +27,6 @@ tmp/
 .local/
 .agent-logs/
 AgentLogs/
+
+# Private design drafts and internal migration notes.
+docs/private/
