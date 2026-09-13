@@ -171,7 +171,7 @@ async function main() {
     [
       "history",
       workspace,
-      "请使用 session_search 搜索当前工作区此前关于项目‘苔石’发布校验码更正的对话，再使用 session_event_read 阅读其中一个相关事件。仅使用宿主的会话查询工具，最后写出来源 session_id 和事件 seq，并说明它是历史记录，不能当作当前有效记忆。不要猜测来源。",
+      "请使用 session_search 搜索当前工作区此前关于项目‘苔石’发布校验码更正的对话，再使用 session_event_search 定位实际写入更正后校验码的 memory_update 调用或结果事件，最后用 session_event_read 精确读取该事件。读取的事件本身必须包含更正后的值，不要只读取更正前的 recall 调用。仅使用宿主的会话查询工具，最后引用已读取事件的完整 session_id 和 seq，并说明它是历史记录，不能当作当前有效记忆。不要猜测来源。",
       null,
       null,
       "session_search",
