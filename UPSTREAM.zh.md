@@ -2,12 +2,12 @@
 
 [English](UPSTREAM.md) | 中文
 
-本文拥有 fork 的上游来源和分支工作流。主动采纳上游更新后，应刷新已核查基线。DSH 实现范围与验收见[迁移计划](docs/dsh/migration-plan.zh.md)。
+本文拥有 fork 的上游来源和分支工作流。主动采纳上游更新后，应刷新已核查基线。首版范围与验收见[迁移计划](docs/dsh/migration-plan.zh.md)，下一阶段的专用化工作由 [DSH 专用化计划](docs/dsh/dsh-only-plan.zh.md)维护。
 
 <a id="remotes"></a>
 ## 远端与分支职责
 
-同步方向为 `upstream/master → origin_main → dsh_main`。本地分支 `origin_main` 与 Git 远端 `origin` 是不同对象。
+官方源码从 `upstream/master` 镜像到 `origin_main`，再将与 DSH 有关的已审查修复选择性引入 `dsh_main`。本地分支 `origin_main` 与 Git 远端 `origin` 是不同对象，专用分支不再例行合并完整上游镜像。
 
 | 名称 | 来源或跟踪引用 | 职责 |
 |---|---|---|
@@ -63,10 +63,9 @@ git merge --ff-only origin/origin_main
 git merge --ff-only upstream/master
 git switch dsh_main
 git merge --ff-only origin/dsh_main
-git merge --no-edit origin_main
 ```
 
-如果本地 `dsh_main` 有未发布提交，同时 fork 跟踪引用也前进，应先明确处理双方关系，再执行最终合并；`--ff-only` 步骤会拒绝这种分歧。解决合并冲突时保留 DSH 行为并采纳相关上游修复，然后按受影响源码消费者运行检查。检查并确认合并后的分支后再发布；每个分支都以明确名称推送至 `origin`。
+如果本地 `dsh_main` 有未发布提交，同时其 fork 跟踪引用也前进，应先明确处理双方关系；`--ff-only` 步骤会拒绝分歧。对照保留源码映射审查上游变化，迁入相关修复时记录原始提交，并运行受影响的 DSH 检查。只有全部改动路径都属于保留范围时才整提交 cherry-pick，不能整体合并 `origin_main` 恢复已退役工作区。每个经过检查的分支都以明确名称推送至 `origin`。
 
 ```sh
 git push origin origin_main

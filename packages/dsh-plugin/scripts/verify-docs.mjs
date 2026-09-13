@@ -9,6 +9,7 @@ const pairs = [
   ["UPSTREAM.md", "UPSTREAM.zh.md"],
   ["docs/dsh/README.md", "docs/dsh/README.zh.md"],
   ["docs/dsh/migration-plan.md", "docs/dsh/migration-plan.zh.md"],
+  ["docs/dsh/dsh-only-plan.md", "docs/dsh/dsh-only-plan.zh.md"],
   ["docs/dsh/compatibility.md", "docs/dsh/compatibility.zh.md"],
   ["packages/dsh-plugin/README.md", "packages/dsh-plugin/README.zh.md"],
 ];

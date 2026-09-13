@@ -2,12 +2,12 @@
 
 English | [中文](UPSTREAM.zh.md)
 
-This file owns the fork's upstream provenance and branch workflow. Refresh the inspected baseline after deliberately adopting upstream changes. DSH implementation scope and acceptance live in the [migration plan](docs/dsh/migration-plan.md).
+This file owns the fork's upstream provenance and branch workflow. Refresh the inspected baseline after deliberately adopting upstream changes. First-release scope and acceptance live in the [migration plan](docs/dsh/migration-plan.md); the [DSH-only plan](docs/dsh/dsh-only-plan.md) owns the next specialization phase.
 
 <a id="remotes"></a>
 ## Remote and branch roles
 
-The synchronization direction is `upstream/master → origin_main → dsh_main`. The local branch `origin_main` and the Git remote `origin` are different objects.
+Mirror official source from `upstream/master` into `origin_main`; adopt only reviewed fixes relevant to DSH into `dsh_main`. The local branch `origin_main` and the Git remote `origin` are different objects. The specialized branch does not routinely merge the complete upstream mirror.
 
 | Name | Source or tracking ref | Role |
 |---|---|---|
@@ -63,10 +63,9 @@ git merge --ff-only origin/origin_main
 git merge --ff-only upstream/master
 git switch dsh_main
 git merge --ff-only origin/dsh_main
-git merge --no-edit origin_main
 ```
 
-If local `dsh_main` has unpublished commits and the fork-tracking ref has also moved, resolve that relationship deliberately before the final merge; the `--ff-only` step intentionally refuses such a divergence. Resolve merge conflicts by preserving DSH behavior and adopting relevant upstream fixes, then run the checks for affected source consumers. Publish only after the resulting branch and checks are reviewed. Push each branch to `origin` with an explicit name.
+If local `dsh_main` has unpublished commits and its fork-tracking ref has also moved, resolve that relationship deliberately; the `--ff-only` step intentionally refuses divergence. Inspect upstream changes against the retained source map, port relevant fixes with their original commit references, and run the affected DSH checks. Cherry-pick a complete commit only when every changed path belongs to the retained scope. Do not merge `origin_main` wholesale and restore retired workspaces. Push each reviewed branch to `origin` with an explicit name.
 
 ```sh
 git push origin origin_main

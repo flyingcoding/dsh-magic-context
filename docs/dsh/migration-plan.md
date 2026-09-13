@@ -166,7 +166,7 @@ Live shared-database support is deferred. Before enabling it, verify Magic schem
 <a id="phases"></a>
 ## Implementation stages
 
-Execute one dependency-ordered stage at a time. The P0–P4 lightweight release is implemented and passes the acceptance recorded in the compatibility matrix. P5 remains optional and requires a separate need. Deliverables below belong to this fork; the prepared [P0 checklist](README.md#p0) distinguishes completed setup from unverified adapter behavior.
+Execute one dependency-ordered stage at a time. The P0–P4 lightweight release is implemented and passes the acceptance recorded in the compatibility matrix. The next priority is [DSH-only specialization](dsh-only-plan.md); P5 remains optional and requires a separate need. Deliverables below belong to this fork; the prepared [P0 checklist](README.md#p0) distinguishes completed setup from unverified adapter behavior.
 
 | Stage | Prerequisite | Work and deliverable | Completion evidence |
 |---|---|---|---|

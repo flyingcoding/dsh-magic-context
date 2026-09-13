@@ -8,6 +8,7 @@ This directory owns the downstream DSH adaptation plan for the full `flyingcodin
 |---|---|
 | [Native package](../../packages/dsh-plugin/README.md) | Build, install, configure, and operate the current alpha. |
 | [Compatibility record](compatibility.md) | Verified host versions, replay and model tests, resource measurements, and remaining limits. |
+| [DSH-only optimization plan](dsh-only-plan.md) | Next priority: source extraction, removal of other adapters, simpler dependencies/configuration, and measurable acceptance. |
 | [Migration plan](migration-plan.md) | Scope, architecture, P0–P5 stages, data import, resource targets, and acceptance. |
 | [Upstream workflow](../../UPSTREAM.md) | Remotes, branch roles, pinned source baseline, pending changes, synchronization, and check selection. |
 | [Agent instructions](../../AGENTS.md) | Short standing rules for work in this fork. |
@@ -32,6 +33,11 @@ This checklist separates repository preparation from behavior verification. Comp
 
 The original P0 feasibility questions have a native implementation path. Follow the [compatibility record](compatibility.md) for acceptance status and the [package README](../../packages/dsh-plugin/README.md) for current behavior. Production-profile activation and npm publication remain separate release actions.
 
+<a id="next-phase"></a>
+## Next phase: specialize for DSH
+
+The project will support DSH alone. The [specialization plan](dsh-only-plan.md) records the inspected baseline and removal sequence; implementation is still pending. Extract the three required upstream source contracts first, then remove non-DSH workspaces, simplify root commands/CI/documentation, and measure equivalent before/after behavior. This takes priority over optional P5 features. A smaller source tree does not by itself prove lower runtime RSS.
+
 <a id="source-map"></a>
 ## Source map for the adapter
 
@@ -51,7 +57,7 @@ The DSH host is a separate integration repository, locally available as the sibl
 <a id="layout"></a>
 ## Package ownership
 
-`packages/dsh-plugin/` owns the native Bundle, Cordis service/provider/consumers, Host lifecycle, and optional DSH Web client integration. Keep reusable source in its upstream-owned location where practical; document every shared-file change and run the existing consumers' checks. Do not copy the community port's compiled `dist/` into this fork.
+`packages/dsh-plugin/` owns the native Bundle, Cordis service/provider/consumers, Host lifecycle, and optional DSH Web client integration. The next phase moves the required upstream leaves into this package with their tests and source attribution before retiring other workspaces. Do not copy the community port's compiled `dist/` into this fork.
 
 <a id="maintenance"></a>
 ## Maintain the development documents

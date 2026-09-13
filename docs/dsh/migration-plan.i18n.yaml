@@ -2,5 +2,5 @@
 # Refresh after updating both documents from the repository root:
 #   git hash-object docs/dsh/migration-plan.md docs/dsh/migration-plan.zh.md
 # These hashes identify text only; they do not certify adapter behavior.
-migration-plan.md: 69abd635d6c124b380d72ba9df790750bd1ce106
-migration-plan.zh.md: 0afa6122fb3c43727d5411de6b29b0dbfca59f5a
+migration-plan.md: d3ad3e3f65169bc8d3e6ff627ac93b52578ddbed
+migration-plan.zh.md: 4e3f6cfa45ee0ecd1c1a037ea16e82eff778da7a

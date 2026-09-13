@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-09-13T04:16:12.948054+00:00",
+  "sourceBaseline": "73cd88b40b2b0852f75ba267100e3ce664aac102",
+  "status": "inventory_complete_implementation_pending",
+  "countingMethod": "Sum blob sizes from git ls-tree -r -l -z at the source baseline; excludes Git object storage, untracked files, installed dependencies, build outputs, and caches.",
+  "tracked": {
+    "files": 2079,
+    "bytes": 38099062
+  },
+  "workspaceCount": 8,
+  "targetWorkspaceCount": 1,
+  "packageWorkspaces": [
+    {
+      "path": "packages/cli",
+      "name": "@cortexkit/magic-context",
+      "files": 97,
+      "bytes": 1040744,
+      "decision": "remove"
+    },
+    {
+      "path": "packages/dashboard",
+      "name": "@cortexkit/magic-context-dashboard",
+      "files": 100,
+      "bytes": 2943869,
+      "decision": "remove"
+    },
+    {
+      "path": "packages/docs",
+      "name": "@magic-context/docs",
+      "files": 36,
+      "bytes": 190489,
+      "decision": "remove"
+    },
+    {
+      "path": "packages/dsh-plugin",
+      "name": "@flyingcoding/dsh-magic-context",
+      "files": 41,
+      "bytes": 172411,
+      "decision": "retain"
+    },
+    {
+      "path": "packages/e2e-tests",
+      "name": "@cortexkit/opencode-magic-context-e2e",
+      "files": 141,
+      "bytes": 1219440,
+      "decision": "remove"
+    },
+    {
+      "path": "packages/pi-plugin",
+      "name": "@cortexkit/pi-magic-context",
+      "files": 189,
+      "bytes": 3021502,
+      "decision": "remove"
+    },
+    {
+      "path": "packages/plugin",
+      "name": "@cortexkit/opencode-magic-context",
+      "files": 974,
+      "bytes": 13732463,
+      "decision": "extract_required_leaves_then_remove"
+    },
+    {
+      "path": "packages/retina-local-fs",
+      "name": "@cortexkit/retina-local-fs",
+      "files": 12,
+      "bytes": 58114,
+      "decision": "remove"
+    }
+  ],
+  "rustCrates": [
+    {
+      "path": "crates/mc-core",
+      "files": 5,
+      "bytes": 229390,
+      "decision": "remove"
+    },
+    {
+      "path": "crates/mc-module",
+      "files": 130,
+      "bytes": 9211305,
+      "decision": "remove"
+    },
+    {
+      "path": "crates/mc-store",
+      "files": 2,
+      "bytes": 1172576,
+      "decision": "remove"
+    },
+    {
+      "path": "crates/mc-tokenizer",
+      "files": 7,
+      "bytes": 1128680,
+      "decision": "remove"
+    }
+  ],
+  "removalCandidates": {
+    "nonDshPackageFiles": 1549,
+    "nonDshPackageBytes": 22206621,
+    "rustFiles": 144,
+    "rustBytes": 11741951,
+    "combinedFiles": 1693,
+    "combinedBytes": 33948572,
+    "meaning": "Candidate footprint before extracting required source/tests and reviewing root files; not measured savings."
+  },
+  "upstreamImports": [
+    {
+      "consumer": "packages/dsh-plugin/src/store.ts",
+      "source": "packages/plugin/src/shared/sqlite.ts",
+      "kind": "runtime",
+      "retainedContract": "Node SQLite statements, transactions/savepoints, bindings, lifecycle, and failure propagation"
+    },
+    {
+      "consumer": "packages/dsh-plugin/src/tokenize.ts",
+      "source": "packages/plugin/src/features/magic-context/memory/normalize-hash.ts",
+      "kind": "runtime",
+      "retainedContract": "Retrieval whitespace/case normalization"
+    },
+    {
+      "consumer": "packages/dsh-plugin/src/types.ts",
+      "source": "packages/plugin/src/features/magic-context/memory/types.ts",
+      "kind": "type_only",
+      "retainedContract": "Seven existing DSH memory categories"
+    }
+  ],
+  "upstreamWorkflowsToReview": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/dashboard-release.yml",
+    ".github/workflows/discord-release.yml",
+    ".github/workflows/release.yml",
+    ".github/workflows/sign-notarize-dispatch.yml",
+    ".github/workflows/smoke-opencode-linux.yml",
+    ".github/workflows/win-opencode-probe.yml"
+  ],
+  "acceptedArtifact": {
+    "name": "@flyingcoding/dsh-magic-context",
+    "version": "0.1.0-alpha.1",
+    "sha256": "fd7cedc90125c4a3c5a27228de541feea1de0582f2a1f9637a3240b904e99aad",
+    "compressedBytes": 83656,
+    "unpackedBytes": 297300
+  },
+  "unmeasured": [
+    "specialized dependency install bytes",
+    "specialized build/check duration",
+    "specialized runtime RSS",
+    "final deletion count after source/test extraction"
+  ]
+}

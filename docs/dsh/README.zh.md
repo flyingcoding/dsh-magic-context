@@ -8,6 +8,7 @@
 |---|---|
 | [原生包说明](../../packages/dsh-plugin/README.zh.md) | 当前 alpha 的构建、安装、配置和使用方式。 |
 | [兼容性记录](compatibility.zh.md) | 已验证宿主版本、回放和模型测试、资源测量及限制。 |
+| [DSH 专用化优化计划](dsh-only-plan.zh.md) | 下一优先级：源码迁出、移除其他适配、精简依赖/配置及可测量验收。 |
 | [迁移计划](migration-plan.zh.md) | 范围、架构、P0–P5 阶段、数据导入、资源目标和验收。 |
 | [上游工作流](../../UPSTREAM.zh.md) | 远端、分支职责、源码基线、待同步变化、同步流程和检查选择。 |
 | [Agent 工作约定](../../AGENTS.md) | 本 fork 的简短执行规则。 |
@@ -32,6 +33,11 @@
 
 P0 的可行性问题已形成原生实现路径。验收状态以[兼容性记录](compatibility.zh.md)为准，当前行为见[包说明](../../packages/dsh-plugin/README.zh.md)。正式 profile 启用和 npm 发布仍属于独立发布动作。
 
+<a id="next-phase"></a>
+## 下一阶段：DSH 专用化
+
+本项目后续仅支持 DSH。[专用化计划](dsh-only-plan.zh.md)已记录核查基线与移除顺序，代码实施仍待执行。先迁出三个必要的上游源码约定，再删除非 DSH 工作区、精简根命令/CI/文档，并测量等价的前后行为；优先级高于可选 P5 功能。源码体积缩小本身不能证明运行时 RSS 降低。
+
 <a id="source-map"></a>
 ## 适配源码索引
 
@@ -51,7 +57,7 @@ DSH 宿主是独立的集成仓库，本机位于兄弟目录 `../deepseek-harne
 <a id="layout"></a>
 ## 包的职责
 
-`packages/dsh-plugin/` 拥有原生 Bundle、Cordis 服务/存储/消费者、Host 生命周期和可选的 DSH Web 客户端接入。在可行时保留可复用源码的上游位置；记录每处共享文件改动，并运行已有消费者的检查。不要把社区移植版编译后的 `dist/` 复制进本 fork。
+`packages/dsh-plugin/` 拥有原生 Bundle、Cordis 服务/存储/消费者、Host 生命周期和可选的 DSH Web 客户端接入。下一阶段会先将必要上游小模块连同测试和来源说明迁入本包，再退役其他工作区。不要把社区移植版编译后的 `dist/` 复制进本 fork。
 
 <a id="maintenance"></a>
 ## 开发文档维护
