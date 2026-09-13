@@ -1,0 +1,232 @@
+{
+  "recordedAt": "2026-09-13T01:46:10.966Z",
+  "sourceBase": "6f718ff019bf327a0b291a8510dfb42f91b65921",
+  "implementationCommit": "be3e1f871b4af0afc54e83925544dad8bf60b525",
+  "hostVersion": "0.1.5-rc.2",
+  "nativeTests": 18,
+  "upstreamLeafTests": 7,
+  "upstreamTypecheck": "passed",
+  "upstreamLint": "passed",
+  "resources": {
+    "measuredAt": "2026-09-13T00:04:08.544Z",
+    "node": "v24.18.0",
+    "platform": "darwin/arm64",
+    "budgets": {
+      "schema": 1,
+      "definedBeforeMeasurement": "2026-09-13",
+      "description": "Local keyless adapter gates; full-provider token billing and production RSS are separate acceptance measurements.",
+      "corpusSizes": [
+        1000,
+        10000
+      ],
+      "querySamples": 100,
+      "gates": {
+        "storeOpenMs": 100,
+        "queryP95Ms": 25,
+        "snapshotP95Ms": 25,
+        "snapshotEstimatedTokens": 1000,
+        "additionalRssMiB": 64,
+        "retainedSnapshotStateBytes": 128,
+        "auxiliaryModelCalls": 0,
+        "additionalProcesses": 0
+      }
+    },
+    "measurements": [
+      {
+        "records": 1000,
+        "storeOpenMs": 1.9908329999999808,
+        "queryP50Ms": 0.22424999999998363,
+        "queryP95Ms": 0.27912500000002183,
+        "snapshotP95Ms": 0.22645799999997962,
+        "snapshotEstimatedTokens": 823,
+        "baselineRssMiB": 121.65625,
+        "idleRssMiB": 123.203125,
+        "peakRssMiB": 132.6875,
+        "additionalRssMiB": 11.03125,
+        "databaseBytes": 2838528,
+        "walBytes": 4198312,
+        "retainedSnapshotStateBytes": 52,
+        "additionalProcesses": 0,
+        "framingEstimatedTokens": 62,
+        "standingGuidanceEstimatedTokens": 303,
+        "toolSchemasEstimatedTokens": 1060,
+        "history": [
+          {
+            "events": 100,
+            "preStepP95Ms": 0.03295799999989413
+          },
+          {
+            "events": 10000,
+            "preStepP95Ms": 0.02945799999997689
+          }
+        ],
+        "auxiliaryModelCalls": 0
+      },
+      {
+        "records": 10000,
+        "storeOpenMs": 2.1793340000000114,
+        "queryP50Ms": 0.7088750000002619,
+        "queryP95Ms": 0.7494999999998981,
+        "snapshotP95Ms": 1.2091249999994034,
+        "snapshotEstimatedTokens": 826,
+        "baselineRssMiB": 103.65625,
+        "idleRssMiB": 105.390625,
+        "peakRssMiB": 150.5625,
+        "additionalRssMiB": 46.90625,
+        "databaseBytes": 28983296,
+        "walBytes": 4223032,
+        "retainedSnapshotStateBytes": 52,
+        "additionalProcesses": 0,
+        "framingEstimatedTokens": 62,
+        "standingGuidanceEstimatedTokens": 303,
+        "toolSchemasEstimatedTokens": 1060,
+        "history": [
+          {
+            "events": 100,
+            "preStepP95Ms": 0.03287499999987631
+          },
+          {
+            "events": 10000,
+            "preStepP95Ms": 0.029125000000021828
+          }
+        ],
+        "auxiliaryModelCalls": 0
+      }
+    ]
+  },
+  "realModel": {
+    "model": "ollama/deepseek-v4.1-flash",
+    "scenarioCount": 10,
+    "modelCalls": 24,
+    "elapsedSeconds": 61.105,
+    "reportedUsage": {
+      "inputTokens": 160224,
+      "outputTokens": 3152,
+      "cacheReadTokens": 305664,
+      "cacheWriteTokens": 0,
+      "totalTokens": 469040
+    },
+    "scenarios": [
+      {
+        "name": "remember",
+        "passed": true,
+        "elapsedMs": 5906,
+        "modelCalls": 2,
+        "tools": [
+          "memory_remember"
+        ]
+      },
+      {
+        "name": "recall",
+        "passed": true,
+        "elapsedMs": 4910,
+        "modelCalls": 2,
+        "tools": [
+          "memory_recall"
+        ]
+      },
+      {
+        "name": "isolation",
+        "passed": true,
+        "elapsedMs": 5451,
+        "modelCalls": 2,
+        "tools": [
+          "bash",
+          "memory_recall"
+        ]
+      },
+      {
+        "name": "correct",
+        "passed": true,
+        "elapsedMs": 6969,
+        "modelCalls": 3,
+        "tools": [
+          "memory_recall",
+          "memory_update"
+        ]
+      },
+      {
+        "name": "recall-corrected",
+        "passed": true,
+        "elapsedMs": 5593,
+        "modelCalls": 2,
+        "tools": [
+          "memory_recall"
+        ]
+      },
+      {
+        "name": "archive",
+        "passed": true,
+        "elapsedMs": 6227,
+        "modelCalls": 3,
+        "tools": [
+          "memory_recall",
+          "memory_forget"
+        ]
+      },
+      {
+        "name": "recall-archived",
+        "passed": true,
+        "elapsedMs": 4786,
+        "modelCalls": 2,
+        "tools": [
+          "memory_recall",
+          "memory_recall"
+        ]
+      },
+      {
+        "name": "history",
+        "passed": true,
+        "elapsedMs": 11709,
+        "modelCalls": 4,
+        "tools": [
+          "session_search",
+          "session_search",
+          "session_event_search",
+          "session_event_read"
+        ]
+      },
+      {
+        "name": "global-remember",
+        "passed": true,
+        "elapsedMs": 4413,
+        "modelCalls": 2,
+        "tools": [
+          "memory_remember"
+        ]
+      },
+      {
+        "name": "global-recall",
+        "passed": true,
+        "elapsedMs": 5141,
+        "modelCalls": 2,
+        "tools": [
+          "memory_recall"
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "surface": "DSH Web",
+    "viewport": "1280x720",
+    "clientSha256": "7fd3f3d212a94854db3c5df5e1c779473e043d782a19acba194aa8c8e970e29a",
+    "checks": [
+      "load",
+      "workspace/global selection",
+      "revision update",
+      "archive",
+      "JSON export",
+      "no new console errors"
+    ]
+  },
+  "artifact": {
+    "name": "@flyingcoding/dsh-magic-context",
+    "version": "0.1.0-alpha.1",
+    "cleanInstall": true,
+    "profileComposition": "passed",
+    "sha256": "fd7cedc90125c4a3c5a27228de541feea1de0582f2a1f9637a3240b904e99aad",
+    "compressedBytes": 83656,
+    "unpackedBytes": 297300,
+    "sourceSha256": "5350eab2a3cb1978d3b3dbcbfef70ef6218738816928c77e942f193f183b0618"
+  }
+}
