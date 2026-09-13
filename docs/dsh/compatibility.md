@@ -4,6 +4,8 @@ English | [中文](compatibility.zh.md)
 
 This record preserves the initial pre-specialization acceptance evidence for `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`. It covers the lightweight native memory implementation committed on `dsh_main` at the revision below. The package is a private local artifact; production-profile activation and npm publication are separate actions. Findings below have high confidence for the named fixtures, versions, and machine, with the limits stated at the end.
 
+Current DSH-only results are in the [specialization acceptance](specialization.md); this page preserves the initial alpha measurements.
+
 ## Reproducible inputs
 
 | Input | Verified value |

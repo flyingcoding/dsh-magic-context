@@ -43,7 +43,8 @@ profile 安装、配置和显式真实模型验收见[包指南](packages/dsh-pl
 | [源码布局](STRUCTURE.zh.md) | 保留文件与命令的归属。 |
 | [DSH 开发入口](docs/dsh/README.zh.md) | 计划、源码来源与兼容性证据。 |
 | [专用化计划](docs/dsh/dsh-only-plan.zh.md) | 移除范围、阶段和验收标准。 |
-| [兼容性](docs/dsh/compatibility.zh.md) | 固定版本的观测和支持限制。 |
+| [专用化验收](docs/dsh/specialization.zh.md) | 当前产物、干净检查、模型/Web 证据和实测变化。 |
+| [初始兼容性](docs/dsh/compatibility.zh.md) | 保留的首次发布观测和支持限制。 |
 | [上游工作流](UPSTREAM.zh.md) | 完整源码镜像和相关修复的选择性迁入。 |
 
 ## 来源与许可证

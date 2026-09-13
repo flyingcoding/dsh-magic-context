@@ -1,6 +1,6 @@
 ---
 description: "Next-phase plan to specialize this fork for DSH and remove other host adapters, workspaces, and release machinery."
-status: "in_progress"
+status: "completed"
 owner: "flyingcoding/dsh-magic-context maintainers"
 created: "2026-09-13"
 updated: "2026-09-13"
@@ -13,7 +13,7 @@ English | [中文](dsh-only-plan.zh.md)
 
 This specialization makes DSH the only supported host: remove other adapters and their development dependencies, simplify configuration and repository structure, and preserve the accepted native memory behavior. This work takes priority over the optional P5 feature expansion in the [migration plan](migration-plan.md#phases).
 
-S1–S3 source extraction, workspace pruning, and entry-point alignment are implemented and pass default checks; S4 is running final behavior acceptance and benefit measurement. The accepted `0.1.0-alpha.1` code and its [compatibility evidence](compatibility.md) remain the starting point. This plan does not claim that deleting source files has already reduced runtime memory or build time.
+S1–S4 are complete within the local macOS / Node 24 acceptance scope. The [specialization record](specialization.md) reports clean installation, runtime and Web behavior, real-model scenarios, controlled measurements, and rollback. The initial [alpha evidence](compatibility.md) remains the historical starting point; observed resource limits and remote-CI boundaries are explicit in the new record.
 
 <a id="baseline"></a>
 ## Evidence and expected benefit
@@ -35,7 +35,7 @@ The source baseline is `73cd88b40b2b0852f75ba267100e3ce664aac102`. Counts below 
 | Seven other package trees | 1,549 | 22,206,621 | Removal candidates after preserving the required source subset. |
 | Four Rust crate trees | 144 | 11,741,951 | Outside the accepted DSH runtime. |
 
-The seven package trees and Rust crates total 1,693 files and 33,948,572 bytes. This is a candidate footprint, not a promised deletion total: source extraction and retained tests add files, and root documents/scripts need their own review. Removing these trees does not shrink existing Git history. Dependency disk usage, build duration, and final runtime RSS have not been measured for the proposed result. Confidence is high for the pinned inventory and observed imports; performance benefits remain to be measured.
+The seven package trees and Rust crates total 1,693 files and 33,948,572 bytes. This is a candidate footprint, not a promised deletion total: source extraction and retained tests add files, and root documents/scripts need their own review. Removing these trees does not shrink existing Git history. At planning time, dependency disk usage, build duration, and final runtime RSS were unmeasured. The [acceptance record](specialization.md) now separates measured changes from unproven performance gains. Confidence remains high for the pinned inventory and observed imports.
 
 <a id="ownership"></a>
 ## Retain, extract, and remove
@@ -76,9 +76,9 @@ Do not transplant the upstream memory store, embedding caches, Historian, Dreame
 |---|---|---|---|
 | S0: inventory and scope | Complete for this plan | Pinned source footprint, three import boundaries, candidate removal list, and benefit limits. | Reproducible Git inventory and source/manifest inspection recorded here. |
 | S1: make DSH source self-contained | Complete (`9d958bc2`) | Local source subset, Node-focused SQLite surface, moved behavior tests, updated declarations and attribution. | DSH checks and artifact build pass with no compile/runtime imports from another package tree; existing database and replay behavior remain valid. |
-| S2: prune workspaces and dependencies | Implemented; default checks passed | Remove the seven non-DSH package trees and Rust/host-only support; simplify root scripts and regenerate the lockfile. | A clean checkout has exactly one package workspace; default install/build/check commands require no old host, Cargo, private sibling repository, or optional inference runtime. |
-| S3: align CI, releases, and documentation | Implemented; paired checks passed | DSH-only CI and root project entry points; retired upstream publication/signing jobs; selective upstream maintenance. | No active command/export/workflow references a removed owner; paired documentation and local links pass verification. |
-| S4: verify behavior and measure benefit | In progress | New acceptance record, isolated tarball, before/after measurements, and rollback evidence. | Functional, packaging, configuration, and resource criteria below pass against the exact resulting commit. |
+| S2: prune workspaces and dependencies | Complete (`cfb788fe`) | Remove the seven non-DSH package trees and Rust/host-only support; simplify root scripts and regenerate the lockfile. | A clean checkout has exactly one package workspace; default install/build/check commands require no old host, Cargo, private sibling repository, or optional inference runtime. |
+| S3: align CI, releases, and documentation | Complete (`cfb788fe`) | DSH-only CI and root project entry points; retired upstream publication/signing jobs; selective upstream maintenance. | No active command/export/workflow references a removed owner; paired documentation and local links pass verification. |
+| S4: verify behavior and measure benefit | Complete; [local acceptance](specialization.md) | New acceptance record, isolated tarball, before/after measurements, and rollback evidence. | Functional, packaging, configuration, and resource criteria below pass against the exact resulting commit. |
 
 Each implementation commit should leave the retained DSH path reviewable and usable. Move the test/CI references with the source they check; remove a workspace and its root command/configuration references together. Use `trash` for filesystem deletions. This phase changes repository code and build ownership; user memory databases, Session logs, production profiles, and unrelated machine caches are not cleanup targets.
 
@@ -115,4 +115,4 @@ Use the existing adapter check/build/install/benchmark commands in the [package 
 
 Before S1, record the accepted source commit and tarball checksum. Roll back repository changes by reverting the relevant specialization commits or using a separate checkout of that baseline; do not rewrite the upstream mirror or Git history. Existing memory and Session formats remain stable during this optimization, so rollback should not require data conversion. Any need for a schema change is a separate change with its own migration evidence.
 
-This plan is complete when S1–S4 have acceptance evidence, the normal project path serves DSH alone, and every retained non-DSH-named dependency or source file has a demonstrated DSH purpose. Embeddings, broader semantic-recall evaluation, background extraction, new hosts, npm publication, and production-profile activation remain separate work items.
+The [acceptance evidence](specialization.md) completes S1–S4 for the named local environment: the normal project path serves DSH alone and retained dependencies/source have documented DSH purposes. Embeddings, broader semantic-recall evaluation, background extraction, new hosts, npm publication, and production-profile activation remain separate work items.

@@ -7,6 +7,7 @@
 | 阅读入口 | 用途 |
 |---|---|
 | [原生包](../../packages/dsh-plugin/README.zh.md) | 构建、安装、配置和使用私有 alpha。 |
+| [专用化验收](specialization.zh.md) | 已完成 S1–S4、最终产物、可比测量、模型/Web 检查及回退。 |
 | [兼容性记录](compatibility.zh.md) | 初始验收输入、行为观测、模型/资源结果和限制。 |
 | [DSH 专用化计划](dsh-only-plan.zh.md) | 源码迁出、移除范围和专用化验收顺序。 |
 | [迁移交接](migration-plan.zh.md) | 首次发布的历史设计、范围、P0–P5 阶段和可选导入。 |

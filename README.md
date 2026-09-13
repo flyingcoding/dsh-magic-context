@@ -43,7 +43,8 @@ The lightweight path uses literal Chinese/identifier/path retrieval. Embeddings,
 | [Source layout](STRUCTURE.md) | Ownership of retained files and commands. |
 | [DSH development entry](docs/dsh/README.md) | Plans, source provenance, and compatibility evidence. |
 | [Specialization plan](docs/dsh/dsh-only-plan.md) | Removal scope, stages, and acceptance criteria. |
-| [Compatibility](docs/dsh/compatibility.md) | Versioned observations and supported limits. |
+| [Specialization acceptance](docs/dsh/specialization.md) | Current package, clean checks, model/Web evidence, and measured changes. |
+| [Initial compatibility](docs/dsh/compatibility.md) | Preserved first-release observations and supported limits. |
 | [Upstream workflow](UPSTREAM.md) | Full source mirror and selective adoption of relevant fixes. |
 
 ## Source and license

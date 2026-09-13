@@ -1,0 +1,703 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-09-13T06:23:51.397704+00:00",
+  "status": "completed_local_acceptance",
+  "sources": {
+    "upstream": "6f718ff019bf327a0b291a8510dfb42f91b65921",
+    "acceptedBaseline": "73cd88b40b2b0852f75ba267100e3ce664aac102",
+    "planning": "f99f30517f99fd2abe436c965c26e003a3a1546a",
+    "extraction": "9d958bc2b99632529207181f5d221f7fc32c64fd",
+    "specialization": "cfb788fee843d477d26c1ab5628f21feacb9ceac",
+    "artifactBuild": "dc99b926626d3c9b625a2fec2e42130b06ea705f",
+    "acceptanceHarness": "eba1a3eda55785028c6fc7c46569e6b5cb6f9019",
+    "originMainUnchanged": true
+  },
+  "environment": {
+    "node": "v24.18.0",
+    "bun": "1.3.5",
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "publishedDshPackages": "0.1.5-rc.2",
+    "installedDshCli": "0.1.5-rc.2",
+    "cordis": "4.0.2",
+    "hostModuleIdentity": {
+      "sharedToolRuntime": true,
+      "agentLoopVersion": "0.1.5-rc.2",
+      "toolsVersion": "0.1.5-rc.2",
+      "agentLoopSha256": "257eb83c00a05ee068e9f4ba80ca71ab94e3a1275d24b7a0cf5038ff23dd0fd8",
+      "toolsSha256": "aaba52bf5d0149355407642b3965c06977d1e9143f5c61bc19429abbe6a11c5d"
+    }
+  },
+  "artifact": {
+    "package": "@flyingcoding/dsh-magic-context",
+    "version": "0.1.0-alpha.1",
+    "sha256": "8ec74edbcfeb38bf0fb00b3c4edcc50a0705ea4f0b7a44c53ea611e23aabf833",
+    "compressedBytes": 61064,
+    "unpackedBytes": 238140,
+    "declarationFiles": 16,
+    "declarationClosure": "passed",
+    "profileComposition": "passed"
+  },
+  "baselineArtifact": {
+    "sha256": "fd7cedc90125c4a3c5a27228de541feea1de0582f2a1f9637a3240b904e99aad",
+    "compressedBytes": 83656,
+    "unpackedBytes": 297300
+  },
+  "footprint": {
+    "method": "Tracked Git blob content at the named snapshots; final acceptance documents are additional. Installed identities are unique package name/version pairs found under node_modules; du -sk reports allocated blocks and is not a whole-disk free-space claim.",
+    "before": {
+      "source": "73cd88b40b2b0852f75ba267100e3ce664aac102",
+      "workspaces": 8,
+      "trackedFiles": 2079,
+      "trackedBytes": 38099062,
+      "lockfileEntries": 1223,
+      "lockfileBytes": 326416,
+      "installedPackageIdentities": 70,
+      "nodeModulesKiB": 121728,
+      "installMode": "clean filtered frozen install, lifecycle scripts disabled"
+    },
+    "after": {
+      "source": "dc99b926626d3c9b625a2fec2e42130b06ea705f",
+      "workspaces": 1,
+      "trackedFiles": 79,
+      "trackedBytes": 415749,
+      "lockfileEntries": 117,
+      "lockfileBytes": 37575,
+      "installedPackageIdentities": 64,
+      "nodeModulesKiB": 114288,
+      "installMode": "clean default frozen install, lifecycle scripts disabled"
+    },
+    "removedTrackedPaths": 2013,
+    "newResolvedDependencyVersions": []
+  },
+  "commands": {
+    "baselineClean": [
+      {
+        "name": "install",
+        "command": [
+          "bun",
+          "install",
+          "--frozen-lockfile",
+          "--filter",
+          "@flyingcoding/dsh-magic-context",
+          "--ignore-scripts"
+        ],
+        "seconds": 0.101,
+        "exitCode": 0
+      },
+      {
+        "name": "check",
+        "command": [
+          "bun",
+          "run",
+          "check:dsh"
+        ],
+        "seconds": 1.827,
+        "exitCode": 2
+      }
+    ],
+    "baselineExistingInstallation": [
+      {
+        "name": "check",
+        "command": [
+          "bun",
+          "run",
+          "check:dsh"
+        ],
+        "seconds": 1.502,
+        "exitCode": 0,
+        "environment": "existing complete dependency installation"
+      },
+      {
+        "name": "build",
+        "command": [
+          "bun",
+          "run",
+          "--cwd",
+          "packages/dsh-plugin",
+          "build"
+        ],
+        "seconds": 0.983,
+        "exitCode": 0,
+        "environment": "existing complete dependency installation"
+      },
+      {
+        "name": "benchmark",
+        "command": [
+          "bun",
+          "run",
+          "--cwd",
+          "packages/dsh-plugin",
+          "benchmark"
+        ],
+        "seconds": 8.247,
+        "exitCode": 0,
+        "environment": "existing complete dependency installation"
+      }
+    ],
+    "finalCleanCheckout": [
+      {
+        "name": "install",
+        "command": [
+          "bun",
+          "install",
+          "--frozen-lockfile",
+          "--ignore-scripts"
+        ],
+        "seconds": 0.058,
+        "exitCode": 0
+      },
+      {
+        "name": "check",
+        "command": [
+          "bun",
+          "run",
+          "check"
+        ],
+        "seconds": 4.074,
+        "exitCode": 0
+      },
+      {
+        "name": "build",
+        "command": [
+          "bun",
+          "run",
+          "build"
+        ],
+        "seconds": 0.971,
+        "exitCode": 0
+      },
+      {
+        "name": "artifact",
+        "command": [
+          "bun",
+          "run",
+          "test:install"
+        ],
+        "seconds": 13.836,
+        "exitCode": 0
+      },
+      {
+        "name": "benchmark",
+        "command": [
+          "bun",
+          "run",
+          "benchmark"
+        ],
+        "seconds": 8.553,
+        "exitCode": 0
+      },
+      {
+        "name": "rollback",
+        "command": [
+          "bun",
+          "run",
+          "test:rollback"
+        ],
+        "seconds": 0.117,
+        "exitCode": 0
+      },
+      {
+        "name": "workflow",
+        "command": [
+          "actionlint",
+          ".github/workflows/dsh.yml"
+        ],
+        "seconds": 0.071,
+        "exitCode": 0
+      }
+    ],
+    "liveModel": "DSH_MEMORY_TEST_HOME supplied; bun run test:live",
+    "controlledComparison": "node packages/dsh-plugin/scripts/compare-benchmarks.mjs BASELINE_PACKAGE; baseline package contains the accepted dist and published test dependencies"
+  },
+  "verification": {
+    "nodeTestsPassed": 27,
+    "typecheck": "passed",
+    "lint": "passed",
+    "defaultWorkspaceAndLockfile": "passed",
+    "documentationPairs": "passed",
+    "actionlint": "passed",
+    "remoteLinuxCi": "not_run",
+    "isolatedArtifact": "passed",
+    "browser": "passed",
+    "realModelScenarios": "10/10",
+    "runtimeJavaScriptIdenticalBetweenControlledComparisonAndFinalArtifact": true
+  },
+  "controlledComparison": {
+    "measuredAt": "2026-09-13T05:54:40.975Z",
+    "node": "v24.18.0",
+    "platform": "darwin/arm64",
+    "workloadHashes": {
+      "scripts/benchmark-worker.ts": "bbcb8469ac97b5050525a07cb0a533d4e7ff40a20ffe9b736cc957a76c331d5d",
+      "tests/fixtures.ts": "4ae091c64b00c3fa7eeea6ffef31af5b075ed18aeb76bebf10c6ceb1775345c9",
+      "tests/recording-adapter.ts": "1a3e3678f28b86bb6ea4b5bb746f710db72034d5a2d8290d3b602b996f63b02f"
+    },
+    "artifacts": {
+      "before": {
+        "index": "2f0070a95ff0b60fa583031f7aebf80dc3ebd866f1f647052be1ae57ded2bd36",
+        "store": "14c38c937b8441425ff7f5572050e5028bf6954bf16a08023af3f969d624379c",
+        "tools": "9ccf7cdae8856451d0ebbe9f39ff498d86b782f6926385a5b09720e0ac798612",
+        "recall": "8f13c6ca642b1815bbb5f58bacf398653569376991618877b0014f86bcbfaa93"
+      },
+      "after": {
+        "index": "f2f12acd685176d05310f139a10581b9027017162f28a2500ec29efceba974a0",
+        "store": "8fbc2509b0769ef8f087470c910ffe98b3cef25a973aed13ab6a1e6216db50a9",
+        "tools": "9ccf7cdae8856451d0ebbe9f39ff498d86b782f6926385a5b09720e0ac798612",
+        "recall": "daea78c18246143edaade48149d425427870832e8bb2048582358ba646bd15be"
+      }
+    },
+    "budgets": {
+      "schema": 1,
+      "definedBeforeMeasurement": "2026-09-13",
+      "description": "Local keyless adapter gates; full-provider token billing and production RSS are separate acceptance measurements.",
+      "corpusSizes": [
+        1000,
+        10000
+      ],
+      "querySamples": 100,
+      "gates": {
+        "storeOpenMs": 100,
+        "queryP95Ms": 25,
+        "snapshotP95Ms": 25,
+        "snapshotEstimatedTokens": 1000,
+        "additionalRssMiB": 64,
+        "retainedSnapshotStateBytes": 128,
+        "auxiliaryModelCalls": 0,
+        "additionalProcesses": 0
+      }
+    },
+    "measurements": {
+      "before": [
+        {
+          "records": 1000,
+          "storeOpenMs": 2.163000000000011,
+          "queryP50Ms": 0.22762499999998909,
+          "queryP95Ms": 0.25004100000001017,
+          "snapshotP95Ms": 0.19558300000005602,
+          "snapshotEstimatedTokens": 860,
+          "baselineRssMiB": 121.21875,
+          "idleRssMiB": 122.8125,
+          "peakRssMiB": 133.28125,
+          "additionalRssMiB": 12.0625,
+          "databaseBytes": 3211264,
+          "walBytes": 4235392,
+          "retainedSnapshotStateBytes": 52,
+          "additionalProcesses": 0,
+          "framingEstimatedTokens": 62,
+          "standingGuidanceEstimatedTokens": 303,
+          "toolSchemasEstimatedTokens": 1060,
+          "history": [
+            {
+              "events": 100,
+              "preStepP95Ms": 0.03458299999999781
+            },
+            {
+              "events": 10000,
+              "preStepP95Ms": 0.030583000000092397
+            }
+          ],
+          "auxiliaryModelCalls": 0
+        },
+        {
+          "records": 10000,
+          "storeOpenMs": 2.157375000000002,
+          "queryP50Ms": 0.771958999999697,
+          "queryP95Ms": 0.8673749999998108,
+          "snapshotP95Ms": 1.489332999999533,
+          "snapshotEstimatedTokens": 863,
+          "baselineRssMiB": 105.953125,
+          "idleRssMiB": 107.84375,
+          "peakRssMiB": 150.75,
+          "additionalRssMiB": 44.796875,
+          "databaseBytes": 32182272,
+          "walBytes": 4223032,
+          "retainedSnapshotStateBytes": 52,
+          "additionalProcesses": 0,
+          "framingEstimatedTokens": 62,
+          "standingGuidanceEstimatedTokens": 303,
+          "toolSchemasEstimatedTokens": 1060,
+          "history": [
+            {
+              "events": 100,
+              "preStepP95Ms": 0.033083000000260654
+            },
+            {
+              "events": 10000,
+              "preStepP95Ms": 0.028749999999490683
+            }
+          ],
+          "auxiliaryModelCalls": 0
+        }
+      ],
+      "after": [
+        {
+          "records": 1000,
+          "storeOpenMs": 2.486959000000013,
+          "queryP50Ms": 0.22825000000000273,
+          "queryP95Ms": 0.26975000000004457,
+          "snapshotP95Ms": 0.20033300000000054,
+          "snapshotEstimatedTokens": 860,
+          "baselineRssMiB": 117.4375,
+          "idleRssMiB": 118.765625,
+          "peakRssMiB": 132.515625,
+          "additionalRssMiB": 15.078125,
+          "databaseBytes": 3207168,
+          "walBytes": 4210672,
+          "retainedSnapshotStateBytes": 52,
+          "additionalProcesses": 0,
+          "framingEstimatedTokens": 62,
+          "standingGuidanceEstimatedTokens": 303,
+          "toolSchemasEstimatedTokens": 1060,
+          "history": [
+            {
+              "events": 100,
+              "preStepP95Ms": 0.0344159999999647
+            },
+            {
+              "events": 10000,
+              "preStepP95Ms": 0.030624999999986358
+            }
+          ],
+          "auxiliaryModelCalls": 0
+        },
+        {
+          "records": 10000,
+          "storeOpenMs": 2.238332999999983,
+          "queryP50Ms": 0.7616660000003321,
+          "queryP95Ms": 0.8177079999986745,
+          "snapshotP95Ms": 1.27545900000041,
+          "snapshotEstimatedTokens": 863,
+          "baselineRssMiB": 103.078125,
+          "idleRssMiB": 104.53125,
+          "peakRssMiB": 124.0625,
+          "additionalRssMiB": 20.984375,
+          "databaseBytes": 32194560,
+          "walBytes": 4264232,
+          "retainedSnapshotStateBytes": 52,
+          "additionalProcesses": 0,
+          "framingEstimatedTokens": 62,
+          "standingGuidanceEstimatedTokens": 303,
+          "toolSchemasEstimatedTokens": 1060,
+          "history": [
+            {
+              "events": 100,
+              "preStepP95Ms": 0.03462500000023283
+            },
+            {
+              "events": 10000,
+              "preStepP95Ms": 0.026624999998603016
+            }
+          ],
+          "auxiliaryModelCalls": 0
+        }
+      ]
+    }
+  },
+  "comparisonLimits": [
+    "Both versions used identical benchmark-worker, fixture, and recording-adapter source hashes, one common cwd, equal snapshot token counts, and separate processes.",
+    "One controlled pair per corpus is observational; query/RSS improvements are not a statistically established or general runtime guarantee.",
+    "The 1000-record run increased query p95 from 0.250041 to 0.269750 ms, snapshot p95 from 0.195583 to 0.200333 ms, and added peak RSS from 12.0625 to 15.078125 MiB. These small-workload regressions remain inside the original gates and are not attributed to a confirmed cause.",
+    "Default-check duration is not compared as an optimization: the original clean filtered check failed, and the successful old check used an already complete installation."
+  ],
+  "defaultBenchmark": {
+    "measuredAt": "2026-09-13T06:01:00.115Z",
+    "node": "v24.18.0",
+    "platform": "darwin/arm64",
+    "budgets": {
+      "schema": 1,
+      "definedBeforeMeasurement": "2026-09-13",
+      "description": "Local keyless adapter gates; full-provider token billing and production RSS are separate acceptance measurements.",
+      "corpusSizes": [
+        1000,
+        10000
+      ],
+      "querySamples": 100,
+      "gates": {
+        "storeOpenMs": 100,
+        "queryP95Ms": 25,
+        "snapshotP95Ms": 25,
+        "snapshotEstimatedTokens": 1000,
+        "additionalRssMiB": 64,
+        "retainedSnapshotStateBytes": 128,
+        "auxiliaryModelCalls": 0,
+        "additionalProcesses": 0
+      }
+    },
+    "measurements": [
+      {
+        "records": 1000,
+        "storeOpenMs": 2.2750839999999926,
+        "queryP50Ms": 0.21795799999995324,
+        "queryP95Ms": 0.24766699999997854,
+        "snapshotP95Ms": 0.19183299999997416,
+        "snapshotEstimatedTokens": 886,
+        "baselineRssMiB": 122.828125,
+        "idleRssMiB": 124.234375,
+        "peakRssMiB": 133.859375,
+        "additionalRssMiB": 11.03125,
+        "databaseBytes": 3461120,
+        "walBytes": 4206552,
+        "retainedSnapshotStateBytes": 52,
+        "additionalProcesses": 0,
+        "framingEstimatedTokens": 62,
+        "standingGuidanceEstimatedTokens": 303,
+        "toolSchemasEstimatedTokens": 1060,
+        "history": [
+          {
+            "events": 100,
+            "preStepP95Ms": 0.033458999999993466
+          },
+          {
+            "events": 10000,
+            "preStepP95Ms": 0.030207999999902313
+          }
+        ],
+        "auxiliaryModelCalls": 0
+      },
+      {
+        "records": 10000,
+        "storeOpenMs": 2.231334000000004,
+        "queryP50Ms": 0.7726249999996071,
+        "queryP95Ms": 0.840582999999242,
+        "snapshotP95Ms": 1.2977090000003955,
+        "snapshotEstimatedTokens": 890,
+        "baselineRssMiB": 103.109375,
+        "idleRssMiB": 104.609375,
+        "peakRssMiB": 124.359375,
+        "additionalRssMiB": 21.25,
+        "databaseBytes": 35057664,
+        "walBytes": 4371352,
+        "retainedSnapshotStateBytes": 52,
+        "additionalProcesses": 0,
+        "framingEstimatedTokens": 62,
+        "standingGuidanceEstimatedTokens": 303,
+        "toolSchemasEstimatedTokens": 1060,
+        "history": [
+          {
+            "events": 100,
+            "preStepP95Ms": 0.03491600000052131
+          },
+          {
+            "events": 10000,
+            "preStepP95Ms": 0.026332999999794993
+          }
+        ],
+        "auxiliaryModelCalls": 0
+      }
+    ]
+  },
+  "rollback": {
+    "testedAt": "2026-09-13T06:01:00.234Z",
+    "node": "v24.18.0",
+    "baselineStoreSha256": "14c38c937b8441425ff7f5572050e5028bf6954bf16a08023af3f969d624379c",
+    "currentStoreSha256": "8fbc2509b0769ef8f087470c910ffe98b3cef25a973aed13ab6a1e6216db50a9",
+    "sequence": [
+      "accepted artifact writes",
+      "specialized artifact reads and revises",
+      "accepted artifact reads and archives",
+      "specialized artifact reopens"
+    ],
+    "stableIdsAndReceipts": true,
+    "revisionsAndArchive": true,
+    "literalAndGlobalRecall": true,
+    "schemaVersion": 1,
+    "dataConversionRequired": false
+  },
+  "realModel": {
+    "model": "ollama/deepseek-v4.1-flash",
+    "endpoint": "https://ollama.com/v1",
+    "titleModelDisabled": true,
+    "isolatedHome": true,
+    "scenarioCount": 10,
+    "successfulModelRequests": 27,
+    "successfulDurationMs": 73664,
+    "successfulUsage": {
+      "inputTokens": 143920,
+      "outputTokens": 4254,
+      "totalTokens": 531406,
+      "cacheReadTokens": 383232
+    },
+    "allAttemptModelRequests": 50,
+    "allAttemptUsage": {
+      "inputTokens": 276682,
+      "outputTokens": 7781,
+      "totalTokens": 981935,
+      "cacheReadTokens": 697472
+    },
+    "results": [
+      {
+        "name": "remember",
+        "passed": true,
+        "elapsedMs": 5382,
+        "tools": [
+          "memory_remember"
+        ],
+        "modelCalls": 2
+      },
+      {
+        "name": "recall",
+        "passed": true,
+        "elapsedMs": 5793,
+        "tools": [
+          "memory_recall"
+        ],
+        "modelCalls": 2
+      },
+      {
+        "name": "isolation",
+        "passed": true,
+        "elapsedMs": 8360,
+        "tools": [
+          "memory_recall",
+          "glob",
+          "memory_recall",
+          "bash"
+        ],
+        "modelCalls": 3
+      },
+      {
+        "name": "correct",
+        "passed": true,
+        "elapsedMs": 6066,
+        "tools": [
+          "memory_recall",
+          "memory_update"
+        ],
+        "modelCalls": 3
+      },
+      {
+        "name": "recall-corrected",
+        "passed": true,
+        "elapsedMs": 4952,
+        "tools": [
+          "memory_recall"
+        ],
+        "modelCalls": 2
+      },
+      {
+        "name": "archive",
+        "passed": true,
+        "elapsedMs": 6804,
+        "tools": [
+          "memory_recall",
+          "memory_forget"
+        ],
+        "modelCalls": 3
+      },
+      {
+        "name": "recall-archived",
+        "passed": true,
+        "elapsedMs": 6332,
+        "tools": [
+          "memory_recall",
+          "memory_recall",
+          "memory_recall",
+          "memory_recall"
+        ],
+        "modelCalls": 3
+      },
+      {
+        "name": "history",
+        "passed": true,
+        "elapsedMs": 17360,
+        "tools": [
+          "session_search",
+          "session_search",
+          "session_event_search",
+          "session_event_search",
+          "session_event_search",
+          "session_event_search",
+          "session_event_read",
+          "session_event_read"
+        ],
+        "modelCalls": 5
+      },
+      {
+        "name": "global-remember",
+        "passed": true,
+        "elapsedMs": 5793,
+        "tools": [
+          "memory_remember"
+        ],
+        "modelCalls": 2
+      },
+      {
+        "name": "global-recall",
+        "passed": true,
+        "elapsedMs": 6822,
+        "tools": [
+          "memory_recall"
+        ],
+        "modelCalls": 2
+      }
+    ]
+  },
+  "web": {
+    "browser": "ego-browser",
+    "surface": "DSH Web",
+    "viewportPixels": [
+      1281,
+      852
+    ],
+    "settingsMemoryVisible": true,
+    "scopedList": true,
+    "editRevision": 2,
+    "archiveRevision": 3,
+    "downloadFormat": "dsh-memory-export-v1",
+    "exportedRecords": 1,
+    "exportSha256": "9ed8842002d92d28a92e5c2ba0ecc529f64bf7eef8df307af9326624b566b16b",
+    "screenshotSha256": "6281e466f6e6c2c8c146edeb9f97effae77c570d204ce4821fde3ebf9ae996b1",
+    "previewStopped": true,
+    "browserSpaceClosed": true
+  },
+  "dependencyOwnership": {
+    "runtime": [
+      "@deepseek-ai/schemastery for Cordis configuration",
+      "zod for validation",
+      "Node node:sqlite for memory storage"
+    ],
+    "hostPeers": "Pinned DSH/Cordis services supplied by one launcher runtime for profile execution. Standalone npm verification explicitly installs a coherent published host set.",
+    "optionalClientPeers": "DSH client APIs and React supplied by the Web host.",
+    "development": "TypeScript, Biome, tsx, Node/Bun/React types and the DSH testkit, persistence, compaction and token-meter fixtures.",
+    "retainedNativeTransitives": "koffi and @deepseek-ai/node-addon-system are required by DSH JSONL persistence; platform variants belong to those owners, not an embedding runtime.",
+    "removedDirectDevelopment": [
+      "@types/better-sqlite3",
+      "@types/react-dom",
+      "react-dom"
+    ]
+  },
+  "resolvedAcceptanceIssues": [
+    {
+      "phase": "baseline clean checkout",
+      "finding": "Filtered installation succeeded, but upstream sqlite.ts could not resolve better-sqlite3 declarations from the DSH package tree.",
+      "resolution": "Local Node-typed source and a src-rooted declaration tree; default clean installation/check/build now pass."
+    },
+    {
+      "phase": "first model attempt",
+      "finding": "A partial npm-installed host graph selected profile dsh-tools while AgentLoop came from the launcher; unique scheduler Symbols differed and failed before the tool body. One model request was made.",
+      "resolution": "Install profiles through dsh plugin with --config.auto-install-peers=false, and reject split module resolution in the live-test preflight. Production runtime was not modified."
+    },
+    {
+      "phase": "second model attempt",
+      "finding": "The history prompt allowed any related event, while the unchanged oracle required a read event containing the corrected value. The model read an earlier recall and only searched the correction. The attempt made 22 model requests.",
+      "resolution": "Clarify the request to read and cite the exact correction event; keep the strict oracle. The next complete ten-scenario matrix passed."
+    },
+    {
+      "phase": "measurement",
+      "finding": "Different checkout path lengths changed serialized workspace metadata and snapshot token counts.",
+      "resolution": "Use one common cwd and matching worker/fixture hashes; both versions now measure 860/863 snapshot tokens for the 1000/10000 workloads."
+    }
+  ],
+  "boundaries": {
+    "npmPublished": false,
+    "productionProfileActivated": false,
+    "productionDataChanged": false,
+    "newBackgroundAgents": false,
+    "embeddingsEnabled": false,
+    "linuxRuntimeCertified": false,
+    "historicalMeasurementsOverwritten": false
+  },
+  "confidence": {
+    "observedFunctionalResults": "high for these fixtures, artifacts, versions and machine",
+    "generalPerformanceImprovement": "not established"
+  }
+}

@@ -7,6 +7,7 @@ This directory owns the native DSH memory project's plans and evidence. `package
 | Read | Purpose |
 |---|---|
 | [Native package](../../packages/dsh-plugin/README.md) | Build, install, configure, and operate the private alpha. |
+| [Specialization acceptance](specialization.md) | Completed S1–S4, final artifact, controlled measurements, model/Web checks, and rollback. |
 | [Compatibility record](compatibility.md) | Original acceptance inputs, observed behavior, model/resource results, and limits. |
 | [DSH-only plan](dsh-only-plan.md) | Source extraction, removal scope, and the specialization acceptance sequence. |
 | [Migration handoff](migration-plan.md) | Historical first-release design, scope, P0–P5 stages, and optional import. |

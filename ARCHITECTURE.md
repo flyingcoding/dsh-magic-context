@@ -54,7 +54,7 @@ Workspace identity comes from the Session's canonical real path. A model cannot 
 
 Only `packages/dsh-plugin` is a workspace. The local SQLite wrapper imports `node:sqlite` and uses Node's native types. Exact upstream ancestry for this wrapper, normalization, category vocabulary, and migrated regression cases is in [NOTICE](packages/dsh-plugin/NOTICE); no other package source is needed for compilation or runtime.
 
-The default page cache is 8 MiB, query results are capped, and the initial snapshot defaults to five records within 1,000 estimated tokens. The provider caches a fixed set of SQL statements. Projection state holds only the delivered message id; all snapshot content stays in the log. [Resource gates](docs/dsh/resource-budgets.json) and [compatibility evidence](docs/dsh/compatibility.md) distinguish measured adapter costs from host RSS and historical source footprint.
+The default page cache is 8 MiB, query results are capped, and the initial snapshot defaults to five records within 1,000 estimated tokens. The provider caches a fixed set of SQL statements. Projection state holds only the delivered message id; all snapshot content stays in the log. [Resource gates](docs/dsh/resource-budgets.json) and [specialization evidence](docs/dsh/specialization.md) distinguish measured adapter costs from host RSS and historical source footprint.
 
 ## Verification and maintenance
 

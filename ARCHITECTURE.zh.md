@@ -54,7 +54,7 @@ flowchart LR
 
 唯一工作区为 `packages/dsh-plugin`。本地 SQLite 封装导入 `node:sqlite` 并使用 Node 原生类型。该封装、归一化、分类词表及迁移回归用例的精确来源见 [NOTICE](packages/dsh-plugin/NOTICE)，编译和运行均无需其他包目录源码。
 
-默认页缓存为 8 MiB，查询结果有数量上限，初始快照默认为五条记录且不超过 1,000 个估算 token。provider 只缓存固定 SQL 语句集合，投影只保存送达消息 ID，快照内容均在日志中。[资源门槛](docs/dsh/resource-budgets.json)及[兼容性证据](docs/dsh/compatibility.zh.md)分别记录适配器实测成本、宿主 RSS 和历史源码体积。
+默认页缓存为 8 MiB，查询结果有数量上限，初始快照默认为五条记录且不超过 1,000 个估算 token。provider 只缓存固定 SQL 语句集合，投影只保存送达消息 ID，快照内容均在日志中。[资源门槛](docs/dsh/resource-budgets.json)及[专用化证据](docs/dsh/specialization.zh.md)分别记录适配器实测成本、宿主 RSS 和历史源码体积。
 
 ## 验证与维护
 

@@ -26,6 +26,7 @@
 │   ├── migration-plan.md, migration-plan.zh.md, migration-plan.i18n.yaml
 │   ├── dsh-only-plan.md, dsh-only-plan.zh.md
 │   ├── compatibility.md, compatibility.zh.md
+│   ├── specialization.md, specialization.zh.md
 │   ├── resource-budgets.json
 │   └── evidence/
 ├── .github/workflows/dsh.yml
