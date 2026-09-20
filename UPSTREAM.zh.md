@@ -25,13 +25,26 @@
 | 初始原生实现 | `be3e1f871b4af0afc54e83925544dad8bf60b525`，初始验收保留在[兼容性记录](docs/dsh/compatibility.zh.md)。 |
 | 专用化前已验收源码 | `73cd88b40b2b0852f75ba267100e3ce664aac102`，后续计划提交为 `f99f30517f99fd2abe436c965c26e003a3a1546a`。 |
 | 本地源码迁出 | `9d958bc2`，SQLite、归一化、词表和保留的 Node 回归由 DSH 自己维护。 |
-| 已核查 `upstream/master` | `1bdaba3c4a8f978b1d670cd1176e3737d980f9ef`，已镜像到本地 `origin_main`，并完成 [2026-09-13 合并](#sync-2026-09-13)的范围核查。 |
+| 已核查 `upstream/master` | `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`，已镜像到本地 `origin_main`，并完成 [2026-09-21 合并](#sync-2026-09-21)的范围核查。 |
 | DSH 包版本线 | 已发布 `0.1.5-rc.2`，Cordis `4.0.2`。 |
 | 已核查 DSH 源码 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`，兄弟工作区仅作可选集成参考。 |
-| 本机工具 | Node `v24.18.0`、Bun `1.3.5`、macOS arm64。 |
+| 本机工具 | Node `v24.18.0`、Bun `1.4.2`、macOS arm64。 |
 | 包身份 | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`，`private: true`。 |
 
-这些是已核查固定版本，不代表当前可用的最新发布。已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/1bdaba3c4a8f978b1d670cd1176e3737d980f9ef)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个保留源码及回归来源文件均与导入基线一致。主动采纳源码或宿主变化后更新此表。
+这些是已核查固定版本，不代表当前可用的最新发布。已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/4f9a3d1a4092bc2a7b914e071045cc54b7baea3e)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个保留源码及回归来源文件均与导入基线一致。主动采纳源码或宿主变化后更新此表。
+
+<a id="sync-2026-09-21"></a>
+## 2026-09-21 合并
+
+按用户要求，本地 `origin_main` 从 `442d15ac082140326232d5d645aa09e614257f1c` 快进到 `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`。随后以 `6b557d61baa6cfe1b10a4ad29769c025043018a0` 之后的 DSH 状态为基础，通过保留专用树的合并将其历史纳入 `dsh_main`。这次明确要求的合并不改变下文的例行选择性迁入流程。
+
+上游差异包含 424 个提交、542 个改动路径，上游包版本线已推进到 `0.42.6`。绝大多数改动属于已退役的 OpenCode、OpenCode 2、Pi/OMP、Rust、dashboard、CLI 和 E2E 范围。核查决定：
+
+- DSH 树继续排除所有退役上游路径；完整源码保留在 `origin_main` 和合并历史中。
+- 不采纳新增的 `.pure-replay-differential-*/` 忽略规则，因为其所属的 differential harness 不在专用仓库内。
+- `packages/dsh-plugin`、清单、锁文件和 CI 逐字节保持不变。blob 对比确认七个已署名的上游源码/回归文件仍全部未变化，因此该区间没有需要迁入的运行时修复。
+
+本次仅文档变化的合并使用 `bun run check`、`git diff --check` 和 Git 祖先/树比较验证。宿主依赖仍固定为 DSH `0.1.5-rc.2`、Cordis `4.0.2`；没有新增产物、校验值、模型验收或生产启用结论。历史产物证据仍保留在[专用化记录](docs/dsh/specialization.zh.md)。
 
 <a id="sync-2026-09-13"></a>
 ## 2026-09-13 合并

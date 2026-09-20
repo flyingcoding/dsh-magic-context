@@ -25,13 +25,26 @@ Remote configuration is local. Inspect `git remote -v` before adding a missing o
 | Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
 | Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
 | Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
-| Inspected `upstream/master` | `1bdaba3c4a8f978b1d670cd1176e3737d980f9ef`; mirrored on local `origin_main` and reviewed for the [2026-09-13 integration](#sync-2026-09-13). |
+| Inspected `upstream/master` | `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`; mirrored on local `origin_main` and reviewed for the [2026-09-21 integration](#sync-2026-09-21). |
 | DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
 | Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
-| Local tools | Node `v24.18.0`, Bun `1.3.5`, macOS arm64. |
+| Local tools | Node `v24.18.0`, Bun `1.4.2`, macOS arm64. |
 | Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/1bdaba3c4a8f978b1d670cd1176e3737d980f9ef) leaves all seven retained source and regression origins in [NOTICE](packages/dsh-plugin/NOTICE) unchanged from the imported baseline. Refresh this table after deliberately adopting source or host changes.
+These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/4f9a3d1a4092bc2a7b914e071045cc54b7baea3e) leaves all seven retained source and regression origins in [NOTICE](packages/dsh-plugin/NOTICE) unchanged from the imported baseline. Refresh this table after deliberately adopting source or host changes.
+
+<a id="sync-2026-09-21"></a>
+## 2026-09-21 integration
+
+At the user's request, local `origin_main` fast-forwarded from `442d15ac082140326232d5d645aa09e614257f1c` to `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`. Its history was integrated into `dsh_main` after `6b557d61baa6cfe1b10a4ad29769c025043018a0` through a merge retaining the specialized tree. This explicit integration does not change the routine selective-port workflow below.
+
+The upstream delta contains 424 commits and 542 changed paths, with the upstream package line reaching `0.42.6`. Most work belongs to retired OpenCode, OpenCode 2, Pi/OMP, Rust, dashboard, CLI, and E2E owners. Review decisions:
+
+- Keep every retired upstream path excluded from the DSH tree; the complete source remains on `origin_main` and in the merge history.
+- Do not adopt the new `.pure-replay-differential-*/` ignore rule because its owning differential harness is not part of the specialized repository.
+- Preserve `packages/dsh-plugin`, manifests, lockfile, and CI byte-for-byte. Blob comparisons confirm that all seven attributed upstream source and regression files remain unchanged, so this range contains no runtime fix to port.
+
+Validation for this documentation-only integration uses `bun run check`, `git diff --check`, and Git ancestry/tree comparisons. Host dependency pins remain DSH `0.1.5-rc.2` and Cordis `4.0.2`; no new artifact, checksum, model acceptance, or production activation is claimed. Historical artifact evidence remains in [specialization](docs/dsh/specialization.md).
 
 <a id="sync-2026-09-13"></a>
 ## 2026-09-13 integration
