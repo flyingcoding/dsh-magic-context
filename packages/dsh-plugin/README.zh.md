@@ -20,7 +20,7 @@ bun run benchmark
 
 仓库显式声明唯一工作区，默认安装无需过滤。原生测试在 Node 下执行，实际覆盖 `node:sqlite`。构建打包本包内已审查的源码，并单独生成生产 JSX 客户端文件，声明统一位于 `dist/types/`；打包前使用 Node 检查每个 Host JavaScript 文件。旧构建目录移到 `.cache/builds/`，避免旧 chunk 混入新产物。
 
-`test:install` 会生成 tarball，在仓库外安装，检查本地声明闭包，使用无需密钥的 provider 驱动真实 DSH AgentLoop，按宿主支持的模块集合执行客户端 factory，并在存在 `dsh` 时检查 Bundle 组合。回执位于 `packages/dsh-plugin/.cache/install.json`。`benchmark` 使用构建产物，在包目录生成 `.cache/benchmark.json`。
+`test:install` 会生成 tarball，并以已验证的 DSH 宿主版本约束间接 peer 后在仓库外安装。它会检查本地声明闭包，使用无需密钥的 provider 驱动真实 DSH AgentLoop，按宿主支持的模块集合执行客户端 factory；仅当本机 `dsh` CLI 与该宿主版本一致时检查 Bundle 组合。`packages/dsh-plugin/.cache/install.json` 会记录 CLI 检查是否跳过。`benchmark` 使用构建产物，在包目录生成 `.cache/benchmark.json`。
 
 ## 安装到指定 profile
 

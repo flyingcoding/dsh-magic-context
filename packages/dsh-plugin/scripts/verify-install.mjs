@@ -40,8 +40,25 @@ const dependencies = Object.fromEntries(
   ),
 );
 dependencies[manifest.name] = `file:${resolve(root, packed.filename)}`;
-dependencies["@deepseek-ai/dsh-agent-loop-testkit"] = "0.1.5-rc.2";
-dependencies["@deepseek-ai/dsh-agent-loop"] = "0.1.5-rc.2";
+const hostVersion = dependencies["@deepseek-ai/dsh-agent"];
+dependencies["@deepseek-ai/dsh-agent-loop-testkit"] = hostVersion;
+dependencies["@deepseek-ai/dsh-agent-loop"] = hostVersion;
+// npm can select a newer prerelease for transitive peers despite exact direct pins.
+const hostOverrides = Object.fromEntries(
+  [
+    ...Object.keys(manifest.devDependencies).filter((name) => name.startsWith("@deepseek-ai/dsh-")),
+    "@deepseek-ai/dsh-brand",
+    "@deepseek-ai/dsh-code-runtime",
+    "@deepseek-ai/dsh-deque",
+    "@deepseek-ai/dsh-invariants",
+    "@deepseek-ai/dsh-scope",
+    "@deepseek-ai/dsh-settings",
+    "@deepseek-ai/dsh-timeout",
+    "@deepseek-ai/dsh-user-approval",
+    "@deepseek-ai/dsh-util-crypto",
+    "@deepseek-ai/dsh-util-values",
+  ].map((name) => [name, hostVersion]),
+);
 writeFileSync(
   resolve(profile, "package.json"),
   `${JSON.stringify(
@@ -50,6 +67,7 @@ writeFileSync(
       private: true,
       type: "module",
       dependencies,
+      overrides: hostOverrides,
       dsh: {
         profile: { bundles: ["@deepseek-ai/dsh-base", manifest.name], patchReload: "startup" },
       },
@@ -67,6 +85,24 @@ execFileSync("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], 
   stdio: "pipe",
   timeout: 300000,
 });
+const installed = JSON.parse(
+  execFileSync("npm", ["ls", "--all", "--json"], {
+    cwd: profile,
+    env,
+    encoding: "utf8",
+    timeout: 30000,
+  }),
+);
+/** Refuse a mixed DSH prerelease graph even when npm finds a formally valid peer range. */
+function assertHostVersions(entries) {
+  for (const [name, entry] of Object.entries(entries ?? {})) {
+    if (name.startsWith("@deepseek-ai/dsh-") && entry.version !== undefined) {
+      assert.equal(entry.version, hostVersion, `mismatched installed DSH package: ${name}`);
+    }
+    assertHostVersions(entry.dependencies);
+  }
+}
+assertHostVersions(installed.dependencies);
 copyFileSync(resolve(packageRoot, "scripts/install-probe.mjs"), resolve(profile, "probe.mjs"));
 const result = JSON.parse(
   execFileSync(process.execPath, ["probe.mjs"], {
@@ -108,20 +144,32 @@ for (const { path } of declarationPaths) {
 }
 result.declarationFiles = declarationPaths.length;
 result.declarationClosure = "passed";
-const composition = spawnSync("dsh", ["--profile", "memory-probe", "--dump-config"], {
+const launcher = spawnSync("dsh", ["--version"], {
   cwd: profile,
   env,
   encoding: "utf8",
   timeout: 60000,
 });
-if (composition.error?.code !== "ENOENT") {
-  assert.equal(composition.status, 0, composition.stderr);
-  for (const id of ["magic-memory-store", "magic-memory-tools", "magic-memory-recall"])
-    assert.ok(composition.stdout.includes(id), `missing bundle row ${id}`);
-  assert.match(composition.stdout, /compaction/);
-  result.profileComposition = "passed";
-} else {
+if (launcher.error?.code === "ENOENT") {
   result.profileComposition = "not run: dsh CLI unavailable";
+} else {
+  assert.equal(launcher.status, 0, launcher.stderr);
+  const launcherVersion = launcher.stdout.trim();
+  if (launcherVersion !== hostVersion) {
+    result.profileComposition = `not run: dsh CLI ${launcherVersion} differs from ${hostVersion}`;
+  } else {
+    const composition = spawnSync("dsh", ["--profile", "memory-probe", "--dump-config"], {
+      cwd: profile,
+      env,
+      encoding: "utf8",
+      timeout: 60000,
+    });
+    assert.equal(composition.status, 0, composition.stderr);
+    for (const id of ["magic-memory-store", "magic-memory-tools", "magic-memory-recall"])
+      assert.ok(composition.stdout.includes(id), `missing bundle row ${id}`);
+    assert.match(composition.stdout, /compaction/);
+    result.profileComposition = "passed";
+  }
 }
 result.tarball = resolve(root, packed.filename);
 result.sha256 = createHash("sha256").update(readFileSync(result.tarball)).digest("hex");

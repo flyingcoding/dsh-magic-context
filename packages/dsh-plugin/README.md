@@ -20,7 +20,7 @@ bun run benchmark
 
 The repository has one explicit workspace, so the default install needs no filter. Native tests execute under Node so they exercise `node:sqlite`. The build bundles the package's own audited source and emits a separate production JSX client artifact; declarations stay under `dist/types/`. It checks every Host JavaScript file with Node before packaging. Previous build directories are moved under `.cache/builds/`, keeping stale chunks out of the new artifact.
 
-`test:install` creates a tarball and installs it outside the checkout, checks the local declaration closure, drives a real DSH AgentLoop with a keyless provider, evaluates the client factory against the supported platform imports, and checks Bundle composition when `dsh` is available. It leaves its receipt in `packages/dsh-plugin/.cache/install.json`. `benchmark` requires the built artifact and writes `.cache/benchmark.json` in the package directory.
+`test:install` creates a tarball and installs it outside the checkout with the tested DSH host release pinned across transitive peers. It checks the local declaration closure, drives a real DSH AgentLoop with a keyless provider, evaluates the client factory against the supported platform imports, and checks Bundle composition when the installed `dsh` CLI matches that host release. The receipt in `packages/dsh-plugin/.cache/install.json` records when the CLI check is skipped. `benchmark` requires the built artifact and writes `.cache/benchmark.json` in the package directory.
 
 ## Install into a selected profile
 
