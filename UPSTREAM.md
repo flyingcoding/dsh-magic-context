@@ -25,13 +25,26 @@ Remote configuration is local. Inspect `git remote -v` before adding a missing o
 | Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
 | Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
 | Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
-| Inspected `upstream/master` | `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`; mirrored on local `origin_main` and reviewed for the [2026-09-21 integration](#sync-2026-09-21). |
+| Inspected `upstream/master` | `55cede0f60a8300e51b461b35ae24f7f306bd263`; mirrored on local `origin_main` and reviewed for the [2026-09-29 integration](#sync-2026-09-29). |
 | DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
 | Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
 | Local tools | Node `v24.18.0`, Bun `1.4.2`, macOS arm64. |
 | Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/4f9a3d1a4092bc2a7b914e071045cc54b7baea3e) leaves all seven retained source and regression origins in [NOTICE](packages/dsh-plugin/NOTICE) unchanged from the imported baseline. Refresh this table after deliberately adopting source or host changes.
+These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/55cede0f60a8300e51b461b35ae24f7f306bd263) changes the original SQLite wrapper, its Node smoke test, and a comment in the category type file among the seven origins in [NOTICE](packages/dsh-plugin/NOTICE). The remaining four origins are unchanged. The review below records why none of these changes was ported. Refresh this table after deliberately adopting source or host changes.
+
+<a id="sync-2026-09-29"></a>
+## 2026-09-29 integration
+
+At the user's request, local `origin_main` fast-forwarded from `61c0f3b2582baa72fff45e7aa78557434d0daf76` to `55cede0f60a8300e51b461b35ae24f7f306bd263`. The delta since the prior `dsh_main` integration at `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e` contains 1,072 commits and 1,243 changed paths; the upstream package line reaches `0.44.1`. Its history was integrated into `dsh_main` after `24292dcfb6f77b323834fd0bbe384a29972ebb59` through a merge retaining the specialized tree.
+
+Review of the retained source map:
+
+- The upstream SQLite wrapper and Node smoke test changed in `329c60aa4928c89b5f10ab87344a1c7c1afc6526` and `d50ba56d37cbda8407bf5d74c39a7a8000dfdbe6` to retry writer-lock acquisition for foreground Magic Context transform passes. DSH owns a separate Node-only wrapper, has no such transform pass, and already tests contention, failed receipts, and retry after the lock clears. No SQLite behavior was ported.
+- The upstream category type file only changes a comment about Dreamer curation. The seven category values used by DSH are unchanged. Normalization and the other three attributed regression origins are unchanged.
+- The new `.gitignore` rules cover retired upstream data and test/build directories. They are not used by the DSH workspace. `packages/dsh-plugin`, manifests, lockfile, and CI remain byte-for-byte unchanged.
+
+Validation for this documentation-only integration uses `bun run check`, `git diff --check`, and Git ancestry/tree comparisons. Host dependency pins remain DSH `0.1.5-rc.2` and Cordis `4.0.2`; no new artifact, model acceptance, or production activation is claimed. Historical artifact evidence remains in [specialization](docs/dsh/specialization.md).
 
 <a id="sync-2026-09-21"></a>
 ## 2026-09-21 integration

@@ -25,13 +25,26 @@
 | 初始原生实现 | `be3e1f871b4af0afc54e83925544dad8bf60b525`，初始验收保留在[兼容性记录](docs/dsh/compatibility.zh.md)。 |
 | 专用化前已验收源码 | `73cd88b40b2b0852f75ba267100e3ce664aac102`，后续计划提交为 `f99f30517f99fd2abe436c965c26e003a3a1546a`。 |
 | 本地源码迁出 | `9d958bc2`，SQLite、归一化、词表和保留的 Node 回归由 DSH 自己维护。 |
-| 已核查 `upstream/master` | `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e`，已镜像到本地 `origin_main`，并完成 [2026-09-21 合并](#sync-2026-09-21)的范围核查。 |
+| 已核查 `upstream/master` | `55cede0f60a8300e51b461b35ae24f7f306bd263`，已镜像到本地 `origin_main`，并完成 [2026-09-29 合并](#sync-2026-09-29)的范围核查。 |
 | DSH 包版本线 | 已发布 `0.1.5-rc.2`，Cordis `4.0.2`。 |
 | 已核查 DSH 源码 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`，兄弟工作区仅作可选集成参考。 |
 | 本机工具 | Node `v24.18.0`、Bun `1.4.2`、macOS arm64。 |
 | 包身份 | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`，`private: true`。 |
 
-这些是已核查固定版本，不代表当前可用的最新发布。已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/4f9a3d1a4092bc2a7b914e071045cc54b7baea3e)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个保留源码及回归来源文件均与导入基线一致。主动采纳源码或宿主变化后更新此表。
+这些是已核查固定版本，不代表当前可用的最新发布。已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/55cede0f60a8300e51b461b35ae24f7f306bd263)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个来源文件有三处变化：上游 SQLite 包装层、Node smoke 测试，以及分类类型文件中的一段注释。其余四个来源未变化。下文记录了不迁入这些变化的原因。主动采纳源码或宿主变化后更新此表。
+
+<a id="sync-2026-09-29"></a>
+## 2026-09-29 合并
+
+按用户要求，本地 `origin_main` 从 `61c0f3b2582baa72fff45e7aa78557434d0daf76` 快进到 `55cede0f60a8300e51b461b35ae24f7f306bd263`。从 `dsh_main` 上次合并点 `4f9a3d1a4092bc2a7b914e071045cc54b7baea3e` 起，上游新增 1,072 个提交、1,243 个改动路径，包版本线推进到 `0.44.1`。随后以 `24292dcfb6f77b323834fd0bbe384a29972ebb59` 之后的 DSH 状态为基础，通过保留专用树的合并纳入上游历史。
+
+保留源码映射的核查结果：
+
+- 上游 SQLite 包装层和 Node smoke 测试在 `329c60aa4928c89b5f10ab87344a1c7c1afc6526` 与 `d50ba56d37cbda8407bf5d74c39a7a8000dfdbe6` 中加入前台 Magic Context transform 的写锁获取重试。DSH 维护独立的 Node 包装层，不存在该 transform 调用链，且已覆盖写锁竞争、失败回执和解锁后的重试测试，因此未迁入 SQLite 行为。
+- 上游分类类型文件仅修改 Dreamer 整理流程的注释；DSH 使用的七个分类值未变化。归一化及其余三个已署名回归来源文件未变化。
+- 新增的 `.gitignore` 规则对应已退役的上游数据、测试和构建目录，DSH 工作区不使用。`packages/dsh-plugin`、清单、锁文件和 CI 逐字节保持不变。
+
+本次仅文档变化的合并使用 `bun run check`、`git diff --check` 和 Git 祖先/树比较验证。宿主依赖仍固定为 DSH `0.1.5-rc.2`、Cordis `4.0.2`；没有新增产物、模型验收或生产启用结论。历史产物证据仍保留在[专用化记录](docs/dsh/specialization.zh.md)。
 
 <a id="sync-2026-09-21"></a>
 ## 2026-09-21 合并
