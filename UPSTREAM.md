@@ -155,3 +155,5 @@ Default checks need no old workspace, Cargo, sibling checkout, local inference m
 [NOTICE](packages/dsh-plugin/NOTICE) also records migrated regression origins and omitted upstream helpers. Keep this subset versioned and auditable. Specialization leaves the DSH database and Session formats stable; rollback uses a revert or a separate accepted-baseline checkout and preserves user data.
 
 2026-10-13 batch 1: adapted the empty-strict-query fallback strategy from upstream `62d84e8a9` with DSH-owned encoded terms, explicit opt-in and a multi-term overlap threshold; original SQL and host logic were not copied. Added strict-result preservation, Chinese prose, NUL, scope, global-selection and archive regressions.
+
+2026-10-13 batch 2: adapted private creation and existing-permission tightening from upstream `487850080` through DSH-owned database-entry checks. No recursive tree mutation; custom parent modes remain intact and linked files are refused. Added permissive restore, sidecar, foreign-database and symlink regressions.

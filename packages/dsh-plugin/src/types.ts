@@ -90,6 +90,8 @@ export interface RecallRequest {
 
 /** Deployment limits are resolved once before opening a database. */
 export interface StoreOptions {
+  /** Only the default plugin-owned directory may have its existing mode tightened. */
+  privateDirectory?: boolean;
   databasePath: string;
   cacheSizeMiB: number;
   busyTimeoutMs: number;

@@ -1,9 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
-import { chmodSync, mkdirSync } from "node:fs";
-import { dirname } from "node:path";
 import { z } from "zod";
 import { boundedInteger } from "./config.ts";
 import { Database, type Statement } from "./sqlite.ts";
+import { prepareStoragePath, tightenStoragePermissions } from "./storage-permissions.ts";
 import { relaxedSearchTokens, searchTokens, toFtsQuery } from "./tokenize.ts";
 import type {
   ForgetRequest,
@@ -80,13 +79,13 @@ export class MemoryStore {
 
   /** Open only an adapter-owned database and refuse unknown or newer schemas before writes. */
   constructor(readonly options: StoreOptions) {
-    mkdirSync(dirname(options.databasePath), { recursive: true, mode: 0o700 });
+    prepareStoragePath(options.databasePath, options.privateDirectory ?? false);
     this.db = new Database(options.databasePath);
     try {
       this.db.exec(`PRAGMA busy_timeout = ${options.busyTimeoutMs}`);
       this.verifyOwner();
-      // SQLite inherits this mode when it creates the WAL and shared-memory files.
-      chmodSync(options.databasePath, 0o600);
+      // Verify database ownership before changing any existing file permissions.
+      tightenStoragePermissions(options.databasePath, options.privateDirectory ?? false);
       this.db.exec(`PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;
         PRAGMA synchronous = FULL; PRAGMA cache_size = -${options.cacheSizeMiB * 1024};
         PRAGMA mmap_size = 0`);
@@ -118,7 +117,7 @@ export class MemoryStore {
         `);
         })
         .immediate();
-      chmodSync(options.databasePath, 0o600);
+      tightenStoragePermissions(options.databasePath, options.privateDirectory ?? false);
     } catch (error) {
       this.db.close();
       throw error;

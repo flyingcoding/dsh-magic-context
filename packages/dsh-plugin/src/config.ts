@@ -37,6 +37,7 @@ export function resolveConfig(config: Config = {}): StoreOptions {
   if (!isAbsolute(databasePath)) throw new TypeError("databasePath must be absolute");
   return {
     databasePath,
+    privateDirectory: databasePath === resolve(home, "magic-context", "memory.sqlite"),
     cacheSizeMiB: boundedInteger("cacheSizeMiB", config.cacheSizeMiB ?? 8, 1, 64),
     busyTimeoutMs: boundedInteger("busyTimeoutMs", config.busyTimeoutMs ?? 100, 0, 5000),
     maxContentChars: boundedInteger("maxContentChars", config.maxContentChars ?? 4000, 128, 16000),

@@ -58,7 +58,7 @@ npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifa
 | 原生工具 | 输入 | 结果 |
 |---|---|---|
 | `memory_remember` | `content`、`category`；可选 `scope`、`request_id` | 有效记录、稳定 ID、修订号，以及创建或去重结果。 |
-| `memory_recall` | `query`；可选 `include_global`、`limit` | 当前有效记录及 ID、修订号、作用域和来源。 |
+| `memory_recall` | `query`；可选 `include_global`、`limit`、`relaxed` | 当前有效记录及 ID、修订号、作用域和来源。 |
 | `memory_update` | `id`、`expected_revision`、`content`、`category`；可选 `scope`、`request_id` | 新修订；旧内容作为 `superseded` 保留在历史中。 |
 | `memory_forget` | `id`、`expected_revision`；可选 `scope`、`request_id` | 归档修订，后续检索和初始快照不再包含它。 |
 
