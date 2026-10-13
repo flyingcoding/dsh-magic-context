@@ -25,13 +25,27 @@ Remote configuration is local. Inspect `git remote -v` before adding a missing o
 | Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
 | Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
 | Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
-| Inspected `upstream/master` | `55cede0f60a8300e51b461b35ae24f7f306bd263`; mirrored on local `origin_main` and reviewed for the [2026-09-29 integration](#sync-2026-09-29). |
+| Inspected `upstream/master` | `3cecbda11b1f29b3668d10be1bfdbce27a030915`; mirrored on local `origin_main` and reviewed for the [2026-10-13 integration](#sync-2026-10-13). |
 | DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
 | Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
 | Local tools | Node `v24.18.0`, Bun `1.4.2`, macOS arm64. |
 | Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/55cede0f60a8300e51b461b35ae24f7f306bd263) changes the original SQLite wrapper, its Node smoke test, and a comment in the category type file among the seven origins in [NOTICE](packages/dsh-plugin/NOTICE). The remaining four origins are unchanged. The review below records why none of these changes was ported. Refresh this table after deliberately adopting source or host changes.
+These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/3cecbda11b1f29b3668d10be1bfdbce27a030915) changes the original SQLite wrapper and its Node smoke test among the seven origins in [NOTICE](packages/dsh-plugin/NOTICE), compared with the previous integration. The remaining five origins are unchanged. The review below records why no runtime changes were ported. Refresh this table after deliberately adopting source or host changes.
+
+<a id="sync-2026-10-13"></a>
+## 2026-10-13 integration
+
+At the user's request, local `origin_main` fast-forwarded from `640eb0209` to `3cecbda11b1f29b3668d10be1bfdbce27a030915` (two new commits). The delta since the prior `dsh_main` integration at `55cede0f60a8300e51b461b35ae24f7f306bd263` contains 1,757 commits and 2,649 changed paths. The upstream plugin manifest declares `0.48.0`; the history also includes draft and finalized `0.49.0` release notes. Its history was integrated into `dsh_main` after `e53354e98` through a merge retaining the specialized tree.
+
+Review of the retained source map:
+
+- The SQLite wrapper adds foreground/background writer admission, lock budgets and diagnostics, tag-identity invalidation, off-thread index coordination, and prepared-statement cleanup for Bun. These belong to upstream transform, tags, maintenance and Bun owners. DSH uses an independent Node-only wrapper without these owners; Node closes its statements natively. No SQLite behavior was ported.
+- Commit `9ac069822` suppresses only Node's SQLite experimental warning during upstream's dynamic import. DSH statically imports `node:sqlite`; warning suppression is a host-console presentation change rather than a retained binding or transaction fix, so the existing import contract remains.
+- The Node smoke test updates short/long lock assertions for the upstream transform budget. The other five attributed source/test files, including normalization and the seven-category vocabulary, are unchanged.
+- New ignore and line-ending rules target an upstream Rust migration probe and Broca fixtures, outside the specialized workspace. Upstream adapters, Rust, dashboard, CLI and E2E paths remain on the mirror. `packages/dsh-plugin`, manifests, lockfile and DSH CI remain byte-for-byte unchanged, including the prior isolated-install dependency pin fix.
+
+Validation for this documentation-only integration uses `bun run check`, `git diff --check`, and Git ancestry/tree comparisons. Host dependency pins remain DSH `0.1.5-rc.2` and Cordis `4.0.2`; no new artifact, model acceptance, or production activation is claimed. Historical artifact evidence remains in [specialization](docs/dsh/specialization.md).
 
 <a id="sync-2026-09-29"></a>
 ## 2026-09-29 integration

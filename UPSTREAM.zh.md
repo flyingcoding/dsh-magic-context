@@ -25,13 +25,27 @@
 | 初始原生实现 | `be3e1f871b4af0afc54e83925544dad8bf60b525`，初始验收保留在[兼容性记录](docs/dsh/compatibility.zh.md)。 |
 | 专用化前已验收源码 | `73cd88b40b2b0852f75ba267100e3ce664aac102`，后续计划提交为 `f99f30517f99fd2abe436c965c26e003a3a1546a`。 |
 | 本地源码迁出 | `9d958bc2`，SQLite、归一化、词表和保留的 Node 回归由 DSH 自己维护。 |
-| 已核查 `upstream/master` | `55cede0f60a8300e51b461b35ae24f7f306bd263`，已镜像到本地 `origin_main`，并完成 [2026-09-29 合并](#sync-2026-09-29)的范围核查。 |
+| 已核查 `upstream/master` | `3cecbda11b1f29b3668d10be1bfdbce27a030915`，已镜像到本地 `origin_main`，并完成 [2026-10-13 合并](#sync-2026-10-13)的范围核查。 |
 | DSH 包版本线 | 已发布 `0.1.5-rc.2`，Cordis `4.0.2`。 |
 | 已核查 DSH 源码 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`，兄弟工作区仅作可选集成参考。 |
 | 本机工具 | Node `v24.18.0`、Bun `1.4.2`、macOS arm64。 |
 | 包身份 | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`，`private: true`。 |
 
-这些是已核查固定版本，不代表当前可用的最新发布。已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/55cede0f60a8300e51b461b35ae24f7f306bd263)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个来源文件有三处变化：上游 SQLite 包装层、Node smoke 测试，以及分类类型文件中的一段注释。其余四个来源未变化。下文记录了不迁入这些变化的原因。主动采纳源码或宿主变化后更新此表。
+这些是已核查固定版本，不代表当前可用的最新发布。与上次合并相比，已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/3cecbda11b1f29b3668d10be1bfdbce27a030915)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个来源文件仅有上游 SQLite 包装层和 Node smoke 测试发生变化。其余五个来源未变化。下文记录了本次未迁入运行时变化的原因。主动采纳源码或宿主变化后更新此表。
+
+<a id="sync-2026-10-13"></a>
+## 2026-10-13 合并
+
+按用户要求，本地 `origin_main` 从 `640eb0209` 快进到 `3cecbda11b1f29b3668d10be1bfdbce27a030915`，新增两个提交。从 `dsh_main` 上次合并点 `55cede0f60a8300e51b461b35ae24f7f306bd263` 起，上游新增 1,757 个提交、2,649 个改动路径。上游插件清单声明版本为 `0.48.0`，历史还包含 `0.49.0` 发布说明的草稿与定稿。随后以 `e53354e98` 之后的 DSH 状态为基础，通过保留专用树的合并纳入上游历史。
+
+保留源码映射的核查结果：
+
+- SQLite 包装层新增前台/后台写锁准入、等待预算与诊断、标签身份失效检测、线程外索引协调及 Bun 预编译语句释放。这些属于上游 transform、标签、维护和 Bun 范围。DSH 使用独立的 Node 包装层，没有这些模块，Node 自身会在关闭连接时释放语句，因此未迁入 SQLite 行为。
+- 提交 `9ac069822` 仅在上游动态导入期间抑制 Node SQLite 实验警告。DSH 静态导入 `node:sqlite`；警告抑制属于宿主控制台展示调整，并非保留的绑定或事务修复，因此继续保留现有导入约定。
+- Node smoke 测试调整上游 transform 等待预算下的短锁/长锁断言。其余五个已署名源码/测试来源未变化，包括归一化和七个分类值。
+- 新增忽略规则和行尾规则对应上游 Rust 迁移探针及 Broca 夹具，位于专用工作区之外。上游适配器、Rust、dashboard、CLI 和 E2E 路径保留在镜像中。`packages/dsh-plugin`、清单、锁文件和 DSH CI 逐字节保持不变，包括之前的隔离安装依赖固定修复。
+
+本次仅文档变化的合并使用 `bun run check`、`git diff --check` 和 Git 祖先/树比较验证。宿主依赖仍固定为 DSH `0.1.5-rc.2`、Cordis `4.0.2`；没有新增产物、模型验收或生产启用结论。历史产物证据仍保留在[专用化记录](docs/dsh/specialization.zh.md)。
 
 <a id="sync-2026-09-29"></a>
 ## 2026-09-29 合并
