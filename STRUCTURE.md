@@ -9,7 +9,7 @@ This is a Bun workspace with one native DSH package. The [architecture](ARCHITEC
 ├── packages/dsh-plugin/
 │   ├── src/
 │   │   ├── index.ts, service.ts, config.ts
-│   │   ├── sqlite.ts, store.ts, types.ts
+│   │   ├── sqlite.ts, store.ts, types.ts, storage-permissions.ts
 │   │   ├── normalize.ts, tokenize.ts, scope.ts
 │   │   ├── tools.ts, recall.ts
 │   │   ├── management.ts, management-wire.ts

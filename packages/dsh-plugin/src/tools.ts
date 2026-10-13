@@ -76,12 +76,19 @@ export function apply(ctx: Context): void {
       execute: async (args, exec) => {
         exec.signal.throwIfAborted();
         return JSON.stringify(
-          ctx.magicMemory.store.remember(callerFor(exec), {
-            scope: (args.scope ?? "workspace") as MemoryScope,
-            requestId: args.request_id ?? exec.callId,
-            content: args.content,
-            category: args.category as MemoryCategory,
-          }),
+          await (
+            ctx.magicMemory.store.rememberAsync?.bind(ctx.magicMemory.store) ??
+            ctx.magicMemory.store.remember.bind(ctx.magicMemory.store)
+          )(
+            callerFor(exec),
+            {
+              scope: (args.scope ?? "workspace") as MemoryScope,
+              requestId: args.request_id ?? exec.callId,
+              content: args.content,
+              category: args.category as MemoryCategory,
+            },
+            { signal: exec.signal },
+          ),
         );
       },
     }),
@@ -141,14 +148,21 @@ export function apply(ctx: Context): void {
       execute: async (args, exec) => {
         exec.signal.throwIfAborted();
         return JSON.stringify(
-          ctx.magicMemory.store.update(callerFor(exec), {
-            scope: (args.scope ?? "workspace") as MemoryScope,
-            requestId: args.request_id ?? exec.callId,
-            id: args.id as MemoryId,
-            expectedRevision: args.expected_revision,
-            content: args.content,
-            category: args.category as MemoryCategory,
-          }),
+          await (
+            ctx.magicMemory.store.updateAsync?.bind(ctx.magicMemory.store) ??
+            ctx.magicMemory.store.update.bind(ctx.magicMemory.store)
+          )(
+            callerFor(exec),
+            {
+              scope: (args.scope ?? "workspace") as MemoryScope,
+              requestId: args.request_id ?? exec.callId,
+              id: args.id as MemoryId,
+              expectedRevision: args.expected_revision,
+              content: args.content,
+              category: args.category as MemoryCategory,
+            },
+            { signal: exec.signal },
+          ),
         );
       },
     }),
@@ -164,12 +178,19 @@ export function apply(ctx: Context): void {
       execute: async (args, exec) => {
         exec.signal.throwIfAborted();
         return JSON.stringify(
-          ctx.magicMemory.store.forget(callerFor(exec), {
-            scope: (args.scope ?? "workspace") as MemoryScope,
-            requestId: args.request_id ?? exec.callId,
-            id: args.id as MemoryId,
-            expectedRevision: args.expected_revision,
-          }),
+          await (
+            ctx.magicMemory.store.forgetAsync?.bind(ctx.magicMemory.store) ??
+            ctx.magicMemory.store.forget.bind(ctx.magicMemory.store)
+          )(
+            callerFor(exec),
+            {
+              scope: (args.scope ?? "workspace") as MemoryScope,
+              requestId: args.request_id ?? exec.callId,
+              id: args.id as MemoryId,
+              expectedRevision: args.expected_revision,
+            },
+            { signal: exec.signal },
+          ),
         );
       },
     }),

@@ -64,7 +64,7 @@ npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifa
 
 支持 `PROJECT_RULES`、`ARCHITECTURE`、`CONFIG_VALUES`、`CONSTRAINTS`、`NAMING`、`USER_PREFERENCES`、`KNOWN_ISSUES`。携带旧修订号的请求会失败，不覆盖当前事实。不确定上次请求是否成功时，使用相同 `request_id` 和相同参数重试；同一 ID 携带不同参数会被拒绝。内容去重限定在作用域内，仅归一化空白，保留代码标识符的大小写差异。
 
-关键词检索使用 FTS5，索引中文单字/双字组合以及归一化的标识符和路径词项，查询词项必须全部匹配。已覆盖中文子串、驼峰标识符、路径、精确错误词和中英混合查询；尚不支持同义词或跨语言翻译。无关查询返回空列表。
+关键词检索使用 FTS5，索引中文单字/双字组合以及归一化的标识符和路径词项，默认要求查询词项全部匹配。已覆盖中文子串、驼峰标识符、路径、精确错误词和中英混合查询；尚不支持同义词或跨语言翻译。无关查询返回空列表。
 
 首个正式入场的请求最多接收五条最近有效记忆，启用时包含全局偏好。完整事实与提示框架必须同时满足 token 估算预算；过长记录会跳过，不会从中截断。快照写入 Session 日志后保持冻结，更新内容通过显式 recall 获取。fork 继承已记录的快照及其原始工作区信息，不会把继承内容重新写成数据库记录。
 
@@ -100,7 +100,7 @@ npm pack ./packages/dsh-plugin --ignore-scripts --pack-destination .cache/artifa
 |---|---|---|
 | `databasePath` | `$DSH_HOME/magic-context/memory.sqlite`；未设置 `DSH_HOME` 时使用 `~/.dsh` | 可选绝对路径，只接受本适配器拥有的数据库，拒绝其他库和未来 schema。 |
 | `cacheSizeMiB` | `8` | SQLite 页缓存，范围 1–64 MiB，mmap 保持关闭；不等于进程 RSS。 |
-| `busyTimeoutMs` | `100` | SQLite 锁等待，范围 0–5000 ms。 |
+| `busyTimeoutMs` | `100` | 同步 SQLite 锁等待，范围 0–5000 ms；异步写尝试不等待锁。 |
 | `maxContentChars` | `4000` | 新增或修订事实的长度上限，范围 128–16000 字符。 |
 | `maxQueryChars` | `512` | 查询长度上限，范围 32–4096 字符。 |
 | `maxResults` | `20` | 检索与管理分页上限，范围 1–100 条。 |
@@ -140,3 +140,5 @@ bun run test:live
 回滚启用状态时，从指定 profile 的 Bundle 列表移除本包并重载该 profile，保留记忆数据库和 DSH Session 日志。本 alpha 不导入已有 Magic 数据库，也不与其他宿主共享在线数据库；本次没有提供待导入的源数据库。后续可选扩展由[迁移计划](../../docs/dsh/migration-plan.zh.md)维护。
 
 备用召回通过 `relaxed: true` 显式启用，仅在严格匹配为空时执行；最多检查 32 个有效词项，排除中文单字，要求至少两个且不少于三分之一词项匹配。结果按匹配数量、更新时间和 ID 排序，继续限制作用域、有效状态和数量；部分匹配仍需检查相关性。
+
+工具和管理页面的写入会在事务开始前遇到锁竞争时自动让出并重试，默认预算为 1 秒。工具取消或服务释放会终止等待；超过预算、32 个并发等待上限、修订冲突或事务内错误会失败，使用原 `request_id` 可安全核对或重试。该预算通过存储异步 API 的 `budgetMs` 调整，Bundle 配置保持不变；同步接口仍使用 `busyTimeoutMs`。初始化时也会收紧本插件数据库及侧文件的存量权限，自定义父目录不变，链接存储条目被拒绝。

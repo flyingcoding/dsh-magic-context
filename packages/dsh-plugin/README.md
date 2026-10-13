@@ -64,7 +64,7 @@ Ask the agent to remember a confirmed fact or correct an existing one. Writes de
 
 Supported categories are `PROJECT_RULES`, `ARCHITECTURE`, `CONFIG_VALUES`, `CONSTRAINTS`, `NAMING`, `USER_PREFERENCES`, and `KNOWN_ISSUES`. Requests with an old revision fail without overwriting the current fact. Reuse a `request_id` with identical arguments after an uncertain response; changed arguments under that id fail. Content deduplication is scoped and normalizes whitespace while preserving case-sensitive identifiers.
 
-Keyword search uses FTS5 over Chinese character/bigram tokens and normalized identifier/path terms. All query terms must match. Chinese substrings, camel-case identifiers, paths, exact error terms, and mixed-language queries are covered; synonyms and translation across languages are not implemented. An irrelevant query returns an empty list.
+Keyword search uses FTS5 over Chinese character/bigram tokens and normalized identifier/path terms. By default, all query terms must match. Chinese substrings, camel-case identifiers, paths, exact error terms, and mixed-language queries are covered; synonyms and translation across languages are not implemented. An irrelevant query returns an empty list.
 
 The first admitted request receives up to five recent active memories, including global preferences when enabled. Complete facts and their framing must fit the configured token estimate; oversized entries are skipped rather than cut mid-fact. That snapshot stays frozen in the Session log. Use explicit recall for newer data. A fork inherits its logged snapshot, including the originating workspace metadata; it does not copy inherited content into new database records.
 
@@ -100,7 +100,7 @@ Override rows in the selected profile's `cordis.patch.yml`. A row's `config` is 
 |---|---|---|
 | `databasePath` | `$DSH_HOME/magic-context/memory.sqlite`; `~/.dsh` when `DSH_HOME` is absent | Optional absolute path to an adapter-owned database. Foreign and future schemas are refused. |
 | `cacheSizeMiB` | `8` | SQLite page cache, 1–64 MiB; mmap remains off. This is not process RSS. |
-| `busyTimeoutMs` | `100` | SQLite lock wait, 0–5000 ms. |
+| `busyTimeoutMs` | `100` | Synchronous SQLite lock wait, 0–5000 ms; async write attempts use zero wait. |
 | `maxContentChars` | `4000` | Maximum new/updated fact length, 128–16000 characters. |
 | `maxQueryChars` | `512` | Query length, 32–4096 characters. |
 | `maxResults` | `20` | Retrieval/management cap, 1–100 records. |
@@ -140,3 +140,5 @@ To verify format compatibility against the accepted artifact, set `DSH_MEMORY_BA
 To roll back activation, remove this package from the selected profile's Bundle list and reload that profile. Keep its memory database and DSH Session logs. Importing an existing Magic database and sharing live databases with other hosts are outside this alpha; no source database was supplied for import. The [migration plan](../../docs/dsh/migration-plan.md) owns later optional work.
 
 Fallback recall is explicitly enabled with `relaxed: true` and runs only when strict retrieval is empty. It uses at most 32 informative terms, excludes Han singletons, and requires at least two and at least one third of the terms to match. Results rank by overlap, recency and id while retaining scope, active-state and result limits; partial matches still require relevance checks.
+
+Tool and management writes automatically yield and retry lock contention before transaction entry, with a default one-second budget. Tool cancellation or service disposal stops waiting; budget exhaustion, the 32-waiter cap, revision conflicts and transaction errors fail, and the original `request_id` remains safe for checking or retrying. The budget is adjustable through `budgetMs` on the async storage API; Bundle configuration is unchanged and synchronous APIs still use `busyTimeoutMs`. Startup also tightens existing plugin database and sidecar permissions while preserving custom parent modes and refusing linked storage entries.

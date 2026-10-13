@@ -11,6 +11,7 @@ import type {
   UpdateRequest,
   WorkspaceKey,
   WriteResult,
+  WriteRetryOptions,
 } from "./types.ts";
 
 /** Storage operations consumed by DSH; providers do not expose a database handle. */
@@ -22,6 +23,24 @@ export interface MemoryRepository {
   update(caller: MemoryCaller, request: UpdateRequest): WriteResult;
   /** Archive one active revision atomically. */
   forget(caller: MemoryCaller, request: ForgetRequest): WriteResult;
+  /** Optional cancellable writes preserve compatibility with synchronous provider implementations. */
+  rememberAsync?(
+    caller: MemoryCaller,
+    request: RememberRequest,
+    options?: WriteRetryOptions,
+  ): Promise<WriteResult>;
+  /** Optionally wait for update acquisition while retaining revision checks. */
+  updateAsync?(
+    caller: MemoryCaller,
+    request: UpdateRequest,
+    options?: WriteRetryOptions,
+  ): Promise<WriteResult>;
+  /** Optionally wait for archive acquisition without changing receipt semantics. */
+  forgetAsync?(
+    caller: MemoryCaller,
+    request: ForgetRequest,
+    options?: WriteRetryOptions,
+  ): Promise<WriteResult>;
   /** Retrieve current matching records inside the caller's scope. */
   recall(workspace: WorkspaceKey, request: RecallRequest): MemoryRecord[];
   /** Select a bounded set of recent active facts. */

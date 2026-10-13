@@ -15,7 +15,7 @@
 | 召回消费者 | `src/recall.ts` | 提出有预算的快照，通过已提交 Session 投影记录送达。 |
 | 管理界面 | `src/management.ts`、`src/management-wire.ts`、`src/client/` | 复用已认证 DSH 网关及现有 Web 设置页面。 |
 
-AgentLoop、模型 provider、权限、Session 存储/查询和压缩由 DSH 管理。插件没有对话数据库、辅助模型、后台定时器或额外服务器。客户端依赖是可选宿主 peer，浏览器 factory 与 Host JavaScript 分别构建。
+AgentLoop、模型 provider、权限、Session 存储/查询和压缩由 DSH 管理。插件没有对话数据库、辅助模型、后台周期任务或额外服务器。客户端依赖是可选宿主 peer，浏览器 factory 与 Host JavaScript 分别构建。
 
 ## 入场与恢复
 
@@ -63,3 +63,5 @@ Node 测试覆盖存储失败、重试、修订冲突、作用域、中文/混�
 通过[上游工作流](UPSTREAM.zh.md)在 `origin_main` 镜像完整源码，向 `dsh_main` 选择性迁入相关修复。本次专用化保留数据库与 Session 格式。仓库回退可 revert 精简提交或检出已验收基线，记忆数据无需转换。
 
 存储打开前拒绝数据库及 WAL/SHM/journal 的符号链接、硬链接和特殊文件，新库以 `0600` 创建。确认数据库归属后，将现有相关文件收紧到 `0600`；只有默认插件目录收紧到 `0700`，自定义父目录及无关文件不变。POSIX 权限收紧不适用于 Windows，路径检查不能防御具有同一账号权限的并发路径替换。
+
+原同步写接口保留；工具及管理页面优先使用异步写接口。只重试 BEGIN 的 BUSY/LOCKED，单次尝试不等待 SQLite 锁，尝试间让出事件循环；默认预算 1,000ms，调用者可设 0–5,000ms，同时等待最多 32 个请求。取消及 provider 释放终止等待；事务内或提交错误不重试，已提交回执不会因之后的取消被撤回。初始化和事务执行仍是同步操作。

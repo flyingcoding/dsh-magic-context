@@ -75,12 +75,18 @@ export class MemoryManagementService extends TypertRemoteService {
     };
     return JSON.stringify(
       input.action === "archive"
-        ? this.store.forget(caller, edit)
-        : this.store.update(caller, {
-            ...edit,
-            content: input.content,
-            category: current.category,
-          }),
+        ? await (this.store.forgetAsync?.bind(this.store) ?? this.store.forget.bind(this.store))(
+            caller,
+            edit,
+          )
+        : await (this.store.updateAsync?.bind(this.store) ?? this.store.update.bind(this.store))(
+            caller,
+            {
+              ...edit,
+              content: input.content,
+              category: current.category,
+            },
+          ),
     );
   }
 }

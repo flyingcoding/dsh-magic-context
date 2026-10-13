@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { setTimeout as delay } from "node:timers/promises";
 import { z } from "zod";
 import { boundedInteger } from "./config.ts";
 import { Database, type Statement } from "./sqlite.ts";
@@ -17,6 +18,7 @@ import type {
   WorkspaceKey,
   WriteRequest,
   WriteResult,
+  WriteRetryOptions,
 } from "./types.ts";
 import { CATEGORIES } from "./types.ts";
 
@@ -71,10 +73,21 @@ function scopeKey(workspace: WorkspaceKey, scope: MemoryScope): string {
   return scope === "global" ? "" : workspace;
 }
 
+/** Mark a busy BEGIN separately so callback or commit errors are never retried. */
+export class MemoryWriteBusyError extends Error {
+  /** Preserve the native SQLite cause and lock message for diagnostics. */
+  constructor(cause: unknown) {
+    super(cause instanceof Error ? cause.message : "Memory write acquisition is busy", { cause });
+    this.name = "MemoryWriteBusyError";
+  }
+}
+
 /** One SQLite owner with atomic revisions, scoped dedupe, and durable operation receipts. */
 export class MemoryStore {
   private readonly db: Database;
   private closed = false;
+  private pendingWrites = 0;
+  private readonly disposal = new AbortController();
   private readonly statements = new Map<string, Statement>();
 
   /** Open only an adapter-owned database and refuse unknown or newer schemas before writes. */
@@ -180,6 +193,7 @@ export class MemoryStore {
   close(): void {
     if (this.closed) return;
     this.closed = true;
+    this.disposal.abort(new Error("Memory store is disposed"));
     this.statements.clear();
     this.db.close();
   }
@@ -205,36 +219,114 @@ export class MemoryStore {
     if (!request.requestId.trim() || request.requestId.length > 512)
       throw new Error("Invalid memory request id");
     const fingerprint = createHash("sha256").update(JSON.stringify(identity)).digest("hex");
-    return this.db
-      .transaction(() => {
-        const prior = this.prepare(`SELECT fingerprint, result_json FROM memory_operations
+    let entered = false;
+    try {
+      return this.db
+        .transaction(() => {
+          entered = true;
+          const prior = this.prepare(`SELECT fingerprint, result_json FROM memory_operations
         WHERE workspace_key = ? AND session_id = ? AND request_id = ?`).get(
-          caller.workspace,
-          caller.provenance.source === "user" ? "ui" : `session:${caller.provenance.sessionId}`,
-          request.requestId,
-        ) as { fingerprint: string; result_json: string } | undefined;
-        if (prior) {
-          if (prior.fingerprint !== fingerprint)
-            throw new Error("Memory request id was reused with different arguments");
-          const result = z
-            .object({
-              record: recordSchema,
-              outcome: z.enum(["created", "existing", "updated", "archived"]),
-            })
-            .parse(JSON.parse(prior.result_json));
-          return { ...result, record: decodeRecord(JSON.stringify(result.record)) };
+            caller.workspace,
+            caller.provenance.source === "user" ? "ui" : `session:${caller.provenance.sessionId}`,
+            request.requestId,
+          ) as { fingerprint: string; result_json: string } | undefined;
+          if (prior) {
+            if (prior.fingerprint !== fingerprint)
+              throw new Error("Memory request id was reused with different arguments");
+            const result = z
+              .object({
+                record: recordSchema,
+                outcome: z.enum(["created", "existing", "updated", "archived"]),
+              })
+              .parse(JSON.parse(prior.result_json));
+            return { ...result, record: decodeRecord(JSON.stringify(result.record)) };
+          }
+          const result = operation();
+          this.prepare("INSERT INTO memory_operations VALUES (?, ?, ?, ?, ?)").run(
+            caller.workspace,
+            caller.provenance.source === "user" ? "ui" : `session:${caller.provenance.sessionId}`,
+            request.requestId,
+            fingerprint,
+            JSON.stringify(result),
+          );
+          return result;
+        })
+        .immediate();
+    } catch (error) {
+      const code = (error as { errcode?: number })?.errcode;
+      if (!entered && typeof code === "number" && [5, 6].includes(code & 0xff)) {
+        throw new MemoryWriteBusyError(error);
+      }
+      throw error;
+    }
+  }
+
+  /** Yield between failed BEGINs with a finite deadline and bounded in-flight work. */
+  private async retryWrite(
+    operation: () => WriteResult,
+    options: WriteRetryOptions,
+  ): Promise<WriteResult> {
+    this.assertOpen();
+    const budget = boundedInteger("write retry budget", options.budgetMs ?? 1000, 0, 5000);
+    const signal = options.signal
+      ? AbortSignal.any([options.signal, this.disposal.signal])
+      : this.disposal.signal;
+    signal.throwIfAborted();
+    if (this.pendingWrites >= 32) throw new Error("Memory write retry capacity exceeded");
+    this.pendingWrites++;
+    const deadline = performance.now() + budget;
+    let lastBusy: MemoryWriteBusyError | undefined;
+    try {
+      for (;;) {
+        this.assertOpen();
+        signal.throwIfAborted();
+        if (lastBusy && performance.now() >= deadline) throw lastBusy;
+        try {
+          // Attempts run synchronously on this connection; restore before yielding.
+          this.db.exec("PRAGMA busy_timeout = 0");
+          try {
+            return operation();
+          } finally {
+            this.db.exec(`PRAGMA busy_timeout = ${this.options.busyTimeoutMs}`);
+          }
+        } catch (error) {
+          if (!(error instanceof MemoryWriteBusyError)) throw error;
+          lastBusy = error;
+          const remaining = deadline - performance.now();
+          if (remaining <= 0) throw error;
+          await delay(Math.min(25, remaining), undefined, { signal });
         }
-        const result = operation();
-        this.prepare("INSERT INTO memory_operations VALUES (?, ?, ?, ?, ?)").run(
-          caller.workspace,
-          caller.provenance.source === "user" ? "ui" : `session:${caller.provenance.sessionId}`,
-          request.requestId,
-          fingerprint,
-          JSON.stringify(result),
-        );
-        return result;
-      })
-      .immediate();
+      }
+    } finally {
+      this.pendingWrites--;
+    }
+  }
+
+  /** Retry remember only before acquisition, preserving the same durable request identity. */
+  rememberAsync(
+    caller: MemoryCaller,
+    request: RememberRequest,
+    options: WriteRetryOptions = {},
+  ): Promise<WriteResult> {
+    return this.retryWrite(() => this.remember(caller, request), options);
+  }
+
+  /** Recheck revision inside each acquired update transaction rather than caching old state. */
+  updateAsync(
+    caller: MemoryCaller,
+    request: UpdateRequest,
+    options: WriteRetryOptions = {},
+  ): Promise<WriteResult> {
+    return this.retryWrite(() => this.update(caller, request), options);
+  }
+
+  /** Retry archive acquisition without repeating a started transaction or successful receipt. */
+  forgetAsync(
+    caller: MemoryCaller,
+    request: ForgetRequest,
+    options: WriteRetryOptions = {},
+  ): Promise<WriteResult> {
+    return this.retryWrite(() => this.forget(caller, request), options);
   }
 
   /** Create a scoped memory, or return the active normalized duplicate without rewriting provenance. */

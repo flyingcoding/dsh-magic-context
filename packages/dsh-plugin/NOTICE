@@ -26,3 +26,14 @@ used by the native Host memory path. DSH Client code is a separate browser artif
 Upstream MIT notices are retained in LICENSE. The upstream OpenCode and Pi
 package identities remain part of the full source mirror on origin_main; the
 DSH-only branch neither publishes nor maintains those packages.
+
+DSH-owned selective adaptations on 2026-10-13 additionally reference these
+cortexkit/magic-context commits (MIT), without importing their host owners:
+- 62d84e8a9ff92825a69e9d4ea700460a303c8fe2: empty strict-query fallback strategy;
+  DSH adds explicit opt-in, encoded-term filtering and multi-term overlap guards.
+- 487850080593bf6154a2770f2916a00937a36397: private creation and existing-file
+  permission tightening; DSH limits changes to owned database entries/default directory.
+- f82cb0f0405ab6b60ee41c4b4700e63077b218bd and
+  083f1f8045c01ffebd2b30b30f80ddd58e36a752: yielding writer admission;
+  DSH retries only failed BEGIN acquisition with cancellation, finite budgets
+  and bounded pending requests. No transform or maintenance scheduler is imported.

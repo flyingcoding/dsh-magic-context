@@ -99,3 +99,9 @@ export interface StoreOptions {
   maxQueryChars: number;
   maxResults: number;
 }
+
+/** Bounded acquisition-only retry; cancellation cannot roll back an already committed write. */
+export interface WriteRetryOptions {
+  signal?: AbortSignal;
+  budgetMs?: number;
+}

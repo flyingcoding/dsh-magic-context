@@ -15,7 +15,7 @@ The native Bundle adds selected long-term memories to DSH's existing lifecycle. 
 | Recall consumer | `src/recall.ts` | Propose a bounded snapshot and track delivery through a committed Session projection. |
 | Management face | `src/management.ts`, `src/management-wire.ts`, `src/client/` | Reuse the authenticated DSH gateway and existing Web settings surface. |
 
-DSH owns the AgentLoop, model provider, permissions, Session storage/query, and compaction. The plugin has no transcript database, auxiliary model, background timer, or additional server. Client dependencies are optional host peers and the browser factory is built separately from Host JavaScript.
+DSH owns the AgentLoop, model provider, permissions, Session storage/query, and compaction. The plugin has no transcript database, auxiliary model, periodic background task, or additional server. Client dependencies are optional host peers and the browser factory is built separately from Host JavaScript.
 
 ## Admission and recovery
 
@@ -63,3 +63,5 @@ Node tests cover storage failure, retry, revision conflicts, scope, Chinese/mixe
 Use the [upstream workflow](UPSTREAM.md) to mirror full source on `origin_main` and selectively port relevant fixes to `dsh_main`. This specialization preserves database and Session formats. Repository rollback reverts specialization commits or checks out the accepted baseline; memory data needs no conversion.
 
 Before opening storage, database and WAL/SHM/journal symlinks, hard links and special files are refused; new databases are created as `0600`. After ownership verification, existing related files are tightened to `0600`; only the default plugin directory is tightened to `0700`, leaving custom parent directories and unrelated files unchanged. POSIX tightening does not apply on Windows; path checks do not defend against concurrent path replacement by the same account.
+
+Synchronous writes remain available; tools and management prefer async writes. Only BEGIN BUSY/LOCKED failures are retried, with zero SQLite lock wait per attempt and event-loop yielding between attempts. The default budget is 1,000ms, callers may select 0–5,000ms, and at most 32 requests may wait. Cancellation and provider disposal stop waiting; callback and commit errors are not retried, and later cancellation cannot undo a committed receipt. Initialization and transaction execution remain synchronous.
