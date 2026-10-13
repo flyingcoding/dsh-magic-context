@@ -138,3 +138,5 @@ bun run test:live
 验证与已验收产物的格式兼容时，将 `DSH_MEMORY_BASELINE_STORE` 指向其隔离安装目录内的 `dist/store.js`，构建后在根目录执行 `bun run test:rollback`。验证使用全新合成数据库，交替运行旧/新版本写入，检查 ID、重试回执、修订、归档、检索及保持不变的 schema。
 
 回滚启用状态时，从指定 profile 的 Bundle 列表移除本包并重载该 profile，保留记忆数据库和 DSH Session 日志。本 alpha 不导入已有 Magic 数据库，也不与其他宿主共享在线数据库；本次没有提供待导入的源数据库。后续可选扩展由[迁移计划](../../docs/dsh/migration-plan.zh.md)维护。
+
+备用召回通过 `relaxed: true` 显式启用，仅在严格匹配为空时执行；最多检查 32 个有效词项，排除中文单字，要求至少两个且不少于三分之一词项匹配。结果按匹配数量、更新时间和 ID 排序，继续限制作用域、有效状态和数量；部分匹配仍需检查相关性。

@@ -4,7 +4,7 @@ import { dirname } from "node:path";
 import { z } from "zod";
 import { boundedInteger } from "./config.ts";
 import { Database, type Statement } from "./sqlite.ts";
-import { searchTokens, toFtsQuery } from "./tokenize.ts";
+import { relaxedSearchTokens, searchTokens, toFtsQuery } from "./tokenize.ts";
 import type {
   ForgetRequest,
   MemoryCaller,
@@ -393,7 +393,27 @@ export class MemoryStore {
     ) as {
       record_json: string;
     }[];
-    return rows.map((row) => decodeRecord(row.record_json));
+    if (rows.length > 0 || !request.relaxed)
+      return rows.map((row) => decodeRecord(row.record_json));
+    const terms = relaxedSearchTokens(request.query);
+    if (terms.length < 2) return [];
+    const minimum = Math.max(2, Math.ceil(terms.length / 3));
+    // One fixed statement: scope and overlap filtering happen before the result cap.
+    const fallback = this.prepare(`WITH terms AS (SELECT value AS token FROM json_each(?)),
+      matches AS (SELECT m.id, COUNT(*) AS overlap FROM terms t
+        JOIN memory_fts f ON memory_fts MATCH ('"' || t.token || '"')
+        JOIN memories m ON m.id=f.id WHERE m.status='active'
+        AND ((m.scope='workspace' AND m.workspace_key=?) OR (?=1 AND m.scope='global' AND m.workspace_key=''))
+        GROUP BY m.id HAVING COUNT(*) >= ?)
+      SELECT m.record_json FROM matches x JOIN memories m ON m.id=x.id
+      ORDER BY x.overlap DESC, m.updated_at DESC, m.id LIMIT ?`).all(
+      JSON.stringify(terms),
+      workspace,
+      Number(request.includeGlobal),
+      minimum,
+      request.limit,
+    ) as { record_json: string }[];
+    return fallback.map((row) => decodeRecord(row.record_json));
   }
 
   /** Select a small recent snapshot with global preferences explicitly enabled by the consumer. */

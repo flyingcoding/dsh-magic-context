@@ -58,7 +58,7 @@ Ask the agent to remember a confirmed fact or correct an existing one. Writes de
 | Native tool | Input | Result |
 |---|---|---|
 | `memory_remember` | `content`, `category`; optional `scope`, `request_id` | Active record, stable id, revision, and creation/deduplication outcome. |
-| `memory_recall` | `query`; optional `include_global`, `limit` | Current active records with ids, revisions, scope, and provenance. |
+| `memory_recall` | `query`; optional `include_global`, `limit`, `relaxed` | Current active records with ids, revisions, scope, and provenance. |
 | `memory_update` | `id`, `expected_revision`, `content`, `category`; optional `scope`, `request_id` | New revision; prior content remains `superseded` in history. |
 | `memory_forget` | `id`, `expected_revision`; optional `scope`, `request_id` | Archived revision; future retrieval and initial snapshots exclude it. |
 
@@ -138,3 +138,5 @@ Keep the alpha package private until its compatibility matrix is reviewed and th
 To verify format compatibility against the accepted artifact, set `DSH_MEMORY_BASELINE_STORE` to its isolated installed `dist/store.js` and run `bun run test:rollback` from the root after building. The probe uses a fresh synthetic database, alternates old/new writers, and checks ids, retry receipts, revisions, archive, retrieval, and the unchanged schema.
 
 To roll back activation, remove this package from the selected profile's Bundle list and reload that profile. Keep its memory database and DSH Session logs. Importing an existing Magic database and sharing live databases with other hosts are outside this alpha; no source database was supplied for import. The [migration plan](../../docs/dsh/migration-plan.md) owns later optional work.
+
+Fallback recall is explicitly enabled with `relaxed: true` and runs only when strict retrieval is empty. It uses at most 32 informative terms, excludes Han singletons, and requires at least two and at least one third of the terms to match. Results rank by overlap, recency and id while retaining scope, active-state and result limits; partial matches still require relevance checks.

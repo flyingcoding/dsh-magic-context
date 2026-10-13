@@ -266,3 +266,48 @@ test("a committed write recovers after abrupt process death without duplicate re
     store.close();
   }
 });
+
+test("relaxed recall is opt-in, multi-term, scoped, bounded and never replaces strict hits", () => {
+  const paths = fixturePaths();
+  const store = new MemoryStore(resolveConfig(paths));
+  const a = caller(paths.workspace);
+  const b = caller(paths.other);
+  try {
+    const fact = store.remember(a, note("生产库连接超时 ECONNRESET", "relaxed-fact"));
+    store.remember(b, note("生产库连接超时 ECONNRESET", "foreign-fact"));
+    const request = { query: "之前生产库连接超时是怎么处理的", includeGlobal: false, limit: 1 };
+    assert.deepEqual(store.recall(a.workspace, request), []);
+    assert.deepEqual(
+      store.recall(a.workspace, { ...request, relaxed: true }).map((r) => r.id),
+      [fact.record.id],
+    );
+    const exact = { ...request, query: "生产库", relaxed: true };
+    assert.deepEqual(
+      store.recall(a.workspace, exact),
+      store.recall(a.workspace, { ...exact, relaxed: false }),
+    );
+    for (const query of ["生 unrelated", "库 unrelated", "irrelevant aardvark", "\0", '" OR *']) {
+      assert.deepEqual(store.recall(a.workspace, { ...request, query, relaxed: true }), [], query);
+    }
+    assert.deepEqual(
+      store.recall(a.workspace, { ...request, query: "生产库\0ECONNRESET" }).map((r) => r.id),
+      [fact.record.id],
+    );
+    const global = store.remember(a, {
+      ...note("global retry guidance", "global"),
+      scope: "global",
+    });
+    const g = { query: "global retry missing", relaxed: true, includeGlobal: false, limit: 1 };
+    assert.deepEqual(store.recall(a.workspace, g), []);
+    assert.equal(store.recall(a.workspace, { ...g, includeGlobal: true })[0]?.id, global.record.id);
+    store.forget(a, {
+      id: fact.record.id,
+      expectedRevision: 1,
+      scope: "workspace",
+      requestId: "archive-relaxed",
+    });
+    assert.deepEqual(store.recall(a.workspace, { ...request, relaxed: true }), []);
+  } finally {
+    store.close();
+  }
+});

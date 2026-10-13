@@ -81,6 +81,8 @@ export interface WriteResult {
 }
 
 export interface RecallRequest {
+  /** Opt into multi-term fallback only when strict literal retrieval returns nothing. */
+  relaxed?: boolean;
   query: string;
   includeGlobal: boolean;
   limit: number;

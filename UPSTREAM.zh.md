@@ -153,3 +153,5 @@ bun run benchmark
 | [分类](https://github.com/cortexkit/magic-context/blob/6f718ff019bf327a0b291a8510dfb42f91b65921/packages/plugin/src/features/magic-context/memory/types.ts) | [types.ts](packages/dsh-plugin/src/types.ts) | 保留相同的七个支持值。 |
 
 [NOTICE](packages/dsh-plugin/NOTICE)还记录迁入回归的来源和省略的上游辅助代码。该子集持续纳入版本管理并可审查。专用化保持 DSH 数据库与 Session 格式稳定；回退采用 revert 或独立的已验收基线工作区，保留用户数据。
+
+2026-10-13 第一批：参考上游 `62d84e8a9` 的严格查询为空后备用召回策略，采用 DSH 自有编码词项、显式选择及多词重叠门槛；原始 SQL 和宿主逻辑未迁入。新增严格结果保留、中文问句、NUL、作用域、全局选择及归档回归。

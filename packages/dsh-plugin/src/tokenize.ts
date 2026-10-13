@@ -39,3 +39,10 @@ export function toFtsQuery(text: string): string {
 export function estimateTokens(text: string): number {
   return Math.ceil(Buffer.byteLength(text, "utf8") / 3);
 }
+
+/** Build a bounded fallback from informative terms; never relax to a single Han character. */
+export function relaxedSearchTokens(text: string): string[] {
+  return searchTokens(text)
+    .filter((token) => token.startsWith("b") || (token.startsWith("w") && token.length >= 7))
+    .slice(0, 32);
+}
