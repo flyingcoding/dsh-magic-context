@@ -25,13 +25,25 @@
 | 初始原生实现 | `be3e1f871b4af0afc54e83925544dad8bf60b525`，初始验收保留在[兼容性记录](docs/dsh/compatibility.zh.md)。 |
 | 专用化前已验收源码 | `73cd88b40b2b0852f75ba267100e3ce664aac102`，后续计划提交为 `f99f30517f99fd2abe436c965c26e003a3a1546a`。 |
 | 本地源码迁出 | `9d958bc2`，SQLite、归一化、词表和保留的 Node 回归由 DSH 自己维护。 |
-| 已核查 `upstream/master` | `3cecbda11b1f29b3668d10be1bfdbce27a030915`，已镜像到本地 `origin_main`，并完成 [2026-10-13 合并](#sync-2026-10-13)的范围核查。 |
+| 已核查 `upstream/master` | `6b776610621a6eb179f23eaa43ae217ec62661b8`，已镜像到本地及远端 `origin_main`，并完成 [2026-10-19 合并](#sync-2026-10-19)的范围核查。 |
 | DSH 包版本线 | 已发布 `0.1.5-rc.2`，Cordis `4.0.2`。 |
 | 已核查 DSH 源码 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`，兄弟工作区仅作可选集成参考。 |
 | 本机工具 | Node `v24.18.0`、Bun `1.4.2`、macOS arm64。 |
 | 包身份 | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`，`private: true`。 |
 
-这些是已核查固定版本，不代表当前可用的最新发布。与上次合并相比，已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/3cecbda11b1f29b3668d10be1bfdbce27a030915)中，[NOTICE](packages/dsh-plugin/NOTICE)列出的七个来源文件仅有上游 SQLite 包装层和 Node smoke 测试发生变化。其余五个来源未变化。下文记录了本次未迁入运行时变化的原因。主动采纳源码或宿主变化后更新此表。
+这些是已核查固定版本，不代表当前可用的最新发布。与上次合并相比，已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/6b776610621a6eb179f23eaa43ae217ec62661b8)仅改变 [NOTICE](packages/dsh-plugin/NOTICE) 七个原始来源中的 SQLite 包装层和 Node smoke 测试，其余五个未变。另行核查了 2026-10-13 三批适配所参考的检索、权限和写锁准入逻辑，下文记录本次无需新增运行时代码迁入的原因。
+
+<a id="sync-2026-10-19"></a>
+## 2026-10-19 合并
+
+本次抓取确认官方 `upstream/master` 和本地/远端 `origin_main` 均已位于 `6b776610621a6eb179f23eaa43ae217ec62661b8`，镜像无需额外快进。从 DSH 上次合并点 `3cecbda11b1f29b3668d10be1bfdbce27a030915` 起，上游新增 456 个提交、1,696 个改动路径，插件版本为 `0.49.12`。以 `b04eba09be09ddb4703a2622d67ed999dbab8ce0` 为 DSH 基线，通过保留专用树的合并纳入上游历史，同时保留三批已适配优化。
+
+- SQLite 的 `b042aca92` 修复自动提交多语句 exec 的重复执行风险，`1561c9e28` 修复无竞争 SQL 消耗 transform 等待预算，`60206b50e` 将该预算扩为 2 秒。DSH 不重试 exec 或事务内语句，只重试进入回调前失败的 BEGIN，已有真实锁、事务内错误及幂等回执测试；因此无需迁入这些上游调度策略，也不改变 DSH 的 1 秒异步等待预算。
+- `f66c3be5e` 将上游长期 worker、子进程、连接及周期任务移出请求 AsyncLocalStorage。DSH 没有这些后台资源或 transform 请求作用域；写锁重试计时器仅随单次有界请求存在，并受取消及释放控制，因此未加入全局异步资源根。
+- 权限来源新增恢复授权文件的私有目录与 fsync/rename 持久发布。DSH 的回执保存在 FULL 同步的 SQLite 事务内，已有默认目录及数据库/侧文件权限收紧，不使用外部恢复授权文件；无需迁入文件发布工具。备用检索所参考的 `storage-memory-fts.ts` 未变，归一化、分类及其余原始来源也未变。
+- 其余变化包括 embedding 限流、Git 项目身份、记忆恢复、Dreamer/Historian、OpenCode/Pi、Rust、dashboard、发布及测试资料；这些模块不进入 DSH 专用树。`.gitignore` 调整服务于上游 `.cortexkit` 发布说明及共享规则，DSH 不使用该发布路径，维持自身忽略规则。
+
+本次仅修改双语上游记录。`packages/dsh-plugin`、清单、锁文件、Bundle 和 CI 与 `b04eba09b` 逐字节一致，数据库及 Session 格式不变。验证使用 macOS arm64、Node `v24.18.0`、Bun `1.4.2` 下的 `bun run check`、`git diff --check` 及 Git 树/祖先比较；不运行构建、产物安装、基准或生产启用。上次 `b04eba09b` 的 [CI](https://github.com/flyingcoding/dsh-magic-context/actions/runs/38334407222) 已在本次核查时确认通过，但不作为本次提交的 CI 结果。
 
 <a id="sync-2026-10-13"></a>
 ## 2026-10-13 合并

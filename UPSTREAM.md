@@ -25,13 +25,25 @@ Remote configuration is local. Inspect `git remote -v` before adding a missing o
 | Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
 | Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
 | Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
-| Inspected `upstream/master` | `3cecbda11b1f29b3668d10be1bfdbce27a030915`; mirrored on local `origin_main` and reviewed for the [2026-10-13 integration](#sync-2026-10-13). |
+| Inspected `upstream/master` | `6b776610621a6eb179f23eaa43ae217ec62661b8`; mirrored on local and remote `origin_main` and reviewed for the [2026-10-19 integration](#sync-2026-10-19). |
 | DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
 | Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
 | Local tools | Node `v24.18.0`, Bun `1.4.2`, macOS arm64. |
 | Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-These are inspected pins, not claims about the latest available release. The synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/3cecbda11b1f29b3668d10be1bfdbce27a030915) changes the original SQLite wrapper and its Node smoke test among the seven origins in [NOTICE](packages/dsh-plugin/NOTICE), compared with the previous integration. The remaining five origins are unchanged. The review below records why no runtime changes were ported. Refresh this table after deliberately adopting source or host changes.
+These are inspected pins, not claims about the latest available release. Compared with the previous integration, the synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/6b776610621a6eb179f23eaa43ae217ec62661b8) changes only the SQLite wrapper and Node smoke test among the seven original sources in [NOTICE](packages/dsh-plugin/NOTICE); the other five are unchanged. The search, permissions and writer-admission references for the three 2026-10-13 adaptations were reviewed separately. The review below explains why no additional runtime port is needed.
+
+<a id="sync-2026-10-19"></a>
+## 2026-10-19 integration
+
+Fetching confirmed that official `upstream/master` and local/remote `origin_main` already point to `6b776610621a6eb179f23eaa43ae217ec62661b8`, so no additional mirror fast-forward was necessary. Since the prior DSH integration at `3cecbda11b1f29b3668d10be1bfdbce27a030915`, upstream adds 456 commits and 1,696 changed paths; the plugin version is `0.49.12`. Its history is integrated after DSH baseline `b04eba09be09ddb4703a2622d67ed999dbab8ce0` through a merge retaining the specialized tree and all three adapted optimization batches.
+
+- SQLite commit `b042aca92` prevents re-execution of partially committed autocommit exec scripts, `1561c9e28` stops uncontended SQL from consuming the transform wait budget, and `60206b50e` extends that budget to two seconds. DSH never retries exec or in-transaction statements: only BEGIN failures before callback entry are retried, with existing real-lock, callback-error and idempotency tests. These upstream scheduling policies are not ported, and DSH's one-second async wait budget remains unchanged.
+- Commit `f66c3be5e` detaches long-lived upstream workers, children, connections and periodic tasks from request AsyncLocalStorage. DSH has no such background owners or transform request scopes; retry timers exist only for a bounded request and honor cancellation/disposal, so no global async-resource root is introduced.
+- The permissions reference adds private directories and durable fsync/rename publication for recovery-authorizing files. DSH receipts live inside FULL-synchronous SQLite transactions, existing default-directory/database/sidecar permissions are already tightened, and no external recovery-authorizing file is used; file-publication helpers are not ported. The fallback-search reference `storage-memory-fts.ts` is unchanged, as are normalization, categories and the remaining original sources.
+- Other changes cover embedding rate limits, Git project identity, memory restoration, Dreamer/Historian, OpenCode/Pi, Rust, dashboard, release and test material; those owners stay outside the DSH tree. The `.gitignore` changes serve upstream `.cortexkit` release notes and shared rules, a release path DSH does not use, so its ignore rules remain intact.
+
+Only paired upstream records change. `packages/dsh-plugin`, manifests, lockfile, Bundle and CI remain byte-identical to `b04eba09b`; database and Session formats are unchanged. Validation uses `bun run check`, `git diff --check`, and Git tree/ancestry comparisons on macOS arm64, Node `v24.18.0`, Bun `1.4.2`; build, artifact installation, benchmarks and production activation are not run. The previous `b04eba09b` [CI](https://github.com/flyingcoding/dsh-magic-context/actions/runs/38334407222) was confirmed successful during this inspection, but is not evidence for this integration's CI.
 
 <a id="sync-2026-10-13"></a>
 ## 2026-10-13 integration
