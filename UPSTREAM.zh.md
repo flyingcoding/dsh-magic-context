@@ -25,13 +25,25 @@
 | 初始原生实现 | `be3e1f871b4af0afc54e83925544dad8bf60b525`，初始验收保留在[兼容性记录](docs/dsh/compatibility.zh.md)。 |
 | 专用化前已验收源码 | `73cd88b40b2b0852f75ba267100e3ce664aac102`，后续计划提交为 `f99f30517f99fd2abe436c965c26e003a3a1546a`。 |
 | 本地源码迁出 | `9d958bc2`，SQLite、归一化、词表和保留的 Node 回归由 DSH 自己维护。 |
-| 已核查 `upstream/master` | `6b776610621a6eb179f23eaa43ae217ec62661b8`，已镜像到本地及远端 `origin_main`，并完成 [2026-10-19 合并](#sync-2026-10-19)的范围核查。 |
+| 已核查 `upstream/master` | `289a721e7ba674b81ec0357eec529c142541a1c6`，已镜像到本地 `origin_main`，并完成 [2026-11-06 合并](#sync-2026-11-06)的范围核查。 |
 | DSH 包版本线 | 已发布 `0.1.5-rc.2`，Cordis `4.0.2`。 |
 | 已核查 DSH 源码 | `7e4504856456f5298b8bc66299995ce8d86c3aa1`，兄弟工作区仅作可选集成参考。 |
 | 本机工具 | Node `v24.18.0`、Bun `1.4.2`、macOS arm64。 |
 | 包身份 | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`，`private: true`。 |
 
-这些是已核查固定版本，不代表当前可用的最新发布。与上次合并相比，已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/6b776610621a6eb179f23eaa43ae217ec62661b8)仅改变 [NOTICE](packages/dsh-plugin/NOTICE) 七个原始来源中的 SQLite 包装层和 Node smoke 测试，其余五个未变。另行核查了 2026-10-13 三批适配所参考的检索、权限和写锁准入逻辑，下文记录本次无需新增运行时代码迁入的原因。
+这些是已核查固定版本，不代表当前可用的最新发布。与上次合并相比，已同步的[上游提交](https://github.com/cortexkit/magic-context/commit/289a721e7ba674b81ec0357eec529c142541a1c6)仅改变 [NOTICE](packages/dsh-plugin/NOTICE) 七个原始来源中的 SQLite 包装层，其余六个未变。另行核查的备用检索及权限来源未变，下文记录本次未迁入运行时代码的原因。
+
+<a id="sync-2026-11-06"></a>
+## 2026-11-06 合并
+
+本地 `origin_main` 从 `8dd1bd1c7988bc55c98525db1db3dfc9f05bc8eb` 快进到官方 `upstream/master` 的 `289a721e7ba674b81ec0357eec529c142541a1c6`，新增 294 个镜像提交。从 DSH 上次合并点 `6b776610621a6eb179f23eaa43ae217ec62661b8` 起，上游新增 685 个提交、1,065 个改动路径，插件版本为 `0.49.35`。以 `1f35bad5e8d382fb1e9f80eab9f521a7a7556ddc` 为 DSH 基线，通过保留专用树的合并纳入上游历史。
+
+- SQLite 的 `973bcb5b0`、`66a9564e2` 和 `29d30e7e7` 面向 Pi/OMP 的原生等待期限、请求回调释放及超时跟踪开销。DSH 使用独立 Node 包装层，没有上游 turn deadline 或 AsyncLocalStorage 路由；异步写只重试 BEGIN，采用零原生等待和有界可取消重试，因此未迁入宿主调度层。
+- `d0c0dee70`、`9a957e7aa` 添加并延迟加载 immutable 只读打开方式，服务于已停止 WAL 库的诊断读取；DSH provider 维护正常读写连接，没有该离线诊断入口。上游异步 `beforeRetry` 回调支持 OpenCode 2 重建已保存请求，DSH 没有该回调或宿主请求重建路径。
+- 七个原始来源中的 Node smoke、绑定测试、导入边界测试、归一化及测试、分类词表均未变。三批适配参考的 `storage-memory-fts.ts` 和 `storage-permissions.ts` 也未变；保留备用召回、存量权限收紧及异步写锁重试。
+- 其余变化主要涉及 embedding pooling/限流、可选托管 reranking、自动搜索 worker、Pi/OMP 恢复、OpenCode、Rust、dashboard 及 CI/发布工具。新增 `.cortexkit/WORKER.md` 放行规则属于上游工具文档，DSH 不采用该路径；这些模块与规则继续保留在完整镜像中。
+
+本次仅修改双语上游记录。`packages/dsh-plugin`、清单、锁文件、Bundle 和 DSH CI 与 `1f35bad5e` 逐字节一致。验证使用 macOS arm64、Node `v24.18.0`、Bun `1.4.2` 下的 `bun run check`、`git diff --check` 及 Git 树/祖先比较；不运行本地构建、产物安装、模型验收、基准或生产启用。
 
 <a id="sync-2026-10-19"></a>
 ## 2026-10-19 合并

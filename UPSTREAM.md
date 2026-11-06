@@ -25,13 +25,25 @@ Remote configuration is local. Inspect `git remote -v` before adding a missing o
 | Initial native implementation | `be3e1f871b4af0afc54e83925544dad8bf60b525`; original acceptance is preserved in [compatibility](docs/dsh/compatibility.md). |
 | Accepted pre-specialization source | `73cd88b40b2b0852f75ba267100e3ce664aac102`; the plan followed at `f99f30517f99fd2abe436c965c26e003a3a1546a`. |
 | Local source extraction | `9d958bc2`; SQLite, normalization, vocabulary, and retained Node regressions are owned by DSH. |
-| Inspected `upstream/master` | `6b776610621a6eb179f23eaa43ae217ec62661b8`; mirrored on local and remote `origin_main` and reviewed for the [2026-10-19 integration](#sync-2026-10-19). |
+| Inspected `upstream/master` | `289a721e7ba674b81ec0357eec529c142541a1c6`; mirrored on local `origin_main` and reviewed for the [2026-11-06 integration](#sync-2026-11-06). |
 | DSH package line | Published `0.1.5-rc.2`, Cordis `4.0.2`. |
 | Inspected DSH source | `7e4504856456f5298b8bc66299995ce8d86c3aa1`; the sibling checkout is an optional integration reference. |
 | Local tools | Node `v24.18.0`, Bun `1.4.2`, macOS arm64. |
 | Package identity | `@flyingcoding/dsh-magic-context@0.1.0-alpha.1`, `private: true`. |
 
-These are inspected pins, not claims about the latest available release. Compared with the previous integration, the synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/6b776610621a6eb179f23eaa43ae217ec62661b8) changes only the SQLite wrapper and Node smoke test among the seven original sources in [NOTICE](packages/dsh-plugin/NOTICE); the other five are unchanged. The search, permissions and writer-admission references for the three 2026-10-13 adaptations were reviewed separately. The review below explains why no additional runtime port is needed.
+These are inspected pins, not claims about the latest available release. Compared with the previous integration, the synchronized [upstream commit](https://github.com/cortexkit/magic-context/commit/289a721e7ba674b81ec0357eec529c142541a1c6) changes only the SQLite wrapper among the seven original sources in [NOTICE](packages/dsh-plugin/NOTICE); the other six are unchanged. The separately reviewed fallback-search and permissions references are unchanged. The review below explains why no runtime code was ported.
+
+<a id="sync-2026-11-06"></a>
+## 2026-11-06 integration
+
+Local `origin_main` fast-forwarded from `8dd1bd1c7988bc55c98525db1db3dfc9f05bc8eb` to official `upstream/master` at `289a721e7ba674b81ec0357eec529c142541a1c6`, adding 294 mirror commits. Since the prior DSH integration at `6b776610621a6eb179f23eaa43ae217ec62661b8`, upstream adds 685 commits and 1,065 changed paths; the plugin version is `0.49.35`. Its history is integrated after DSH baseline `1f35bad5e8d382fb1e9f80eab9f521a7a7556ddc` through a merge retaining the specialized tree.
+
+- SQLite commits `973bcb5b0`, `66a9564e2` and `29d30e7e7` address Pi/OMP native wait deadlines, request callback release and timeout-tracking overhead. DSH uses an independent Node wrapper without upstream turn-deadline or AsyncLocalStorage routing; async writes retry only BEGIN with zero native wait and bounded, cancellable retries, so the host scheduling layer is not ported.
+- Commits `d0c0dee70` and `9a957e7aa` introduce and lazily load immutable read-only opening for diagnostics of stopped WAL stores. The DSH provider owns a normal read/write connection and has no such offline diagnostic entry point. The upstream async `beforeRetry` callback supports OpenCode 2 saved-request reconstruction; DSH has neither that callback nor that host reconstruction path.
+- The six original sources covering Node smoke, binding tests, import-boundary tests, normalization and its test, and category vocabulary are unchanged. The three adaptation batches' `storage-memory-fts.ts` and `storage-permissions.ts` references are also unchanged; fallback recall, existing-permission tightening and async writer retries are preserved.
+- Other changes mainly concern embedding pooling/rate limits, optional hosted reranking, auto-search workers, Pi/OMP recovery, OpenCode, Rust, dashboard and CI/release tooling. The new `.cortexkit/WORKER.md` allow rule belongs to upstream tooling documentation, a path DSH does not adopt; these owners and rules remain in the full mirror.
+
+Only paired upstream records change. `packages/dsh-plugin`, manifests, lockfile, Bundle and DSH CI remain byte-identical to `1f35bad5e`. Validation uses `bun run check`, `git diff --check`, and Git tree/ancestry comparisons on macOS arm64, Node `v24.18.0`, Bun `1.4.2`; local build, artifact installation, model acceptance, benchmarks and production activation are not run.
 
 <a id="sync-2026-10-19"></a>
 ## 2026-10-19 integration
